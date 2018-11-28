@@ -1,0 +1,1 @@
+hand_rn__completion_list="run release"

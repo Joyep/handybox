@@ -1,0 +1,1 @@
+hand_android_getpath__completion_list="kernel defconfig dts"
