@@ -12,6 +12,8 @@ Handybox is a tool with many shell scripts intergrated for linux/unix environmen
 1. get handybox
     ```
     git clone git@github.com:Joyep/handybox.git
+    git submodule init
+    git submodule update
     cd handybox
     ```
 2. export `HAND_PATH` in your bash config file (such as ~/.bashrc)
@@ -55,16 +57,16 @@ config/
 It is easy to add a new sub command, for example you want add a command `hand hello`
 1. create file `$HAND_PATH/hand/hello.sh`, and write shell script as below
 ```
-    function hand_hello()
-    {
-        echo "Hello, world!"
-    }
+function hand_hello()
+{
+    echo "Hello, world!"
+}
 ```
 2. update handybox with `hand update`
 3. enjoy!
 ```
-    > hand hello
-    Hello, world!
+$ hand hello
+Hello, world!
 ```
 > Tips: you can olso add your own custom sub command in your config path `$HAND_PATH/config/<your config dir>/hand/`
 
@@ -139,21 +141,14 @@ Sometimes, you need some environment, but in other times, we need some other env
 
 ## Alias hand as h
 alias hand as h makes you more easy to use handybox, the main command just an `h`
-```
+    ```
     1, hand cd config
     2, Edit alias.sh, set alias h='hand'
     3, hand update and Enjoy!
-```
+    ```
 
-
-
-
-
-
-
-
-
-
+## Add libs for dependency
+Please palce all depended libs into $HAND_PATH/libs
 
 
 
