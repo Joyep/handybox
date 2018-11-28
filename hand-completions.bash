@@ -18,6 +18,9 @@
 hand__completion_entry() {
 	local cmd comp
 	for(( i=1;i<${COMP_CWORD};i++)) do
+		if [ "${COMP_WORDS[i]:0:2}" == "--" ]; then
+			continue
+		fi
 		cmd="${cmd}_${COMP_WORDS[i]}"
 	done
 

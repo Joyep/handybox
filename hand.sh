@@ -126,6 +126,9 @@ function hand()
 				hand__debug=0	
 			fi
 			continue;
+		elif [ "$1" == "--show" ]; then
+			shift
+			local show_func_define=1
 		fi
 		break;
 	done
@@ -224,6 +227,11 @@ function hand()
 
 	#only load if need
 	if [ "$only_load" == "1" ]; then
+		return 0
+	fi
+
+	if [ "$show_func_define" ]; then
+		type $func
 		return 0
 	fi
 
