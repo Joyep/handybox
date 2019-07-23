@@ -1,10 +1,10 @@
 #!/bin/bash
 
-echo "[bin] hand $@"
-
 # load hand.sh
 hand__path="example_path"
 source $hand__path/hand.sh
+
+hand echo debug "[bin] hand $@"
 
 # call hand
 hand "$@"
