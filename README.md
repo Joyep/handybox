@@ -1,14 +1,14 @@
 
 # Handy Box Tool Scripts
-Handybox is a tool with many shell scripts intergrated for linux/unix environment
+Handybox is a tool which include many shell scripts integrated for linux/macOS environment.
 
 
 ## Features
-1. provide only one main command `hand` for many shell scripts
-2. Flexable sub command, lazy load
-3. Easy to customize your shell enviroment
+1. provide only one main command `hand` for many shell scripts.
+2. Flexible sub command, lazy load.
+3. Easy to customize your shell environment.
 
-## Install
+## Installation
 1. get handybox
     ```
     git clone git@github.com:Joyep/handybox.git
@@ -17,16 +17,16 @@ Handybox is a tool with many shell scripts intergrated for linux/unix environmen
     cd handybox
     ```
 2. export `hand__path` in your bash config file (such as ~/.bashrc)
-    ``` 
-    export hand__path=/path/to/handybox_pub
+    ```
+    bash install.sh
+    ```
+    It will automaticlly install `hand` command line in your own bin path(`$HOME/bin`), and show you lines to add into bash config file. as below:
+
+    ```
+    export hand__path=/path/to/handybox
     source $hand__path/hand.sh
     ```
-   > tips:you can run `bash install.sh` to get that two line above.
-3. open new terminal or source your bash config file
-    ```
-    source ~/.bashrc
-    ```
-4. enjoy!
+3. open new terminal and enjoy!
    ```
    hand
    ```
@@ -34,121 +34,118 @@ Handybox is a tool with many shell scripts intergrated for linux/unix environmen
 ## Usage
 * `hand` --- then main command
 * `hand update` --- update hand and sub command scripts
-* `hand update completions` --- update bash completions for handybox
-* `hand cd config`  --- cd to your config path
-* `hand work` --- setup workspace
+* `hand update completions` --- update completions
+* `hand cd` --- cd to handybox root dir
+* `hand cd config`  --- cd to your config dir
+* `hand work` --- switch workspace
+* `hand prop get/set` --- get/set properties in you workspace
 * `hand <sub command> [<params...>]`  --- call sub command
 
+> Tips: If you want to run cmd in standalone process, please use `$HOME/bin/hand`. Also, you can use `hand__hub` instead of `hand` to run most of commands in standalone process.
 
-## Config
-The first time you source handybox, it would automatically generate config directory depend on user name and host name.
-`$hand__path/config/<user name>_<host name>/`
-It is a copy of `$hand__path/config/example`
+## Configuration
+The first time you source handybox, it will automatically generate config directory depending on user name and host name.
 ```
-config/
-`-- example
-    |-- alias.sh  --- your shell alias definition
-    |-- custom.sh  --- your custom scripts
-    |-- short.sh   --- short name for command
-    `-- workspace.sh  --- workspace definition
+$hand__path/config/<user_name>_<host_name>/
 ```
+It is a copy of `$hand__path/example`
+```
+example/
+├── alias.sh --- your alias
+├── custom.sh --- your custom scripts
+└── hand --- your custom commands
+    └── example.sh
+```
+> Tips: `$hand__config_path` is your config path.
 
 ## How to add new sub command
-It is easy to add a new sub command, for example you want add a command `hand hello`
-1. create file `$hand__path/hand/hello.sh`, and write shell script as below
+It is easy to add a new sub command, for example if you want to add a command `hand hello`.
+1. create file `$hand__path/hand/hello.sh`, and write shell script as below:
 ```
 function hand_hello()
 {
     echo "Hello, world!"
 }
 ```
-2. update handybox with `hand update`
-3. enjoy!
+> Notice: function name must be `hand_hello` if your command is `hand hello`.
+2. enjoy!
 ```
 $ hand hello
 Hello, world!
 ```
-> Tips: you can olso add your own custom sub command in your config path `$hand__path/config/<your config dir>/hand/`
+> Tips: you can also put your own custom sub command into your config path (`$hand__config_path/hand/`)
 
 
 ## Workspace
-Sometimes, you need some environment, but in other times, we need some other enviroment. For this reason, we need workspace.
-### Config your workspaces
-1. cd your config path by `hand cd config`
-2. edit `workspace.sh`, add 2 workspace (test1 and test2) for example.
-    ```
-    # workspace list
-    hand_work__list=("test1" "test2")
+Sometimes, you need some environment, but in other times, we need some other environment. For this reason, we need workspace.
 
-    # workspace functions
-    function hand_work__workspace_test1()
-    {
-    	echo "load default"
-    	hand_hello__to="Daniel"
-    }
-    function hand_work__workspace_test2()
-    {
-    	hand echo info "load test"
-    	hand_hello__to="Bob"
-    }
-    ```
-3. show workspace list
-    ```
-    $ hand update
-    $ hand work
-    test1
-    test2
-    ```
-4. change workspace
-    ```
-    $ hand work test1
-    $ echo $hand_hello__to
-    Daniel
-    ```
+In handybox, workspace is a file include a set of properties, named `<workspace_name>.props`, placed in config path.
 
-    ```
-    hand work test2
-    $ echo $hand_hello__to
-    Bob
-    ```
+Using `hand work` to show all workspace. first time, it shows like this:
+```
+$ hand work
+work space:
+  *  default
+```
+It means that you have one workspace named `default`. Now, you can put some properties into this workspace.
+```
+$ hand prop set hello.to Daniel
+$ hand prop get hello.to
+Daniel
+```
+Then, maybe you want switch to another workspace, say `develop`:
+```
+$ hand work develop
+work space:
+     default
+  *  develop
+```
+It will switch to another workspace, if this workspace not exist, it will create one automatically.
 
 ### use workspace in sub command
-1. Edit $hand__path/hand/hello.sh
+1. Edit `$hand__path/hand/hello.sh`
     ```
     function hand_hello()
     {
-        echo "Hello, $hand_hello__to"
+        hello_to=`hand --silence prop get hello.to`
+        if [ $? -ne 0 ]; then
+            echo "hello.to not found!"
+            return 1
+        fi
+        echo "Hello, $hello_to"
     }
-    function hand_hello__workspace_default()
-    {
-        hand_hello__to="Alice" #say hello to Alice by default
-    }
-    hand work --load hand_hello
     ```
-2. Update handybox by `hand update`
-3. Test `hand hello` in different workspace
+2. Test `hand hello` in different workspace
     ```
-    $ hand work test1
+    $ hand work alice
     $ hand hello
-    Hello, Daniel
+    hello.to not found!
 
-    $ hand work test2
+    $ hand prop set hello.to Alice
+    $ hand hello
+    Hello, Alice
+
+    $ hand work bob
+    $ hand prop set hello.to Bob
     $ hand hello
     Hello, Bob
+
+    $ hand work alice
+    $ hand hello
+    Hello, Alice
     ```
 
 
 
 ## Alias hand as h
-alias hand as h makes you more easy to use handybox, the main command just an `h`
-    ```
-    1, hand cd config
-    2, Edit alias.sh, set alias h='hand'
-    3, hand update and Enjoy!
-    ```
+Alias hand as h makes you more easy to use handybox, the main command just an `h`.
 
-## Add libs for dependency
-Please palce all depended libs into $hand__path/libs
+1. `hand cd config`
+2. Edit `alias.sh`, add line `alias h='hand'`
+3. `hand update`
+4. Using `h` instead of `hand`
+
+> Tips: If you prefer call `hand__hub` instead of `hand`, using `alias h='hand__hub`.
 
 
 
