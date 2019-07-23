@@ -40,7 +40,9 @@ hand__completion_entry() {
 	return
 }
 complete -F hand__completion_entry h
+# complete -F hand__completion_entry handy
 complete -F hand__completion_entry hand
+complete -F hand__completion_entry hs
 
 
 
@@ -55,8 +57,8 @@ hand__completions_generate()
 	local item
 	local list
 
-	if [ -d $HAND_PATH/hand/$path ]; then
-		list=" $(ls $HAND_PATH/hand/$path | sed '/\.comp\.sh$/d')"
+	if [ -d $hand__path/hand/$path ]; then
+		list=" $(ls $hand__path/hand/$path | sed '/\.comp\.sh$/d')"
 	fi
 
 	if [ -d $hand__config_path/hand/$path ]; then
@@ -91,8 +93,9 @@ hand__completions_generate()
 	for item in ${list}
 	do
 		if [ "${item##*.sh}" ]; then
-			#echo $item
-			hand__completions_generate $path/$item "_$item"
+			# echo item=$item
+			# echo cmd=$cmd
+			hand__completions_generate $path/$item "${cmd}_${item}"
 		fi
 	done
 }
@@ -101,7 +104,7 @@ hand__completions_load_sub()
 {
 	local f
 	#echo "load sub..."
-	for f in $(find $HAND_PATH/hand $hand__config_path/hand -name "*.comp.sh")
+	for f in $(find $hand__path/hand $hand__config_path/hand -name "*.comp.sh")
 	do
 		hand echo debug "source $f"
 		#echo "" >> $hand__completion_prebuild

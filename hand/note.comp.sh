@@ -1,0 +1,1 @@
+hand_note__completion_list="gettop setdir search grep"

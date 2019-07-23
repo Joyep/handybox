@@ -1,0 +1,1 @@
+hand_bcompare__completion_list="register"

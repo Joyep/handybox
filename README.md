@@ -16,10 +16,10 @@ Handybox is a tool with many shell scripts intergrated for linux/unix environmen
     git submodule update
     cd handybox
     ```
-2. export `HAND_PATH` in your bash config file (such as ~/.bashrc)
+2. export `hand__path` in your bash config file (such as ~/.bashrc)
     ``` 
-    export HAND_PATH=/path/to/handybox_pub
-    source $HAND_PATH/hand.sh
+    export hand__path=/path/to/handybox_pub
+    source $hand__path/hand.sh
     ```
    > tips:you can run `bash install.sh` to get that two line above.
 3. open new terminal or source your bash config file
@@ -42,8 +42,8 @@ Handybox is a tool with many shell scripts intergrated for linux/unix environmen
 
 ## Config
 The first time you source handybox, it would automatically generate config directory depend on user name and host name.
-`$HAND_PATH/config/<user name>_<host name>/`
-It is a copy of `$HAND_PATH/config/example`
+`$hand__path/config/<user name>_<host name>/`
+It is a copy of `$hand__path/config/example`
 ```
 config/
 `-- example
@@ -55,7 +55,7 @@ config/
 
 ## How to add new sub command
 It is easy to add a new sub command, for example you want add a command `hand hello`
-1. create file `$HAND_PATH/hand/hello.sh`, and write shell script as below
+1. create file `$hand__path/hand/hello.sh`, and write shell script as below
 ```
 function hand_hello()
 {
@@ -68,7 +68,7 @@ function hand_hello()
 $ hand hello
 Hello, world!
 ```
-> Tips: you can olso add your own custom sub command in your config path `$HAND_PATH/config/<your config dir>/hand/`
+> Tips: you can olso add your own custom sub command in your config path `$hand__path/config/<your config dir>/hand/`
 
 
 ## Workspace
@@ -113,7 +113,7 @@ Sometimes, you need some environment, but in other times, we need some other env
     ```
 
 ### use workspace in sub command
-1. Edit $HAND_PATH/hand/hello.sh
+1. Edit $hand__path/hand/hello.sh
     ```
     function hand_hello()
     {
@@ -148,7 +148,7 @@ alias hand as h makes you more easy to use handybox, the main command just an `h
     ```
 
 ## Add libs for dependency
-Please palce all depended libs into $HAND_PATH/libs
+Please palce all depended libs into $hand__path/libs
 
 
 

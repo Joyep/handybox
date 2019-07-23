@@ -22,7 +22,7 @@ function hand_android_gettop()
 			fi
 		fi
 
-		if [ ! -d $aroot/frameworks ] ; then
+		if [ ! -d "$aroot/frameworks" ] ; then
 			#not android dir
 			return 1
 		fi
@@ -31,3 +31,5 @@ function hand_android_gettop()
 	echo $aroot
 	return 0
 }
+
+# android_gettop "$@"

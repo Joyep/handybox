@@ -1,6 +1,6 @@
 function hand_git_gettop()
 {
-   local path=`pwd`
+    local path=`pwd`
     while true;
     do
         if [ -d $path/.git ]; then
@@ -21,3 +21,5 @@ function hand_git_gettop()
         path=`dirname $path`
     done
 }
+
+# git_gettop "$@"

@@ -11,3 +11,5 @@ hand_lcd_select()
     echo "select=${select}";
     echo "name=${name}"
 }
+
+# lcd_select_info "$@"

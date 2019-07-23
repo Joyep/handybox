@@ -3,40 +3,50 @@
 #cmd <type> <files...>
 function hand_adb_push()
 {
+    # detect if android device connected
     hand adb detect
     [[ $? -ne 0 ]] && return 1
-    
+
+    # remount before push
+    adb remount
+
     local sub=$1
     shift
 	case $sub in
 	"chmod")
-		hand_adb_push__chmod $* 
+		push_and_chmod $* 
 		;;
 	"lib")
-		hand_adb_push__chmod 644 system/lib $*
+		push_and_chmod 644 system/lib $*
 		;;
 	"lib64")
-		hand_adb_push__chmod 644 system/lib64 $*
+		push_and_chmod 644 system/lib64 $*
 		;;
 	"libhw")
-		hand_adb_push__chmod 644 system/lib/hw $*
+		push_and_chmod 644 system/lib/hw $*
 		;;
 	"lib64hw")
-		hand_adb_push__chmod 644 system/lib64/hw $*
+		push_and_chmod 644 system/lib64/hw $*
 		;;
 	"bin")
-		hand_adb_push__chmod 755 system/bin $*
+		push_and_chmod 755 system/bin $*
 		;;
 	"system")
-		hand_adb_push__chmod 755 system $*
+		push_and_chmod 755 system $*
 		;;
     "app")
-        hand_adb_push__chmod null system/app $*
+        push_and_chmod null system/app $*
+        ;;
+    "privapp")
+        push_and_chmod null system/priv-app $*
         ;;
     "path")
         local path=$1
         shift
-        hand_adb_push__chmod null $path $*
+        push_and_chmod null $path $*
+        ;;
+    "i2c_test")
+        hand adb push bin $hand__path/libs/libi2c/prebuild/arm/i2c_test
         ;;
 	*)
 		hand echo error "push $sub not support"
@@ -46,7 +56,7 @@ function hand_adb_push()
 
 #push file to device path with chmod
 #push $file $path $mod
-function hand_adb_push__file()
+function adb_push_file()
 {
     local f=$1
     local path=$2
@@ -70,7 +80,7 @@ function hand_adb_push__file()
 
 #push dir to device path with chmod
 #push $dir $path $mod
-function hand_adb_push__dir()
+function adb_push_dir()
 {
     local d=${1%/}
     local path=${2%/}
@@ -95,12 +105,12 @@ function hand_adb_push__dir()
         #echo ">>>" $file
         local filepath=$d/$file
         if [ -d $filepath ]; then
-            hand_adb_push__dir $filepath $path/$dname $mod
+            adb_push_dir $filepath $path/$dname $mod
         elif [ -L $filepath ]; then
             hand echo warn "$file is a symbolic link, ignore!"
             continue
         elif [ -f $filepath ]; then
-            hand_adb_push__file $filepath $path/$dname $mod
+            adb_push_file $filepath $path/$dname $mod
         else
             hand echo error "$filepath is not a file or directory!"
         fi
@@ -114,7 +124,7 @@ function hand_adb_push__dir()
 }
 
 #push $mod $path $files...
-function hand_adb_push__chmod()
+function push_and_chmod()
 {
     local mod=""
     if [ "$1" != "null" ]; then
@@ -131,9 +141,15 @@ function hand_adb_push__chmod()
     local file=
     for file in $*
     do
+        # if file not exist, try related to android top dir
         if [ ! -e $file ]; then
-            hand --load android gettop
-            file=$(hand_android_gettop)/$file
+            hand echo warn "file not exist, try android path"
+            android_top=`hand android gettop`
+            if [ $? -ne 0 ]; then
+                hand echo error "android path not found!"
+                return 1
+            fi
+            file=$(android_top)/$file
             if [ ! -e $file ]; then
                 hand echo error "$file not found!"
                 continue
@@ -141,17 +157,21 @@ function hand_adb_push__chmod()
         fi
 
         if [ -d $file ] ; then
-            hand_adb_push__dir $file $path $mod
+            # if file is a dir, then push dir
+            adb_push_dir $file $path $mod
         elif [ -L $file ]; then
+            # if file is a link, ignore!
             hand echo warn "$file is a symbolic link, ignore"
             continue
         elif [ -f $file ] ; then
-            hand_adb_push__file $file $path $mod
+            # if file is a file, then push file
+            adb_push_file $file $path $mod
         else
             hand echo error "$file is not a file or directory!"
         fi
         if [ $? -ne 0 ]; then
-            return $?
+            hand echo error "something wrong"
+            return 1
         fi
     done
 

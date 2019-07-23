@@ -16,3 +16,5 @@ function hand_repo_gettop()
         path=`dirname $path`
     done
 }
+
+# hand_repo_gettop "$@"

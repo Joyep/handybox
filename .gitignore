@@ -1,3 +1,5 @@
 .tmp
-config
-!config/example
+.completions.sh
+.ctags
+tags
+.DS_Store

@@ -8,7 +8,10 @@ hand_android_emulator()
 		ls $HOME/.android/avd/ | grep avd
 		return
 	fi
+	# start emulator
 	cd $ANDROID_HOME/tools
 	./emulator -avd $1
 	cd -
 }
+
+# android_emulator "$@"

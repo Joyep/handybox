@@ -5,10 +5,13 @@ function hand_git_mydepot()
     shift
 	case $sub in
 	"clone")
-		hand_git_mydepot__clone $*
+		mydepot_clone $*
 		;;
 	"init")
-		hand_git_mydepot__init $*
+		mydepot_init $*
+		;;
+	*)
+		hand echo error "command not support!"
 		;;
 	esac
 }
@@ -16,7 +19,7 @@ function hand_git_mydepot()
 
 
 #init $fromdir $togitdir
-function hand_git_mydepot__init()
+function mydepot_init()
 {
 	#check params
     if [ $# -ne 2 ]; then
@@ -24,9 +27,27 @@ function hand_git_mydepot__init()
 		return 1
 	fi
 
+	local user
+	user=`hand prop get git.mydepot.user`
+	if [ $? -ne 0 ]; then
+		user=
+	fi
+	local ip
+	ip=`hand prop get git.mydepot.ip`
+	if [ $? -ne 0 ]; then
+		ip=
+	fi
+	local path
+	path=`hand prop get git.mydepot.path`
+	if [ $? -ne 0 ]; then
+		echo $path
+		hand echo error mydepot path not found!
+		return 1
+	fi
+
 	#check path
     local dirpath=$1
-    local gitpath=$mydepot_path/$2.git
+    local gitpath=$path/$2.git
 	if [ ! -d $dirpath ] ; then
 		hand echo error "dir path ($dirpath) not found!"
 		return 1
@@ -42,9 +63,6 @@ function hand_git_mydepot__init()
 	#work on dirpath
 	cd $dirpath
 
-	local user=$hand_git_mydepot__user
-	local ip=$hand_git_mydepot__path
-	local path=$hand_git_mydepot__path
 
 	#1, create a remote bare git repository
 	if [ "$user" != "" ] && [ "$ip" != "" ] ; then
@@ -82,26 +100,31 @@ function hand_git_mydepot__init()
 }
 
 #clone $gitname
-function hand_git_mydepot__clone()
+function mydepot_clone()
 {
-	local user=$hand_git_mydepot__user
-	local ip=$hand_git_mydepot__ip
-	local path=$hand_git_mydepot__path
-
-    if [ "$path" == "" ]; then
-        echo "please define hand_git_mydepot__path"
-        return
+	local user
+	
+	local ip
+	ip=`hand prop get git.mydepot.ip`
+	local path
+	path=`hand prop get git.mydepot.path`
+    if [ $? -ne 0 ]; then
+    	echo $path
+        # hand echo warn "git.mydepot.path not found! please set by:"
+        # hand echo warn "hand prop set git.mydepot.path <your path>"
+        return 1
     fi
 
 	local gitpath=""
 	local sedstr="s%$path/%%g"
-	
-    if [ "$user" == "" ]; then
+	user=`hand prop get git.mydepot.user`
+    if [ $? -ne 0 ]; then
 		#clone from local
 		gitpath=$path/$1
 		hand echo green "$gitpath"
 		if [ ""  == "$1" ]; then
-			find $path -name *.git | sed 's%'$path'/%%g'
+			echo $path
+			find $path -name "*.git" | sed 's%'$path'/%%g'
 			return 0
 		fi
     else
@@ -119,16 +142,7 @@ function hand_git_mydepot__clone()
 
 }
 
-function hand_git_mydepot__workspace_default()
-{
-	hand echo debug hand_git_mydepot__workspace_default
-	#hand_git_mydepot__user=
-	#hand_git_mydepot__ip=
-	#hand_git_mydepot__path=
-}
 
-hand work --load hand_git_mydepot
-
-
+# git_mydepot "$@"
 
 

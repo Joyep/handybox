@@ -1,4 +1,6 @@
 function hand_lcd_gencmd()
 {
-	python3 $HAND_PATH/libs/mipi_cmd_formater/gen.py $*
+	python3 $hand__path/libs/mipi_cmd_formater/gen.py $*
 }
+
+# gencmd "$@"

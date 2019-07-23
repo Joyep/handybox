@@ -121,3 +121,6 @@ function hand_myhome__link()
 	ls -al ~/$file
 
 }
+
+
+# hand_myhome "$@"

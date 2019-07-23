@@ -40,9 +40,12 @@ alias dmsg="adb shell dmesg"
 alias kmsg="adb shell cat /proc/kmsg"
 
 #alias for remote
-alias rmdo="hand remote do"
-alias rmdo2="hand remote do2 "
-alias cpfrm="hand remote cp to"
+alias rdo="hand remote do"
+alias rdof="hand remote do -f"
+alias rdoh="hand remote do hand"
+alias rdofh="hand remote do -f hand"
+alias rcpfrom="hand remote cpfrom"
+alias rcpto="hand remote cpto"
 
 #alias for git
 alias gitclone_mydepot="hand git mydepot clone"

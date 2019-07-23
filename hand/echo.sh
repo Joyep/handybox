@@ -6,28 +6,28 @@ function hand_echo()
     shift
 	case $sub in
 	"do")
-		hand_echo__do $*
+		hand_echo__do "$@"
 		;;
 	"error"):
-		hand_echo__error $*
+		hand_echo__error "$@"
 		;;
 	"info"):
-		hand_echo__info $*
+		hand_echo__info "$@"
 		;;
 	"warn"):
-		hand_echo__warn $*
+		hand_echo__warn "$@"
 		;;
 	"red"):
-		hand_echo__red $*
+		hand_echo__red "$@"
 		;;
 	"green"):
-		hand_echo__green $*
+		hand_echo__green "$@"
 		;;
 	"yellow"):
-		hand_echo__yellow $*
+		hand_echo__yellow "$@"
 		;;
 	"debug"):
-		hand_echo__debug $*
+		hand_echo__debug "$@"
 		;;
 	*)
 		hand_echo__error "$sub not support"
@@ -44,8 +44,8 @@ function hand_echo__debug()
 
 function hand_echo__do()
 {
-	echo -e "\033[33m[do] $*\033[0m"
-    $*
+	echo -e "\033[33m[do] $@\033[0m"
+    "$@"
     return $?
 }
 function hand_echo__error()

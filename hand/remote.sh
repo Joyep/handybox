@@ -1,85 +1,162 @@
 
+# props:
+#		remote.user
+#		remote.ip
+#		remote.path
+# subcmds:
+#		do
+#		ls
+#		cpto
+#		cpfrom
+#
 function hand_remote()
 {
+
+	remote_user=`hand --silence prop get remote.user`
+	if [ $? -ne 0 ]; then
+		echo $remote_user
+		# hand echo error "please define remote.user"
+		return 1
+	fi
+	remote_ip=`hand --silence prop get remote.ip`
+	if [ $? -ne 0 ]; then
+		echo $remote_ip
+		# hand echo error "please define remote.ip"
+		return 1
+	fi
+
+	remote_path=`hand --silence prop get remote.path`
+	if [ $? -ne 0 ]; then
+		echo $remote_path
+		# hand echo error "please define remote.path!"
+		return 1
+	fi
+
 	local sub=$1
     shift
 	case $sub in
 	"do")
-		hand_remote__do $*
+		remote_do "$@"
 		;;
+    "ls")
+		remote_do ls ${remote_path}
+        ;;
 	"cpto")
-		hand_remote__cpto $*
+		remote_cpto $*
 		;;
 	"cpfrom")
-		hand_remote__cpfrom $*
+		remote_cpfrom $*
 		;;
 	*)
-		hand_echo__error "$sub not support"
+		hand echo error "$sub not support"
 	esac
 	return $?
 }
 
 #cp file/dir to remote (into default path)
-function hand_remote__cpto()
+function remote_cpto()
 {
-	if [ "$hand_remote__user" == "" ] || [ "$hand_remote__ip" == "" ]; then
-		hand echo error "remote user or remote ip not defined!"
-		return 1
-	fi
-
-	hand echo do scp -r $1 $hand_remote__user@$hand_remote__ip:${hand_remote__path}
+	hand echo do scp -r $1 $remote_user@$remote_ip:${remote_path}
 }
 
 #cp file/dir from remote (from default path)
-function hand_remote__cpfrom()
+function remote_cpfrom()
 {
-	echo
+	hand echo do scp -r $remote_user@$remote_ip:${remote_path}/$1 ./
 
 }
+
+expand_cmd_hand()
+{
+	if [ "$1" == "hand" ] || [  "$1" ==  "hand__hub" ]; then
+		shift
+		echo "\$HOME/bin/hand" "$@"
+	else
+		echo "$@"
+	fi
+}
+
+
+# expand_cmd $cmd $params
+expand_cmd()
+{
+	# echo ">  $@"
+	# alias
+	# cmd=`alias $1`
+	# if [ $? -eq 0 ]; then
+	local c=$1
+	local cmd=`alias | grep "alias $c="`
+	if [ "$cmd" != "" ]; then
+		# alias got, do_command again
+		# is_alias=1
+		cmd=${cmd#*=}
+		cmd=${cmd//\'/}
+		if [ "$cmd" != "" ]; then
+			# hand__echo_debug $cmd $*
+			local first=`hand__get_first $cmd`
+			if [ "$first" == "$c" ]; then
+				# echo expanded cmd is the same
+				expand_cmd_hand "$@"
+			else
+				shift
+				expand_cmd $cmd "$@"
+			fi	
+		fi
+	else
+		expand_cmd_hand "$@"
+	fi
+}
+
 
 #do [-f] $cmd...
 # -f: if cmd contains file or dir, copy them to remote path
 #     and replace the file or dir a real remote path
-function hand_remote__do()
+function remote_do()
 {
-	if [ "$hand_remote__user" != "" ] && [ "$hand_remote__ip" != "" ]; then	
-		#support remote
-		local remote=$hand_remote__user@$hand_remote__ip
-		if [ "$1" == "-f" ]; then
-			#copy file or dir in cmd, and then execute remote do
-			shift
-            local path=${hand_remote__path%\/}
-			local params=""
-			local p=
-			for p in $* ; do
-				#echo $p
-				if [ -f $p ] || [ -d $p ]; then
-					#file or dir found
-					hand echo do scp -r $p $remote:$path
-					p=$path/${p##*\/}
-				fi
-				params="$params $p"
-			done
-			hand echo do ssh $remote $params
-		else
-			#normal remote do
-			hand echo do ssh $remote $*
-		fi
-		return $?
+
+	# echo remote_do $@
+
+	if [ "$remote_user" == "" ] || [ "$remote_ip" == "" ]; then
+		hand echo error "remote not defined!"
+		return 1
 	fi
-	
-	hand echo error "remote not defined!"
-	return 1
+
+	#support remote
+	local remote=$remote_user@$remote_ip
+
+	#options
+	if [ "$1" == "-f" ]; then
+		shift
+		# echo "should copy file"
+		local copy_file=1
+	fi
+
+	# transfrom alias
+	local real_cmd=`expand_cmd $1`
+	shift
+	# real_cmd=`hand__get_lastline $real_cmd`
+
+	# echo real_cmd=$real_cmd
+
+	if [ $copy_file ]; then
+		#copy file or dir in cmd, and then execute remote do
+        local path=${remote_path%\/}
+		local params=""
+		local p=
+		for p in $* ; do
+			#echo $p
+			if [ -f $p ] || [ -d $p ]; then
+				#file or dir found
+				hand echo do scp -r $p $remote:$path
+				p=$path/${p##*\/}
+			fi
+			params="$params $p"
+		done
+		hand echo do ssh $remote $real_cmd $params
+	else
+		#normal remote do
+		hand echo do ssh $remote $real_cmd "$@"
+	fi
 }
 
-function hand_remote__workspace_default()
-{
-	echo "hand_remote load default config"
-	#if [ "$hand_remote__ip" == "" ]; then
-	#	hand_remote__ip="192.168.1.123"
-	#	hand_remote__user="username"
-	#	hand_remote__path="/path/to/remote/workpath"
-	#fi
-}
-
-hand work --load hand_remote
+# hand_remote "$@"

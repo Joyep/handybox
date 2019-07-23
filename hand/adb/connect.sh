@@ -2,31 +2,44 @@
 #main function
 function hand_adb_connect()
 {
-	if [ $# -ne 0 ]; then
-		hand_adb_connect__last_ip_val=$1
-	elif [ "$hand_adb_connect__last_ip_val" == "" ]; then
-		hand echo error "please determin IP last value"
-		return 1
+	echo "start of adb connect ..."
+	# echo "params=$*"
+	local port=5555
+
+	# get ip value
+	local ip=$1
+	if [ "$ip" == "" ]; then
+		ip=`hand prop get adb.connect.ip`
+		if [ $? -ne 0 ]; then
+			echo $ip
+			hand echo error "please assign IP last value"
+			return 1
+		fi
+		ip=`hand__get_lastline $ip`
+	else
+		# get a new ip value, save it
+		hand prop set adb.connect.ip $ip
 	fi
 
+
+	# get ip prefix
+	prefix=`hand prop get adb.connect.prefix`
+	if [ $? -ne 0 ]; then
+		echo $prefix
+		hand echo warn "default ip prefix '192.168.199' used, you can also set prop adb.connect.prefix"
+		# use default ip prefix
+		prefix="192.168.199"
+	else
+		prefix=`hand__get_lastline $prefix`
+	fi
+
+	# ok, do disconnet and then connect
 	hand echo do adb disconnect
-	hand echo do adb connect ${hand_adb_connect__prefix}.${hand_adb_connect__last_ip_val}
-	adb devices
-}
+	hand echo do adb connect "${prefix}.${ip}:${port}"
 
-#default workspace
-function hand_adb_connect__workspace_clear()
-{
-	hand_adb_connect__prefix=
-}
-function hand_adb_connect__workspace_default()
-{
-	#echo "hand_adb_connect load default config"
-	if [ "$hand_adb_connect__prefix" == "" ]; then
-		hand_adb_connect__prefix="192.168.1"
-	fi
+	# at last, show adb device list
+	adb devices
 }
 	
 
-#load
-hand work --load hand_adb_connect
+# adb_connect "$@"
