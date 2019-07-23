@@ -57,11 +57,11 @@ hand__completions_generate()
 	local item
 	local list
 
-	if [ -d $hand__path/hand/$path ]; then
+	if [ -e $hand__path/hand/$path ]; then
 		list=" $(ls $hand__path/hand/$path | sed '/\.comp\.sh$/d')"
 	fi
 
-	if [ -d $hand__config_path/hand/$path ]; then
+	if [ -e $hand__config_path/hand/$path ]; then
 		list+=" $(ls $hand__config_path/hand/$path | sed '/\.comp\.sh$/d')"
 	fi
 

@@ -27,7 +27,7 @@ function hand()
 			if [ "$hand__debug" != "0" ]; then # if debug enabled
 				local save_debug_state=$hand__debug
 				#echo "set hand__debug=0"
-				hand__debug=0	
+				hand__debug=0
 			fi
 			continue;
 		fi
@@ -51,27 +51,27 @@ function hand()
 		#echo file=$file
 		#echo file2=$file2
 
-		if [ -d $file ]; then
+		if [ -e $file ]; then
 			#file2=$file
 			continue
 		fi
-		if [ -d $file2 ]; then
+		if [ -e $file2 ]; then
 			#file=$file2
 			continue
 		fi
 
 		break
 	done
-	if [ -f $file2.sh ]; then
+	if [ -e $file2.sh ]; then
 		file=$file2
 	fi
 	file=$file.sh
 	# echo "file="$file
 
 	local lost=
-	if [ ! -f $file ]; then
+	if [ ! -e $file ]; then
 		local file2=${file%/*}.sh
-		if [ ! -f $file2 ]; then
+		if [ ! -e $file2 ]; then
 			echo "$file not found!"
 			echo "$file2 not found!"
 			return 1
