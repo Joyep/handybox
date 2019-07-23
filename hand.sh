@@ -234,8 +234,11 @@ hand__get_first()
 # computer_name=`hand computer hostname`
 computer_name=`hand__get_computer_name`
 hand__config_path=$hand__path/config/$computer_name
+if [ ! -d $hand__path/config  ]; then
+    mkdir $hand__path/config
+fi
 if [ ! -d $hand__config_path ]; then
-	cp -r $hand__path/config/example $hand__config_path
+	cp -r $hand__path/example $hand__config_path
 fi
 
 # completions prebuild file
