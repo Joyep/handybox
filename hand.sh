@@ -71,6 +71,10 @@ function hand()
 	local lost=
 	if [ ! -e $file ]; then
 		local file2=${file%/*}.sh
+		if [ "${file2##*/}" == "hand.sh" ]; then
+			echo "$file not found!"
+			return 1
+		fi
 		if [ ! -e $file2 ]; then
 			echo "$file not found!"
 			echo "$file2 not found!"
