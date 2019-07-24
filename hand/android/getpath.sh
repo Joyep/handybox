@@ -13,7 +13,7 @@ function hand_android_getpath()
     shift
 	case $sub in
 	"kernel")
-		kernel=`hand prop get $PROP_KERNEL`
+		kernel=`hand --silence prop get $PROP_KERNEL`
 		if [ $? -ne 0 ]; then
 			echo $kernel
 			# hand echo error "prop $PROP_KERNEL not defined"
@@ -22,13 +22,13 @@ function hand_android_getpath()
 		echo $kernel
 		;;
 	"defconfig")
-		kernel=`hand prop get $PROP_KERNEL`
+		kernel=`hand --silence prop get $PROP_KERNEL`
 		if [ $? -ne 0 ]; then
 			echo $kernel
 			# hand echo error "prop $PROP_KERNEL not defined"
 			return 1
 		fi
-		arch=`hand prop get $PROP_ARCH`
+		arch=`hand --silence prop get $PROP_ARCH`
 		if [ $? -ne 0 ]; then
 			echo $arch
 			# hand echo error "prop $PROP_ARCH not defined"
@@ -37,22 +37,23 @@ function hand_android_getpath()
 		echo "$kernel"/arch/"$arch"/configs
 		;;
 	"dts")
-		kernel=`hand prop get $PROP_KERNEL`
+		kernel=`hand --silence prop get $PROP_KERNEL`
 		if [ $? -ne 0 ]; then
 			echo $kernel
 			# hand echo error "prop $PROP_KERNEL not defined"
 			return 1
 		fi
-		arch=`hand prop get $PROP_ARCH`
+		arch=`hand --silence prop get $PROP_ARCH`
 		if [ $? -ne 0 ]; then
 			echo $arch
 			# hand echo error "prop $PROP_ARCH not defined"
 			return 1
 		fi
-		dtsdir=`hand prop get $PROP_DTSDIR`
+		dtsdir=`hand --silence prop get $PROP_DTSDIR`
 		if [ $? -ne 0 ]; then
 			echo $dtsdir
-			dtsdir=""
+			# dtsdir=""
+			return 1
 		fi
 		echo "$kernel"/arch/"$arch"/boot/dts/"$dtsdir"
 		;;
