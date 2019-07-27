@@ -104,10 +104,8 @@ function mydepot_clone()
 {
 	local user
 	
-	local ip
-	ip=`hand prop get git.mydepot.ip`
 	local path
-	path=`hand prop get git.mydepot.path`
+	path=`hand --silence prop get git.mydepot.path`
     if [ $? -ne 0 ]; then
     	echo $path
         # hand echo warn "git.mydepot.path not found! please set by:"
@@ -115,9 +113,15 @@ function mydepot_clone()
         return 1
     fi
 
+    local ip
+	ip=`hand --silence prop get git.mydepot.ip`
+	if [ $? -ne 0 ]; then
+		ip=""
+	fi
+
 	local gitpath=""
 	local sedstr="s%$path/%%g"
-	user=`hand prop get git.mydepot.user`
+	user=`hand --silence prop get git.mydepot.user`
     if [ $? -ne 0 ]; then
 		#clone from local
 		gitpath=$path/$1
