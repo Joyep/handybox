@@ -16,6 +16,9 @@ function hand_adb_push()
 	"chmod")
 		push_and_chmod $* 
 		;;
+	"etc")
+		push_and_chmod 644 system/etc $*
+		;;
 	"lib")
 		push_and_chmod 644 system/lib $*
 		;;
