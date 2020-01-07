@@ -1,6 +1,6 @@
 
 #hand main script
-hand__version="2.0.3"
+hand__version="2.1.0"
 hand__timestamp=`date +"%s"`
 hand__debug=0
 

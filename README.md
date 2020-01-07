@@ -2,6 +2,9 @@
 # Handy Box Tool Scripts
 Handybox is a tool which include many shell scripts integrated for linux/macOS environment.
 
+## Version
+* 2.1.0
+    * compatible with zsh
 
 ## Features
 1. provide only one main command `hand` for many shell scripts.
