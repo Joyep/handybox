@@ -25,7 +25,7 @@ function hand_work()
 	fi
 
 	# work --on [name], or work [name]
-	if [ "$1" == "--on" ] ; then
+	if [ "$1" = "--on" ] ; then
 		shift
 		hand_work__on "$1"
 	else
@@ -85,7 +85,7 @@ function hand_work__show()
 		local name=${i##*\/}
 		name=${name%.*}
 
-		if [ "$work_name" == "$name" ]; then
+		if [ "$work_name" = "$name" ]; then
 			echo "  *  "$name
 		else
 			echo "     "$name

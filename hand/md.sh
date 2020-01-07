@@ -37,7 +37,7 @@ function hand_md__clean_images()
 		img_name=${img##*/}
 		if [[ ! $used_images =~ $img_name ]]; then
 			hand echo red " [ Not Used ] "$img
-			if [ "$1" == "-y" ]; then
+			if [ "$1" = "-y" ]; then
 				hand echo green "Deleted!"
 				rm $img
 			fi
@@ -131,7 +131,7 @@ function hand_md__handle_mdfile()
 			fi
 
 			# modify refered image path
-			# if [ $(uname) == "Darwin" ]; then
+			# if [ $(uname) = "Darwin" ]; then
 			# 	sed -i "" "s%]($img_path/$img_name)%](__images/${img_name})%" $md
 			# else
 				sed -i "s%]($img_path/$img_name)%](__images/${img_name})%" $md
@@ -267,7 +267,7 @@ function hand_md__check_images_old()
 					break;
 				fi
 				md_dir2=${md_dir%/*}
-				if [ "$md_dir2" == "$md_dir" ]; then
+				if [ "$md_dir2" = "$md_dir" ]; then
 					img_dir=""
 					break;
 				fi
@@ -276,7 +276,7 @@ function hand_md__check_images_old()
 			done
 
 
-			if [ "$img_dir" == "" ]; then
+			if [ "$img_dir" = "" ]; then
 				hand echo error "img file not found, skip!"
 				((img_not_found_cnt=img_not_found_cnt+1))
 				continue
@@ -287,11 +287,11 @@ function hand_md__check_images_old()
 			new_img_path="$img_dir"/"$img_name"
 			# hand echo green new_img_path=$new_img_path
 
-			if [ "$1" == "--fix" ]; then
+			if [ "$1" = "--fix" ]; then
 				# do replace
 				hand echo green "do replace for $md"
 
-				# if [ $(uname) == "Darwin" ]; then
+				# if [ $(uname) = "Darwin" ]; then
 				# 	sed -i "" "s%]($img_path)%]($new_img_path)%" $md
 				# else
 					sed -i "s%]($img_path)%]($new_img_path)%" $md
@@ -313,7 +313,7 @@ function hand_md__check_images_old()
 
 	echo ------- not used img files ---------
 	echo $imgfiles
-	if [ "$1" == "--clean" ]; then
+	if [ "$1" = "--clean" ]; then
 		for img in $imgfiles ; do
 			rm __images/$img
 		done
@@ -383,7 +383,7 @@ function hand_md__fix_image_path()
 					break;
 				fi
 				md_dir2=${md_dir%/*}
-				if [ "$md_dir2" == "$md_dir" ]; then
+				if [ "$md_dir2" = "$md_dir" ]; then
 					img_dir=""
 					break;
 				fi
@@ -392,7 +392,7 @@ function hand_md__fix_image_path()
 			done
 
 
-			if [ "$img_dir" == "" ]; then
+			if [ "$img_dir" = "" ]; then
 				hand echo error "img file not found, skip!"
 				((error_cnt=error_cnt+1))
 				continue
@@ -403,7 +403,7 @@ function hand_md__fix_image_path()
 			new_img_path="$img_dir"/"$img_name"
 			# hand echo green new_img_path=$new_img_path
 
-			if [ "$1" == "-y" ]; then
+			if [ "$1" = "-y" ]; then
 				# do replace
 				hand echo green "do replace for $md"
 				hand echo do sed -i "s%]($img_path)%]($new_img_path)%" $md

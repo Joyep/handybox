@@ -44,9 +44,9 @@ function hand_adb_push()
         push_and_chmod null system/priv-app $*
         ;;
     "path")
-        local path=$1
+        local path1=$1
         shift
-        push_and_chmod null $path $*
+        push_and_chmod null $path1 $*
         ;;
     "i2c_test")
         hand adb push bin $hand__path/libs/libi2c/prebuild/arm/i2c_test
@@ -58,48 +58,48 @@ function hand_adb_push()
 }
 
 #push file to device path with chmod
-#push $file $path $mod
+#push $file $path1 $mod
 function adb_push_file()
 {
     local f=$1
-    local path=$2
+    local path1=$2
     local mod=$3
 
-    hand echo yellow "push file $f to $path ..."
-    #echow "adb push $f $path"
-    hand echo do adb push $f $path
-    [ $? -ne 0 ] && hand echo error "$file ---x $path failed" && return 1
+    hand echo yellow "push file $f to $path1 ..."
+    #echow "adb push $f $path1"
+    hand echo do adb push $f $path1
+    [ $? -ne 0 ] && hand echo error "$file ---x $path1 failed" && return 1
     
-    hand echo green "$file ---> $path ok"
+    hand echo green "$file ---> $path1 ok"
 
     if [ "$mod" != "" ]; then
         #hand echo info "chmod $mod of $file..."
-        hand echo do adb shell "chmod $mod $path/${f##*/}"
-        hand echo do adb shell "ls $path/${f##*/} -al"
+        hand echo do adb shell "chmod $mod $path1/${f##*/}"
+        hand echo do adb shell "ls $path1/${f##*/} -al"
     fi
 
     return 0
 }
 
-#push dir to device path with chmod
-#push $dir $path $mod
+#push dir to device path1 with chmod
+#push $dir $path1 $mod
 function adb_push_dir()
 {
     local d=${1%/}
-    local path=${2%/}
+    local path1=${2%/}
     local mod=$3
 
     local dname=${d##*/}
 
-    if [ "$dname" == "" ]; then
+    if [ "$dname" = "" ]; then
         echor "dname is valid"
         return 1
     fi
     
-    hand echo yellow "push dir $d to $path ..."
+    hand echo yellow "push dir $d to $path1 ..."
 
-    #echow "adb shell mkdir $path/$d"
-    hand echo do adb shell mkdir $path/${dname}
+    #echow "adb shell mkdir $path1/$d"
+    hand echo do adb shell mkdir $path1/${dname}
     [ $? -ne 0 ] && hand echo error "mkdir failed" && return 1
 
     local file=
@@ -108,12 +108,12 @@ function adb_push_dir()
         #echo ">>>" $file
         local filepath=$d/$file
         if [ -d $filepath ]; then
-            adb_push_dir $filepath $path/$dname $mod
+            adb_push_dir $filepath $path1/$dname $mod
         elif [ -L $filepath ]; then
             hand echo warn "$file is a symbolic link, ignore!"
             continue
         elif [ -f $filepath ]; then
-            adb_push_file $filepath $path/$dname $mod
+            adb_push_file $filepath $path1/$dname $mod
         else
             hand echo error "$filepath is not a file or directory!"
         fi
@@ -133,11 +133,11 @@ function push_and_chmod()
     if [ "$1" != "null" ]; then
         mod=$1
     fi
-    local path=$2
+    local path1=$2
     shift
     shift
 
-    echo path=$path
+    echo path1=$path1
     echo mod=$mod
     echo files=$*
 
@@ -161,14 +161,14 @@ function push_and_chmod()
 
         if [ -d $file ] ; then
             # if file is a dir, then push dir
-            adb_push_dir $file $path $mod
+            adb_push_dir $file $path1 $mod
         elif [ -L $file ]; then
             # if file is a link, ignore!
             hand echo warn "$file is a symbolic link, ignore"
             continue
         elif [ -f $file ] ; then
             # if file is a file, then push file
-            adb_push_file $file $path $mod
+            adb_push_file $file $path1 $mod
         else
             hand echo error "$file is not a file or directory!"
         fi

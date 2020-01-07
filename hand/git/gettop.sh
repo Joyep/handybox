@@ -1,24 +1,28 @@
+
 function hand_git_gettop()
 {
-    local path=`pwd`
+    local path1=`pwd`
     while true;
     do
-        if [ -d $path/.git ]; then
-            echo "$path"
+        if [ -d $path1/.git ]; then
+            echo "$path1"
             return 0
         fi
 
-        if [ -d $path/.repo ]; then
-            echo "$path"
+        if [ -d $path1/.repo ]; then
+            echo "$path1"
             return 0
         fi
 
-        if [ "$path" = "/" ] ; then
+        if [ "$path1" = "/" ] ; then
             echo ""
             return 1
         fi
 
-        path=`dirname $path`
+        path1=`dirname $path1`
+        if [ $? -ne 0 ]; then
+            return 1
+        fi
     done
 }
 

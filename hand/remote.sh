@@ -68,7 +68,7 @@ function remote_cpfrom()
 
 expand_cmd_hand()
 {
-	if [ "$1" == "hand" ] || [  "$1" ==  "hand__hub" ]; then
+	if [ "$1" = "hand" ] || [  "$1" =  "hand__hub" ]; then
 		shift
 		echo "\$HOME/bin/hand" "$@"
 	else
@@ -94,7 +94,7 @@ expand_cmd()
 		if [ "$cmd" != "" ]; then
 			# hand__echo_debug $cmd $*
 			local first=`hand__get_first $cmd`
-			if [ "$first" == "$c" ]; then
+			if [ "$first" = "$c" ]; then
 				# echo expanded cmd is the same
 				expand_cmd_hand "$@"
 			else
@@ -116,7 +116,7 @@ function remote_do()
 
 	# echo remote_do $@
 
-	if [ "$remote_user" == "" ] || [ "$remote_ip" == "" ]; then
+	if [ "$remote_user" = "" ] || [ "$remote_ip" = "" ]; then
 		hand echo error "remote not defined!"
 		return 1
 	fi
@@ -125,7 +125,7 @@ function remote_do()
 	local remote=$remote_user@$remote_ip
 
 	#options
-	if [ "$1" == "-f" ]; then
+	if [ "$1" = "-f" ]; then
 		shift
 		# echo "should copy file"
 		local copy_file=1
@@ -140,15 +140,15 @@ function remote_do()
 
 	if [ $copy_file ]; then
 		#copy file or dir in cmd, and then execute remote do
-        local path=${remote_path%\/}
+        local path1=${remote_path%\/}
 		local params=""
 		local p=
 		for p in $* ; do
 			#echo $p
 			if [ -f $p ] || [ -d $p ]; then
 				#file or dir found
-				hand echo do scp -r $p $remote:$path
-				p=$path/${p##*\/}
+				hand echo do scp -r $p $remote:$path1
+				p=$path1/${p##*\/}
 			fi
 			params="$params $p"
 		done

@@ -2,7 +2,9 @@
 
 
 
+# alias h='hand__hub'
 alias h='hand'
+alias hs='h --show'
 
 #alias for echo
 alias echor='hand echo red'
@@ -16,7 +18,13 @@ alias echoe='hand echo error'
 #alias cdmyconfig="hand cd config"
 
 alias cdandroid="hand cd android"
+alias cdevice="hand cd android device"
+alias cout="hand cd android out"
 alias cdkernel="hand cd android kernel"
+alias cduboot="hand cd android uboot"
+alias cddefconfig="hand cd android defconfig"
+alias cddts="hand cd android dts"
+alias cddts64="hand cd android dts64"
 alias cdgit="hand cd git"
 alias cdrepo="hand cd repo"
 
@@ -34,6 +42,7 @@ alias pushlib64='hand adb push lib64'
 alias pushbin='hand adb push bin'
 alias pushpath='hand adb push path'
 alias pushapp='hand adb push app'
+alias pushprivapp='hand adb push privapp'
 
 #alias for dmsg
 alias dmsg="adb shell dmesg"
@@ -50,6 +59,8 @@ alias rcpto="hand remote cpto"
 #alias for git
 alias gitclone_mydepot="hand git mydepot clone"
 alias gitinit_mydepot="hand git mydepot init"
+alias gerrit_push="hand git pushref"
 
-
+#android make
+alias sourcelunch="source build/envsetup.sh && lunch"
 

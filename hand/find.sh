@@ -13,17 +13,17 @@ function hand_find()
 	esac
 }
 
-# find $path -name "$name"
+# find $path1 -name "$name"
 function hand_find_name()
 {
 
-    local path=$2
+    local path1=$2
 
-    if [ ! "$path" ]; then
-        path="."
+    if [ ! "$path1" ]; then
+        path1="."
     fi
 
-    find $path -name "$1"
+    find $path1 -name "$1"
 }
 
 # hand_find "$@"

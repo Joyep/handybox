@@ -30,7 +30,7 @@ hand_android_make__kernel()
     local img=$3;
     local force=$4;
 
-    if [ "$force" == "-f" ]; then
+    if [ "$force" = "-f" ]; then
         hand echo do make mrproper;
     fi;
     hand echo do make ARCH=$arch $defconfig;
@@ -53,7 +53,7 @@ hand_android_make__uboot()
     local defconfig=$2;
     local force=$3;
    
-    if [ "$force" == "-f" ]; then
+    if [ "$force" = "-f" ]; then
         hand echo do make mrproper;
     fi;
     hand echo do make $defconfig;

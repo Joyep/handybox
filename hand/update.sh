@@ -2,7 +2,7 @@
 
 hand_update()
 {
-	if [ "$1" == "completions" ]; then
+	if [ "$1" = "completions" ]; then
 		#hand echo do "source $hand__path/hand-completions.bash"
 		rm $hand__completion_prebuild
 		hand echo do source $hand__path/hand-completions.bash

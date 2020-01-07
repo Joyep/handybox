@@ -28,26 +28,26 @@ function mydepot_init()
 	fi
 
 	local user
-	user=`hand prop get git.mydepot.user`
+	user=`hand --silece prop get git.mydepot.user`
 	if [ $? -ne 0 ]; then
 		user=
 	fi
 	local ip
-	ip=`hand prop get git.mydepot.ip`
+	ip=`hand --silece prop get git.mydepot.ip`
 	if [ $? -ne 0 ]; then
 		ip=
 	fi
-	local path
-	path=`hand prop get git.mydepot.path`
+	local path1
+	path1=`hand --silence prop get git.mydepot.path`
 	if [ $? -ne 0 ]; then
-		echo $path
+		echo $path1
 		hand echo error mydepot path not found!
 		return 1
 	fi
 
 	#check path
     local dirpath=$1
-    local gitpath=$path/$2.git
+    local gitpath=$path1/$2.git
 	if [ ! -d $dirpath ] ; then
 		hand echo error "dir path ($dirpath) not found!"
 		return 1
@@ -104,10 +104,10 @@ function mydepot_clone()
 {
 	local user
 	
-	local path
-	path=`hand --silence prop get git.mydepot.path`
+	local path1
+	path1=`hand --silence prop get git.mydepot.path`
     if [ $? -ne 0 ]; then
-    	echo $path
+    	echo $path1
         # hand echo warn "git.mydepot.path not found! please set by:"
         # hand echo warn "hand prop set git.mydepot.path <your path>"
         return 1
@@ -120,23 +120,23 @@ function mydepot_clone()
 	fi
 
 	local gitpath=""
-	local sedstr="s%$path/%%g"
+	local sedstr="s%$path1/%%g"
 	user=`hand --silence prop get git.mydepot.user`
     if [ $? -ne 0 ]; then
 		#clone from local
-		gitpath=$path/$1
+		gitpath=$path1/$1
 		hand echo green "$gitpath"
-		if [ ""  == "$1" ]; then
-			echo $path
-			find $path -name "*.git" | sed 's%'$path'/%%g'
+		if [ ""  = "$1" ]; then
+			echo $path1
+			find $path1 -name "*.git" | sed 's%'$path1'/%%g'
 			return 0
 		fi
     else
 		#clone from remote
-		gitpath=$user@$ip:$path/$1
+		gitpath=$user@$ip:$path1/$1
 		hand echo green "$gitpath"
-		if [ ""  == "$1" ]; then
-			hand echo do ssh $user@$ip "find $path -name '*.git'" | sed 's%'$path'/%%g'
+		if [ ""  = "$1" ]; then
+			hand echo do ssh $user@$ip "find $path1 -name '*.git'" | sed 's%'$path1'/%%g'
 			return 0
 		fi
     fi

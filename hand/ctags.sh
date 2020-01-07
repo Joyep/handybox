@@ -55,7 +55,7 @@ function hand_ctags()
 			work=$1
 			shift
 
-			if [ "$1" == "-f" ]; then
+			if [ "$1" = "-f" ]; then
 				force="--force"
 			fi
 			shift
@@ -104,9 +104,9 @@ function hand_ctags()
 			return 1
 		fi
 
-		local path
-		for path in $* ; do
-			echo $path >> $workfile
+		local path1
+		for path1 in $* ; do
+			echo $path1 >> $workfile
 		done
 		
 
@@ -137,14 +137,14 @@ function hand_ctags()
 			return 1
 		fi
 
-		local path
-		for path in $* ; do
-			echo "rmpath $path"
+		local path1
+		for path1 in $* ; do
+			echo "rmpath $path1"
 
-			# if [ $(uname) == "Darwin" ]; then
+			# if [ $(uname) = "Darwin" ]; then
 			# 	sed -i "" '/'$path'/d' $workfile
 			# else
-				sed -i '/'$path'/d' $workfile
+				sed -i '/'$path1'/d' $workfile
 			# fi
 		done
 
@@ -190,7 +190,7 @@ function hand_ctags__ls()
 	local work
 	for work in $workspaces; do
 		work=${work##.ctags/workspace_}
-		if [ "$work" == "$hand_ctags__used" ]; then
+		if [ "$work" = "$hand_ctags__used" ]; then
 			echo " * "$work
 		else
 			echo "   "$work
@@ -208,7 +208,7 @@ function hand_ctags__init()
     fi
 
     #handle for cpp language
-    if [ $1 == "--cpp" ]; then
+    if [ $1 = "--cpp" ]; then
     	shift
         iscpp=1
     else
@@ -252,12 +252,12 @@ function hand_ctags__apply()
     	return 1
     fi
 
-	local path=${workspace_file%/*}
+	local path1=${workspace_file%/*}
     local file=${workspace_file##*/}
     local work=${file##workspace_}
 
-    local workspace_file="$path/$file"
-	local tags_file="$path/tags_$work"
+    local workspace_file="$path1/$file"
+	local tags_file="$path1/tags_$work"
 
 	# update used workpace name
 	hand_ctags__used=${file##workspace_}
@@ -271,11 +271,11 @@ function hand_ctags__apply()
     iscpp=0
     force=1
 	if [ $# -ge 2 ]; then
-	    if [ $2 == "--force" ]; then
+	    if [ $2 = "--force" ]; then
 	        force=1
 	    fi
         if [ $# -ge 3 ]; then
-	        if [ $3 == "--cpp" ]; then
+	        if [ $3 = "--cpp" ]; then
                 iscpp=1
             fi
         fi

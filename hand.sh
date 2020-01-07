@@ -1,7 +1,6 @@
-#!/bin/bash
 
 #hand main script
-hand__version="2.0.2"
+hand__version="2.0.3"
 hand__timestamp=`date +"%s"`
 hand__debug=0
 
@@ -14,15 +13,14 @@ function hand()
 		return
 	fi
 
-
 	#special options
 	while [ true ];
 	do
-		if [ "$1" == "--show" ]; then
+		if [ "$1" = "--show" ]; then
 			shift
-			local show_func_define=1
+			 show_func_define=1
 			continue;
-		elif [ "$1" == "--silence" ]; then
+		elif [ "$1" = "--silence" ]; then
 			shift
 			if [ "$hand__debug" != "0" ]; then # if debug enabled
 				local save_debug_state=$hand__debug
@@ -71,7 +69,7 @@ function hand()
 	local lost=
 	if [ ! -e $file ]; then
 		local file2=${file%/*}.sh
-		if [ "${file2##*/}" == "hand.sh" ]; then
+		if [ "${file2##*/}" = "hand.sh" ]; then
 			echo "$file not found!"
 			return 1
 		fi
@@ -96,7 +94,7 @@ function hand()
 	# record func timestamp
 	local func_date=`eval echo '$'${func}__timestamp`
 
-	if [ "$func_date" == "" ]; then
+	if [ "$func_date" = "" ]; then
 		# func not exist, first load file
 		hand__load_file $file $func
 		# hand__echo_debug "source $file"
@@ -104,13 +102,14 @@ function hand()
 		# source $file
 		# eval ${func}__timestamp=`date +%s`
 	else
-		local file_date=`hand__get_file_timestamp $file`
+		local file_date
+		file_date=`hand__get_file_timestamp $file`
 
 		# echo func_date=$func_date
 		# echo file_date=$file_date
 		# echo hand_time=$hand__timestamp
 
-		if [ $file_date -gt $func_date ] ; then
+		if [[ $file_date -gt $func_date ]]; then
 			# func has modified, reload file
 			hand__load_file  $file $func 'u'
 			# hand__echo_debug "source $file"
@@ -169,7 +168,7 @@ hand__load_file()
 
 function hand__get_file_timestamp()
 {
-	if [ `uname` == "Darwin" ]; then
+	if [ "`uname`" = "Darwin" ]; then
 		stat -r $1 | awk '{print $(NF-6)}'
 	else
 		ls -l --time-style=+%s $1 |  awk '{print $(NF-1)}'
@@ -214,19 +213,19 @@ function hand__check_function_exist()
 
 function hand__echo_debug()
 {
-	if [ "$hand__debug" == "1" ]; then
+	if [ "$hand__debug" = "1" ]; then
 		echo $*
 	fi
 }
 
 hand__get_lastline()
 {
-	echo "$@" | awk -F " " '{print $NF}'
+	echo -E "$@" | awk 'END {print}' | awk -F " " '{print $NF}'
 }
 
 hand__get_first()
 {
-	echo "$@" | awk -F " " '{print $1}'
+	echo -E "$@" | awk 'START {print}' | awk -F " " '{print $1}'
 }
 
 

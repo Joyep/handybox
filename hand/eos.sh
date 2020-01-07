@@ -98,7 +98,7 @@ function hand_eos__node()
 	if [ "$1" != "" ]; then
 		hand_eos__path=$1
 	fi
-	if [ "$hand_eos__path" == "" ]; then
+	if [ "$hand_eos__path" = "" ]; then
 		hand_eos__path=`pwd`
 		# hand echo error "$hand_eos__path not found!"
 	fi

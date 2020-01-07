@@ -2,24 +2,24 @@
 
 function hand_cd_repo()
 {
-	path=$(hand repo gettop)
+	path1=$(hand repo gettop)
 	if [ $? -ne 0 ]; then
-		echo $path
+		echo $path1
 		hand echo error "hand repo gettop error!"
 		return 1
 	fi
 
-	# echo $path
+	# echo $path1
 
-	# path=`echo $path | awk -F " " '{print $NF}'`
-	path=`hand__get_lastline $path`
+	# path1=`echo $path1 | awk -F " " '{print $NF}'`
+	path1=`hand__get_lastline $path1`
 
-	if [ ! -d "$path" ]; then
+	if [ ! -d "$path1" ]; then
 		hand echo red "repo dir not found!"
 		return 1
 	fi
 
-	cd $path
+	cd $path1
 }
 
 

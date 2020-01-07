@@ -3,19 +3,30 @@
 
 function hand_rn()
 {
+
+	local platform
+	platform=`hand --silence prop get rn.platform`
+	if [ $? -ne 0 ]; then
+		echo $platform
+		return 1
+	fi
+
 	local sub=$1
 	shift
 	case $sub in
 	"build")
-		hand_rn__release $*
+		hand_rn__release $platform $*
 		;;
 
 	"run")
-		hand_rn__run $*
+		hand_rn__run $platform $*
 		;;
 
 	"log")
-		hand_rn__log $*
+		hand_rn__log $platform $*
+		;;
+	"clean")
+		hand_rn__clean $platform $*
 		;;
 	*)
 		hand echo error "$sub unsupported"
@@ -24,45 +35,51 @@ function hand_rn()
 }
 
 
-hand_rn__gradlew_clean()
+hand_rn__clean()
 {
-	cd android
-	gradlew clean
-	cd ..
+	local plat=$1
+	shift
+	if [ "$plat" = "android" ]; then
+		cd android
+		gradlew clean
+		cd ..
+	else
+		hand echo error $plat not support!
+	fi
+	
 }
 
 function hand_rn__release()
 {
-	if [ "$hand_rn__platform" == "android" ]; then
+	local plat=$1
+	shift
+	if [ "$plat" = "android" ]; then
 		cd android
 		# [[  $? -ne 0 ]] && hand echo error "cd android failed!" && return 1
 		./gradlew $1
 	else
-		hand echo error "$hand_rn__platform not support!"
+		hand echo error "$plat not support!"
 	fi
 }
 
 function hand_rn__run()
 {
-	react-native run-$hand_rn__platform $*
+	local plat=$1
+	shift
+	react-native run-$plat $*
 }
 
 function hand_rn__log()
 {
-	if [ "$hand_rn__platform" == "android" ]; then
-		react-native log-$hand_rn__platform $*
-	elif [ "$hand_rn__platform" == "ios" ]; then
+	local plat=$1
+	shift
+	if [ $# -eq 0 ]; then
+		hand echo error "log for what project? please give your project name!"
+		return 1
+	fi
+	if [ "$plat" = "android" ]; then
+		react-native log-$plat $*
+	elif [ "$plat" = "ios" ]; then
 		react-native-log-ios $*
 	fi
 }
-
-function hand_rn__workspace_default()
-{
-	if [ "$hand_rn__platform" == "" ]; then
-		hand_rn__platform="android"
-	fi
-}
-
-# hand work --load hand_rn
-
-# hand_rn "$@"

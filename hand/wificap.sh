@@ -180,7 +180,7 @@ function wificap_merge()
 
 
 
-# if [ "$1" == "-h" ]; then
+# if [ "$1" = "-h" ]; then
 # 	echo "wificap v1.0"
 # 	echo "Usage: wificat \$bssid \$channel"
 # 	return 0

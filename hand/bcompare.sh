@@ -15,7 +15,7 @@ function hand_bcompare()
 
 
 function hand_bcomapre__register() {
-	if [ $(uname) == "Darwin" ]; then
+	if [ $(uname) = "Darwin" ]; then
 		registry_file="${HOME}/Library/Application Support/Beyond Compare/registry.dat"
 	else
 		registry_file="${HOME}/.config/bcompare/registry.dat"

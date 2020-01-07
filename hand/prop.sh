@@ -22,16 +22,16 @@ hand_prop()
 	local key=$2
 
 	## start to get
-	if [ "get" == "$sub" ]; then
+	if [ "get" = "$sub" ]; then
 
-		if [ "$key" == "" ]; then
+		if [ "$key" = "" ]; then
 			# show all props
 			# hand echo do cat $props_file
 			cat $props_file
 		else
 			# cat $props_file | grep $1 | sed 's/.*=//g'
 			local value=`grep $key $props_file | sed 's/.*=//g'`
-			if [ "$value" == "" ]; then
+			if [ "$value" = "" ]; then
 				hand echo warn "prop $key not defined, hand prop set $key [value]"
 				return 1
 			fi
@@ -40,16 +40,16 @@ hand_prop()
 		return 0
 
 	# start to set
-	elif [ "set" == "$sub" ]; then
+	elif [ "set" = "$sub" ]; then
 
-		if [ "$key" == "" ]; then
+		if [ "$key" = "" ]; then
 			# echo "key is null"
 			return 1
 		fi
 
 		local value=$3
 
-		# if [ "$value" == "" ]; then
+		# if [ "$value" = "" ]; then
 		# 	# echo "value is null"
 		# 	return 1
 		# fi
@@ -63,7 +63,7 @@ hand_prop()
 		local line=`sed -n -e "/${key}=/=" $props_file`
 
 		# modify props file
-		if [ "$line" == "" ]; then
+		if [ "$line" = "" ]; then
 			# echo "new prop 2"
 			echo "${key}=${value}" >> $props_file
 		else

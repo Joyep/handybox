@@ -2,25 +2,24 @@
 
 function hand_cd_git()
 {
-	local path
-	path=$(hand git gettop)
+	local path1
+	path1=$(hand git gettop)
 	if [ $? -ne 0 ]; then
-		echo $path
+		echo $path1
 		hand echo error "hand git gettop error!"
 		return 1
 	fi
 
-	# echo $path
-
-	# path=`echo $path | awk -F " " '{print $NF}'`
-	path=`hand__get_lastline $path`
-
-	if [ ! -d "$path" ]; then
+	# path1=`echo $path1 | awk -F " " '{print $NF}'`
+	# echo path1_before=$path1
+	path1=`hand__get_lastline $path1`
+	# echo path1_after=$path1
+	if [[ ! -d "$path1" ]]; then
 		hand echo red "git dir not found!"
 		return 1
 	fi
 
-	cd $path
+	cd $path1
 }
 
 # cd_git "$@"

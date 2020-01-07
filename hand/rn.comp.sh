@@ -1,1 +1,1 @@
-hand_rn__completion_list="run release build"
+hand_rn__completion_list="run release build log"

@@ -27,7 +27,7 @@ function hand_note()
         if [ ! $1 ]; then
             new_dir=`pwd`
         else
-            if [ "${1:0:1}" == "/" ]; then
+            if [ "${1:0:1}" = "/" ]; then
                 # is absolute path
                 new_dir=$1
             else 
@@ -176,14 +176,14 @@ function hand_note__search_path()
     [ $# -ne 2 ] && echo_error "params error!" && return
 
     local keywords=$1
-    local path=$2
+    local path1=$2
     # local it_dir=$note_dir/IT/
-    # local abs_path=${path#$it_dir}
+    # local abs_path=${path1#$it_dir}
 
     # find all note files
-    local files=`find $path -name "*.txt"`
+    local files=`find $path1 -name "*.txt"`
 
-    # if $path string include some keywords, just search other keywords.
+    # if $path1 string include some keywords, just search other keywords.
     #local temp_keywords=""
     #for key in $keywords
     #do
@@ -199,7 +199,7 @@ function hand_note__search_path()
     #fi
 
     # now, search in file include all keywords
-    # echo_warn "Search [$keywords] in $path >>>"
+    # echo_warn "Search [$keywords] in $path1 >>>"
     for file in $files
     do
         # for one file
