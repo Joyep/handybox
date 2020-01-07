@@ -1,4 +1,3 @@
-
 function hand_git_gettop()
 {
     local path1=`pwd`
@@ -25,5 +24,3 @@ function hand_git_gettop()
         fi
     done
 }
-
-# git_gettop "$@"

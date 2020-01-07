@@ -19,5 +19,3 @@ function hand_repo_gettop()
         fi
     done
 }
-
-# hand_repo_gettop "$@"

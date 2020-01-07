@@ -11,9 +11,7 @@ function hand_cd_git()
 	fi
 
 	# path1=`echo $path1 | awk -F " " '{print $NF}'`
-	# echo path1_before=$path1
 	path1=`hand__get_lastline $path1`
-	# echo path1_after=$path1
 	if [[ ! -d "$path1" ]]; then
 		hand echo red "git dir not found!"
 		return 1
@@ -21,5 +19,3 @@ function hand_cd_git()
 
 	cd $path1
 }
-
-# cd_git "$@"

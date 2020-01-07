@@ -92,7 +92,7 @@ function hand()
 	# fi
 
 	# record func timestamp
-	local func_date=`eval echo '$'${func}__timestamp`
+	local func_date=`eval echo '$'hand__timestamp_${func}`
 
 	if [ "$func_date" = "" ]; then
 		# func not exist, first load file
@@ -105,6 +105,7 @@ function hand()
 		local file_date
 		file_date=`hand__get_file_timestamp $file`
 
+		# echo $file
 		# echo func_date=$func_date
 		# echo file_date=$file_date
 		# echo hand_time=$hand__timestamp
@@ -163,7 +164,7 @@ hand__load_file()
 	# hand__echo_debug "source $file -- from "
 	hand__echo_debug "[$symbol] $func  <-- $file"
 	source $file
-	eval ${func}__timestamp=`date +%s`
+	eval hand__timestamp_${func}=`date +%s`
 }
 
 function hand__get_file_timestamp()
