@@ -132,6 +132,7 @@ function hand()
 	if [ "$show_func_define" ]; then
 		echo "file: $file"
 		type $func
+		which $func
 		return 0
 	fi
 	

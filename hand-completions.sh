@@ -17,7 +17,7 @@
 #output COMPREPLY
 hand__completion_entry() {
 	local cmd comp
-	for(( i=1;i<${COMP_CWORD};i++)) do
+	for ((i=1; i<${COMP_CWORD}; i++ )); do
 		if [ "${COMP_WORDS[i]:0:2}" == "--" ]; then
 			continue
 		fi
@@ -39,39 +39,49 @@ hand__completion_entry() {
 	COMPREPLY=($(compgen -W "$comp" -- "${COMP_WORDS[COMP_CWORD]}"))
 	return
 }
-complete -F hand__completion_entry h
-# complete -F hand__completion_entry handy
-complete -F hand__completion_entry hand
-complete -F hand__completion_entry hs
 
+if [[ "$SHELL" = "/bin/zsh" ]]; then
+	fpath=($hand__path/completions $fpath)
+	autoload -U _hand
+	compdef _hand hand h hs hand__hub
+else
+	complete -F hand__completion_entry h
+	# complete -F hand__completion_entry handy
+	complete -F hand__completion_entry hand
+	complete -F hand__completion_entry hs
+fi
 
 
 #gen $path $cmd
 hand__completions_generate()
 {
-
-	local path=$1
+	# echo pathx=$pathx
+	# echo ">>" Generate "$@ ============="
+	local pathx=$1
 	local path1
 	local path2
 	local cmd=$2
 	local item
-	local list
+	local list=
+	local list2=
 
-	if [ -e $hand__path/hand/$path ]; then
-		list=" $(ls $hand__path/hand/$path | sed '/\.comp\.sh$/d')"
+	if [ -e $hand__path/hand/$pathx ]; then
+		list="$(ls $hand__path/hand/$pathx | sed '/\.comp\.sh$/d')"
 	fi
 
-	if [ -e $hand__config_path/hand/$path ]; then
-		list+=" $(ls $hand__config_path/hand/$path | sed '/\.comp\.sh$/d')"
+	if [ -e $hand__config_path/hand/$pathx ]; then
+		list2="$(ls $hand__config_path/hand/$pathx | sed '/\.comp\.sh$/d')"
 	fi
 
-	if [ -z "$list" ]; then
-		echo "$path is not a path!!!"
+	if [ -z "$list" ] && [ -z "$list2" ]; then
+		echo "$pathx is not a path!!!"
 		return 1
 	fi
 
 	hand echo debug "completion: hand$cmd"
-	#echo list=$list
+
+	list=(`echo $list $list2`)
+	# echo list=$list
 	#local list="$(ls $path | sed 's/.sh$//')"
 	#eval hand${cmd}__completion_list='"$list"'
 
@@ -81,22 +91,32 @@ hand__completions_generate()
 	#ls $path1;ls $path2
 	#echo ===
 
-	local words="$(echo $list | sed 's/\.sh//g')"
+	# local words="$(echo $list | sed 's/ .*\.sh / /g')"
+	local words=`echo $list | sed 's/\.sh//g'`
+	# echo words=$words
+	# echo '============'
+
 	#eval hand${cmd}__completion_list='"${words}"'
 	
 	#eval hand${cmd}__completion_list='"$(echo "$list" | sed 's/\.sh//')"'
 
 	#eval echo list2='$'hand${cmd}__completion_list
-	eval echo hand${cmd}__completion_list='\"'${words}'\"' >> $hand__completion_prebuild
+	#eval echo hand${cmd}__completion_list='\"'${words}'\"' >> $hand__completion_prebuild
+	
 
+	echo hand${cmd}__completion_list="'${words}'" >> $hand__completion_prebuild
 
-	for item in ${list}
+	# echo "-------------1"
+	local item=
+	for item in $list
 	do
+		# echo "for item=$item:"
 		if [ "${item##*.sh}" ]; then
 			# echo item=$item
 			# echo cmd=$cmd
-			hand__completions_generate $path/$item "${cmd}_${item}"
+			hand__completions_generate $pathx/$item "${cmd}_${item}"
 		fi
+		# echo "***2"
 	done
 }
 

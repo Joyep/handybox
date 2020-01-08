@@ -1,0 +1,52 @@
+#compdef hand
+
+# _describe ‘TAG:DESCRIPTION:{_describe ‘values’ options}’
+# _arguments -x[description]:message:action
+# _alternative ‘TAG:DESCRIPTION:ACTION’ 
+
+# _alternative \
+#   "directories:user directory:($userdirs)" \
+#   'options:comma-separated opt: _values -s , letter a b c'
+
+
+local cmd= comp= i=
+
+for (( i=2;i<${#words};i++ )); do
+	if [ "${words[i]:0:2}" = "--" ]; then
+		continue
+	fi
+	cmd="${cmd}_${words[i]}"
+done
+
+# echo cmd=$cmd
+
+# if [ "$(declare -F hand${cmd}__completion)" ]; then
+# 	comp=$(hand${cmd}__completion ${words[@]:i+1})
+# else
+# 	comp=`eval echo '$'hand${cmd}__completion_list`
+# fi
+rep="${cmd/./}"  
+if [[ "$rep" == "$cmd" ]]; then
+	# echo "----"
+	comp=(`eval echo '$'hand${cmd}__completion_list`)
+fi
+# echo comp=$comp
+
+if [ -z "$comp" ]; then
+	_arguments '*:files:_files'
+	return 0
+fi
+
+_values "hand"  $comp
+return 0
+
+
+
+# if [[ ${words[(i)-f]} -le ${#words} ]] || [[ ${words[(i)-r]} -le ${#words} ]]
+# then
+#         _values 'reader options' \
+#         '-R[Parse untranslatable HTML codes and LaTeX as raw]' \
+#         '-S[Produce typographically correct output]' \
+#         '--filter[Specify an executable to be used as a filter]' \
+#         '-p[Preserve tabs instead of converting them to spaces]'
+# fi
