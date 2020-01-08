@@ -2,7 +2,9 @@
 
 # load hand.sh
 hand__path="example_path"
+
 source $hand__path/hand.sh
+# hand__debug=0
 
 hand echo debug "[bin] hand $@"
 

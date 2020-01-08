@@ -192,6 +192,7 @@ function hand__help()
 	echo "Handybox $hand__version"
 	echo "path: $hand__path"
 	echo "config: $hand__config_path"
+	echo "shell: $SHELL"
 	echo "============================"
 }
 

@@ -3,7 +3,7 @@
 function hand_cd_git()
 {
 	local path1
-	path1=$(hand git gettop)
+	path1=`hand git gettop`
 	if [ $? -ne 0 ]; then
 		echo $path1
 		hand echo error "hand git gettop error!"

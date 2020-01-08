@@ -3,7 +3,7 @@
 function hand_cd_repo()
 {
 	local path1
-	path1=$(hand repo gettop)
+	path1=`hand repo gettop`
 	if [ $? -ne 0 ]; then
 		echo $path1
 		hand echo error "hand repo gettop error!"

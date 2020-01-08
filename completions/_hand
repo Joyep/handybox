@@ -1,13 +1,5 @@
 #compdef hand
 
-# _describe ‘TAG:DESCRIPTION:{_describe ‘values’ options}’
-# _arguments -x[description]:message:action
-# _alternative ‘TAG:DESCRIPTION:ACTION’ 
-
-# _alternative \
-#   "directories:user directory:($userdirs)" \
-#   'options:comma-separated opt: _values -s , letter a b c'
-
 
 local cmd= comp= i=
 
@@ -39,14 +31,3 @@ fi
 
 _values "hand"  $comp
 return 0
-
-
-
-# if [[ ${words[(i)-f]} -le ${#words} ]] || [[ ${words[(i)-r]} -le ${#words} ]]
-# then
-#         _values 'reader options' \
-#         '-R[Parse untranslatable HTML codes and LaTeX as raw]' \
-#         '-S[Produce typographically correct output]' \
-#         '--filter[Specify an executable to be used as a filter]' \
-#         '-p[Preserve tabs instead of converting them to spaces]'
-# fi

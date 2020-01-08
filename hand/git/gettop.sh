@@ -14,7 +14,7 @@ function hand_git_gettop()
         fi
 
         if [ "$path1" = "/" ] ; then
-            echo ""
+            # echo ""
             return 1
         fi
 

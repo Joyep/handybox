@@ -9,7 +9,7 @@ function hand_repo_gettop()
         fi
 
         if [ "$path1" = "/" ] ; then
-            echo ""
+            # echo ""
             return 1
         fi
 
