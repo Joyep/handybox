@@ -79,9 +79,10 @@ hand__completions_generate()
 	fi
 
 	hand echo debug "completion: hand$cmd"
-
+	
 	list=(`echo $list $list2`)
-	# echo list=$list
+	# echo list=${list[@]}
+	
 	#local list="$(ls $path | sed 's/.sh$//')"
 	#eval hand__complist${cmd}='"$list"'
 
@@ -92,7 +93,7 @@ hand__completions_generate()
 	#echo ===
 
 	# local words="$(echo $list | sed 's/ .*\.sh / /g')"
-	local words=`echo $list | sed 's/\.sh//g'`
+	local words=`echo ${list[@]} | sed 's/\.sh//g'`
 	# echo words=$words
 	# echo '============'
 
@@ -108,7 +109,7 @@ hand__completions_generate()
 
 	# echo "-------------1"
 	local item=
-	for item in $list
+	for item in ${list[@]}
 	do
 		# echo "for item=$item:"
 		if [ "${item##*.sh}" ]; then
