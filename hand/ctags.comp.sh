@@ -1,1 +1,1 @@
-hand_ctags__completion_list="init gen rm use ls show addpath rmpath"
+hand__complist_ctags="init gen rm use ls show addpath rmpath"

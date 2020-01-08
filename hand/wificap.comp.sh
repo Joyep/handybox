@@ -1,3 +1,3 @@
 
 
-hand_wificap__completion_list="capbeacon caphandshake init merge crack hashcat"
+hand__complist_wificap="capbeacon caphand__complistshake init merge crack hashcat"

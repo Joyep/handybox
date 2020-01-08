@@ -1,1 +1,1 @@
-hand_android_getpath__completion_list="kernel defconfig dts"
+hand__complist_android_getpath="kernel defconfig dts"

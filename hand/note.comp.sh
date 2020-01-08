@@ -1,1 +1,1 @@
-hand_note__completion_list="gettop setdir search grep"
+hand__complist_note="gettop setdir search grep"

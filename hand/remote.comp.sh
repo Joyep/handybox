@@ -1,3 +1,3 @@
 
 
-hand_remote__completion_list="do cpto cpfrom ls"
+hand__complist_remote="do cpto cpfrom ls"

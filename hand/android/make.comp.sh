@@ -1,1 +1,1 @@
-hand_android_make__completion_list="kernel uboot"
+hand__complist_android_make="kernel uboot"

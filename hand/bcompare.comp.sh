@@ -1,1 +1,1 @@
-hand_bcompare__completion_list="register"
+hand__complist_bcompare="register"

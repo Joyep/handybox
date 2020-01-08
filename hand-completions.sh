@@ -27,7 +27,7 @@ hand__completion_entry() {
 	if [ "$(declare -F hand${cmd}__completion)" ]; then
 		comp=$(hand${cmd}__completion ${COMP_WORDS[@]:i+1})
 	else
-		comp=`eval echo '$'hand${cmd}__completion_list`
+		comp=`eval echo '$'hand__complist${cmd}`
 	fi
 
 	if [ -z "$comp" ]; then
@@ -83,7 +83,7 @@ hand__completions_generate()
 	list=(`echo $list $list2`)
 	# echo list=$list
 	#local list="$(ls $path | sed 's/.sh$//')"
-	#eval hand${cmd}__completion_list='"$list"'
+	#eval hand__complist${cmd}='"$list"'
 
 	#echo ===
 	#echo path1=$path1
@@ -96,15 +96,15 @@ hand__completions_generate()
 	# echo words=$words
 	# echo '============'
 
-	#eval hand${cmd}__completion_list='"${words}"'
+	#eval hand__complist${cmd}='"${words}"'
 	
-	#eval hand${cmd}__completion_list='"$(echo "$list" | sed 's/\.sh//')"'
+	#eval hand__complist${cmd}='"$(echo "$list" | sed 's/\.sh//')"'
 
-	#eval echo list2='$'hand${cmd}__completion_list
-	#eval echo hand${cmd}__completion_list='\"'${words}'\"' >> $hand__completion_prebuild
+	#eval echo list2='$'hand__complist${cmd}
+	#eval echo hand__complist${cmd}='\"'${words}'\"' >> $hand__completion_prebuild
 	
 
-	echo hand${cmd}__completion_list="'${words}'" >> $hand__completion_prebuild
+	echo hand__complist${cmd}="'${words}'" >> $hand__completion_prebuild
 
 	# echo "-------------1"
 	local item=

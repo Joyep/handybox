@@ -1,3 +1,3 @@
 
 
-hand_myhome__completion_list="link unlink apply"
+hand__complist_myhome="link unlink apply"

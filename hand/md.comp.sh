@@ -1,1 +1,1 @@
-hand_md__completion_list="fix_images clean_images"
+hand__complist_md="fix_images clean_images"

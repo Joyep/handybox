@@ -1,1 +1,1 @@
-hand_find__completion_list="name"
+hand__complist_find="name"

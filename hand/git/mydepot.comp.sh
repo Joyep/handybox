@@ -1,9 +1,9 @@
 
-hand_git_mydepot__completion_list="clone init"
+hand__complist_git_mydepot="clone init"
 #completion $words
-#hand_git_mydepot__completion()
+#hand__complist_git_mydepot__completion()
 # {
 #	if [ $# -lt 2 ]; then
-#		compgen -W "$hand_git_mydepot__completion_list" -- "$1"
+#		compgen -W "$hand__complist_git_mydepot" -- "$1"
 #	fi
 # }

@@ -1,2 +1,2 @@
 
-hand_adb_push__completion_list="lib lib64 bin system app privapp path chmod i2c_test"
+hand__complist_adb_push="lib lib64 bin system app privapp path chmod i2c_test"

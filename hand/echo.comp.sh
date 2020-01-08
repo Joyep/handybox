@@ -1,12 +1,12 @@
 
 
-hand_echo__completion_list="red green yellow error info warn debug do"
+hand__complist_echo="red green yellow error info warn debug do"
 
 #completions $words
-#hand_echo__completion()
+#hand__complist_echo__completion()
 # {
 #	#echo "$*"
 #	if [ $# -lt 2 ]; then
-#		compgen -W "$hand_echo__completion_list" -- "$1"
+#		compgen -W "$hand__complist_echo" -- "$1"
 #	fi
 #}

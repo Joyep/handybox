@@ -1,1 +1,1 @@
-hand_cd_android__completion_list="device defconfig kernel dts uboot"
+hand__complist_cd_android="device defconfig kernel dts uboot"

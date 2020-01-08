@@ -1,3 +1,3 @@
 
 
-hand_prop__completion_list="get set"
+hand__complist_prop="get set"

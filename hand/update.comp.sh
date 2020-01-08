@@ -1,3 +1,3 @@
 
 
-hand_update__completion_list="completions"
+hand__complist_update="completions"

@@ -23,12 +23,12 @@ done
 # if [ "$(declare -F hand${cmd}__completion)" ]; then
 # 	comp=$(hand${cmd}__completion ${words[@]:i+1})
 # else
-# 	comp=`eval echo '$'hand${cmd}__completion_list`
+# 	comp=`eval echo '$'hand__complist${cmd}`
 # fi
 rep="${cmd/./}"  
 if [[ "$rep" == "$cmd" ]]; then
 	# echo "----"
-	comp=(`eval echo '$'hand${cmd}__completion_list`)
+	comp=(`eval echo '$'hand__complist${cmd}`)
 fi
 # echo comp=$comp
 
