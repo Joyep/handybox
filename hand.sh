@@ -152,6 +152,19 @@ function hand()
 
 }
 
+# get prop
+hand__getprop()
+{
+	local value=
+	value=`hand prop get $1`
+	if [ $? -ne 0 ]; then
+		echo $value
+		# hand echo error "$1 not found!"
+		return 1
+	fi
+	hand__get_lastline $value
+}
+
 # load a function from file
 # params: $file $func $symbol
 hand__load_file()

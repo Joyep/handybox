@@ -1,6 +1,6 @@
 .tmp
 .completions.sh
 .ctags
-config
+/config
 tags
 .DS_Store
