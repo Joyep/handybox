@@ -58,6 +58,7 @@ function hand_work__set()
 
 function hand_work__show()
 {
+	local default_name='default'
 
 	# get current hand work name
 	local work_name=$hand_work__name
@@ -67,13 +68,13 @@ function hand_work__show()
 	fi
 
 	if [ ! "$work_name" ]; then
-		echo "work file $hand_work__current_file is empty! so use default"
-		work_name="default"
+		echo "work file $hand_work__current_file is empty! so use $default_name as default"
+		work_name=$default_name
 	fi
 
 	# udpate it
 	if [ ! "$hand_work__name" ]; then
-		hand_work__on default
+		hand_work__on $default_name
 		if [ ! -f $hand__config_path/${work_name}.props ]; then
 			touch $hand__config_path/${work_name}.props
 		fi
@@ -84,6 +85,10 @@ function hand_work__show()
 	do 
 		local name=${i##*\/}
 		name=${name%.*}
+
+		if [[ ! ${name//_*} ]]; then
+			continue
+		fi
 
 		if [ "$work_name" = "$name" ]; then
 			echo "  *  "$name

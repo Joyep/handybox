@@ -266,9 +266,11 @@ hand__completion_prebuild=$hand__config_path/.completions.sh
 #init workspace
 if [ -f $hand__config_path/current_work ]; then
 	hand_work__name=`cat $hand__config_path/current_work`
-else
-	touch $hand__config_path/current_work
 fi
+if [[ ! $hand_work__name ]]; then
+	hand_work__name='default'
+fi
+
 
 
 # load custom sh

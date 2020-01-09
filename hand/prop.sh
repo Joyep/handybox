@@ -9,7 +9,7 @@ hand_prop()
 {
 
 	# get global props file name
-	local g_props_file="$hand__config_path/common.props"
+	local g_props_file="$hand__config_path/_global.props"
 	if [ ! -f "$g_props_file" ]; then
 		touch $g_props_file
 	fi
@@ -17,13 +17,15 @@ hand_prop()
 	# get current work name
 	local props_file=
 	if [ "$hand_work__name" ]; then
-		# echo "\$hand_work__name not defined!!!"
-		# return 1
+		
 		# get props file name by work name
 		local props_file="$hand__config_path/${hand_work__name}.props"
 		if [ ! -f "$props_file" ]; then
 			touch $props_file
 		fi
+	else
+		echo "\$hand_work__name not defined!!!"
+		return 1
 	fi
 	
 	local sub=$1	
@@ -34,7 +36,9 @@ hand_prop()
 		if [ "$key" = "" ]; then
 			# show all props
 			# hand echo do cat $props_file
+			hand echo green "==== $hand_work__name ===="
 			cat $props_file
+			hand echo green "==== global ===="
 			cat $g_props_file
 		else
 			# cat $props_file | grep $1 | sed 's/.*=//g'
@@ -79,7 +83,7 @@ hand_prop()
 		# 	touch $props_file
 		# fi
 
-		echo set_file=$set_file
+		# echo set_file=$set_file
 
 		# search key in props file, get line number
 		local line=`sed -n -e "/${key}=/=" $set_file`
