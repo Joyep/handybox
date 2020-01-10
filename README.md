@@ -19,15 +19,16 @@ Handybox is a tool which include many shell scripts integrated for linux/macOS e
     git submodule update
     cd handybox
     ```
-2. export `hand__path` in your bash config file (such as ~/.bashrc)
+2. export `hand__path` in your shell config file (such as ~/.bashrc)
     ```
-    bash install.sh
+    sh install.sh
     ```
     It will automaticlly install `hand` command line in your own bin path(`$HOME/bin`), and show you lines to add into bash config file. as below:
 
     ```
     export hand__path=/path/to/handybox
     source $hand__path/hand.sh
+    source $hand__path/hand-completions.sh
     ```
 3. open new terminal and enjoy!
    ```
@@ -80,7 +81,7 @@ Hello, world!
 
 
 ## Workspace
-Sometimes, you need some environment, but in other times, we need some other environment. For this reason, we need workspace.
+Sometimes, you need some environment, but in other times, you need some other environment. For this reason, we need workspace.
 
 In handybox, workspace is a file include a set of properties, named `<workspace_name>.props`, placed in config path.
 
@@ -105,7 +106,7 @@ work space:
 ```
 It will switch to another workspace, if this workspace not exist, it will create one automatically.
 
-### use workspace in sub command
+### Use workspace in sub command
 1. Edit `$hand__path/hand/hello.sh`
     ```
     function hand_hello()
