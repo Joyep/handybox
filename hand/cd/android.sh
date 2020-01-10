@@ -12,7 +12,7 @@ function hand_cd_android()
 	# cd to android sub path1
 	# sub path1 come from sub_module_name
 	# get from `hand android getpath1 [sub_module_name]`
-	path1=`hand --silence android getpath1 $1`
+	path1=`hand --silence android getpath $1`
 	if [ $? -ne 0 ]; then
 
 		echo $path1
