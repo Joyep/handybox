@@ -17,17 +17,45 @@ done
 # else
 # 	comp=`eval echo '$'hand__complist${cmd}`
 # fi
-rep="${cmd/./}"  
+rep="${cmd/[.-]/}"  
 if [[ "$rep" == "$cmd" ]]; then
 	# echo "----"
 	comp=(`eval echo '$'hand__complist${cmd}`)
 fi
+
+# local comp2=( "$comp" )
+# _arguments ($comp2)
+# return 0
+
 # echo comp=$comp
 
 if [ -z "$comp" ]; then
-	_arguments '*:files:_files'
+	_arguments \
+		'*:files:_files' \
+		# {-h,--help}'[Help of this command]' \
+		
 	return 0
+# else
+# 	if [[ ! $cmd ]]; then
+# 		echo "with show"
+# 		_arguments \
+# 			--show'[Show script definition]'
+# 	else
+# 		echo "with help"
+# 		_arguments \
+# 			{-s,--shelp}'[Help of this command 1]' \
+# 			--show'[Show script definition]'
+# 	fi
 fi
 
-_values "hand"  $comp
+# local options=
+# if [[ ! $cmd ]]; then
+# 	options=('--show[Show script definition]')
+# else
+# 	options=('-h[Help of this command]')
+# fi
+# _values "hand" $comp $options
+
+_values "hand" $comp
+
 return 0

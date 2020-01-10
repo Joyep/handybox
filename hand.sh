@@ -9,7 +9,7 @@ function hand()
 {
 	#empty cmd
 	if [ $# -eq 0 ]; then
-		hand__help
+		hand__show_help
 		return
 	fi
 
@@ -129,6 +129,8 @@ function hand()
 		fi
 	fi
 
+	# echo fun=$func	
+
 	# show func define
 	if [ $show_func_define = 1 ]; then
 		echo "file: $file"
@@ -136,6 +138,10 @@ function hand()
 		which $func
 		return 0
 	fi
+
+	# provide help function
+	hand__help "${func}__help" "$lost $*" 
+	[[ $? -eq 0 ]] && return 0
 	
 	# excute
 	# echo ">>" $func $lost "$@"
@@ -150,6 +156,27 @@ function hand()
 	fi
 
 	return $ret
+
+}
+
+# hand__help $help_func $params
+hand__help()
+{
+	# echo "hand__help 1=$1"
+	# echo "hand__help 2=$2"
+	# echo "with help? =${2//[ ]*-h*}="
+	local param=`eval echo $2`
+	# echo "params =$param="
+
+	[[ ! $param ]] && return 1
+
+	if [[ ! ${param//-h*} ]] || [[ ! ${param//--help*} ]]; then
+		# echo do $1
+		$1
+		return 0
+	fi
+	# echo "go pass"
+	return 1
 
 }
 
@@ -200,7 +227,7 @@ function hand__get_computer_name()
     #echo "example"
 }
 
-function hand__help()
+function hand__show_help()
 {
 	echo "============================"
 	echo "Handybox $hand__version"

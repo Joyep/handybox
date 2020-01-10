@@ -19,3 +19,9 @@ function hand_cd_repo()
 
 	cd $path1
 }
+
+hand_cd_repo__help()
+{
+	echo "== hand cd repo =="
+	echo "切换到当前目录所在的repo根目录"
+}

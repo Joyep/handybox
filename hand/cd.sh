@@ -10,3 +10,9 @@ function hand_cd()
 	cd $hand__path
 }
 
+hand_cd__help()
+{
+	echo "== hand cd =="
+	echo "切换到handybox主目录"
+}
+

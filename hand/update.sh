@@ -15,3 +15,11 @@ hand_update()
 	fi
 }
 
+hand_update__help()
+{
+	echo "== hand update =="
+	echo "重新载入handybox主脚本"
+	echo "子命令:"
+	echo "  completions: 更新handybox命令行自动完成脚本"
+	
+}
