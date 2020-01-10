@@ -9,16 +9,17 @@ function hand_cd_android()
 		return
 	fi
 
-	# cd to android sub path1
-	# sub path1 come from sub_module_name
-	# get from `hand android getpath1 [sub_module_name]`
+	# cd to android sub path
+	# sub path come from sub_module_name
+	# get from `hand android getpath [sub_module_name]`
+	local path1
 	path1=`hand --silence android getpath $1`
 	if [ $? -ne 0 ]; then
 
-		echo $path1
+		# echo $path1
 
-		# sub path1 not found
-		# maybe sub_module_name is a path1
+		# sub path not found
+		# maybe sub_module_name is a path
 		path1=$1
 	fi
 

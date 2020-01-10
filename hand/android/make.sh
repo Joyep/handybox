@@ -1,9 +1,17 @@
-
-
+#
+# 1. 跳转到编译目录
+# 2. 根据传入的编译信息进行编译
+#
 hand_android_make()
 {
 	local sub=$1
     shift
+
+    # echo 1=$1
+    # echo 2=$2
+    # echo 3=$3
+    # echo 4=$4
+
 	case $sub in
 	"kernel")
 		hand_android_make__kernel $@
@@ -18,7 +26,7 @@ hand_android_make()
 #make $arch $defconfig $img [-f]
 hand_android_make__kernel()
 {
-	local cur_path=`pwd`;
+	# local cur_path=`pwd`;
 	hand cd android kernel;
     if [ $? -ne 0 ]; then
     	hand echo error "kernel dir not found! exit make"
@@ -42,12 +50,13 @@ hand_android_make__kernel()
 #make $arch $defconfig [-f]
 hand_android_make__uboot()
 {
-	local cur_path=`pwd`;
+	# local cur_path=`pwd`;
 	hand cd android uboot
     if [ $? -ne 0 ]; then
     	hand echo error "uboot dir not found! exit make"
         return 1
     fi
+    echo 111
 
 	local arch=$1;
     local defconfig=$2;
