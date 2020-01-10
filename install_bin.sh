@@ -1,4 +1,3 @@
-#!/bin/bash
 
 #export hand__path=`pwd`
 #source $hand__path/hand.sh

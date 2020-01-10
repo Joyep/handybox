@@ -1,4 +1,4 @@
-#!/bin/bash
+
 
 . ./install_bin.sh
 

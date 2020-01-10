@@ -1,4 +1,3 @@
-#!/bin/bash
 
 hand_cd_config()
 {

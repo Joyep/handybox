@@ -262,16 +262,55 @@ function hand__echo_debug()
 	fi
 }
 
+
 hand__get_lastline()
 {
-	echo -E "$@" | awk 'END {print}' | awk -F " " '{print $NF}'
+	if [[ ! $# -eq 0 ]]; then
+		# echo get last line from params
+		echo $* | awk 'END {print}'
+		return 0
+	fi
+
+	# echo parmas is empty, try read from pipe
+	local lastline
+	while read line ; do
+		lastline=$line
+	done
+	echo $lastline
+}
+
+hand__get_firstline()
+{
+	# echo -E "$@" | awk 'START {print}'
+	if [[ ! $# -eq 0 ]]; then
+		# echo "get first line from params =$@="
+		echo $* | awk 'NR==1'
+		return 0
+	fi
+
+	# echo parmas is empty, try read from pipe
+	local line
+	read line
+	echo $line
+}
+
+hand__get_last()
+{
+	hand__get_lastline $* | awk -F " " '{print $NF}'
+
+	# echo -E "$@" | awk 'END {print}' | awk -F " " '{print $NF}'
 }
 
 hand__get_first()
 {
-	echo -E "$@" | awk 'START {print}' | awk -F " " '{print $1}'
+	hand__get_firstline $* | awk -F " " '{print $NF}'
+	# echo -E "$@" | awk 'START {print}' | awk -F " " '{print $1}'
 }
 
+# hand__dump_params()
+# {
+# 	echo $@
+# }
 
 #
 # Init custom configuration

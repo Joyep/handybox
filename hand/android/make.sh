@@ -6,10 +6,10 @@ hand_android_make()
     shift
 	case $sub in
 	"kernel")
-		hand_android_make__kernel $*
+		hand_android_make__kernel $@
 		;;
 	"uboot")
-		hand_android_make__uboot $*
+		hand_android_make__uboot $@
 		;;
 	esac
 }
@@ -39,7 +39,7 @@ hand_android_make__kernel()
     # cd $cur_path
 }
 
-#make $arch $defconfig $force
+#make $arch $defconfig [-f]
 hand_android_make__uboot()
 {
 	local cur_path=`pwd`;
