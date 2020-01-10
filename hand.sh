@@ -14,6 +14,7 @@ function hand()
 	fi
 
 	#special options
+	local show_func_define=0
 	while [ true ];
 	do
 		if [ "$1" = "--show" ]; then
@@ -129,7 +130,7 @@ function hand()
 	fi
 
 	# show func define
-	if [ "$show_func_define" ]; then
+	if [ $show_func_define = 1 ]; then
 		echo "file: $file"
 		type $func
 		which $func
