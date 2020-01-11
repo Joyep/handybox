@@ -5,7 +5,7 @@ function hand_rn()
 {
 
 	local platform
-	platform=`hand --silence prop get rn.platform`
+	platform=`hand__pure_do hand prop get rn.platform`
 	if [ $? -ne 0 ]; then
 		echo $platform
 		return 1

@@ -6,19 +6,19 @@ hand_git_pushref()
 	local remote
 	local branch
 	if [ $# -eq 0 ]; then
-		remote=`hand prop get git.pushref.remote`
+		remote=`hand__pure_do hand prop get git.pushref.remote`
 		if [ $? -ne 0 ]; then
 			echo $remote
 			return 1
 		fi
-		remote=`hand__get_lastline $remote`
+		# remote=`hand__get_lastline $remote`
 
-		branch=`hand prop get git.pushref.branch`
+		branch=`hand__pure_do hand prop get git.pushref.branch`
 		if [ $? -ne 0 ]; then
 			echo $branch
 			return 1
 		fi
-		branch=`hand__get_lastline $branch`
+		# branch=`hand__get_lastline $branch`
 		
 	elif [ $# -eq 1 ]; then
 		# hand echo do git push ${1/\/*} HEAD:refs/for/${1#*\/}

@@ -12,20 +12,20 @@
 function hand_remote()
 {
 
-	remote_user=`hand --silence prop get remote.user`
+	remote_user=`hand__pure_do hand prop get remote.user`
 	if [ $? -ne 0 ]; then
 		echo $remote_user
 		# hand echo error "please define remote.user"
 		return 1
 	fi
-	remote_ip=`hand --silence prop get remote.ip`
+	remote_ip=`hand__pure_do hand prop get remote.ip`
 	if [ $? -ne 0 ]; then
 		echo $remote_ip
 		# hand echo error "please define remote.ip"
 		return 1
 	fi
 
-	remote_path=`hand --silence prop get remote.path`
+	remote_path=`hand__pure_do hand prop get remote.path`
 	if [ $? -ne 0 ]; then
 		echo $remote_path
 		# hand echo error "please define remote.path!"

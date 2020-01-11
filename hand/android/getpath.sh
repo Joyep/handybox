@@ -6,14 +6,14 @@ function hand_android_getpath()
 
 	local PROP_KERNEL="android.path.kernel"
 	local PROP_ARCH="android.arch"
-	local PROP_UBOOT="andorid.path.uboot"
+	local PROP_UBOOT="android.path.uboot"
 	local PROP_DTSDIR="android.path.dts"
 
  	local sub=$1
     shift
 	case $sub in
 	"kernel")
-		kernel=`hand --silence prop get $PROP_KERNEL`
+		kernel=`hand__pure_do hand prop get $PROP_KERNEL`
 		if [ $? -ne 0 ]; then
 			echo $kernel
 			# hand echo error "prop $PROP_KERNEL not defined"
@@ -22,13 +22,13 @@ function hand_android_getpath()
 		echo $kernel
 		;;
 	"defconfig")
-		kernel=`hand --silence prop get $PROP_KERNEL`
+		kernel=`hand__pure_do hand prop get $PROP_KERNEL`
 		if [ $? -ne 0 ]; then
 			echo $kernel
 			# hand echo error "prop $PROP_KERNEL not defined"
 			return 1
 		fi
-		arch=`hand --silence prop get $PROP_ARCH`
+		arch=`hand__pure_do hand prop get $PROP_ARCH`
 		if [ $? -ne 0 ]; then
 			echo $arch
 			# hand echo error "prop $PROP_ARCH not defined"
@@ -37,19 +37,19 @@ function hand_android_getpath()
 		echo "$kernel"/arch/"$arch"/configs
 		;;
 	"dts")
-		kernel=`hand --silence prop get $PROP_KERNEL`
+		kernel=`hand__pure_do hand prop get $PROP_KERNEL`
 		if [ $? -ne 0 ]; then
 			echo $kernel
 			# hand echo error "prop $PROP_KERNEL not defined"
 			return 1
 		fi
-		arch=`hand --silence prop get $PROP_ARCH`
+		arch=`hand__pure_do hand prop get $PROP_ARCH`
 		if [ $? -ne 0 ]; then
 			echo $arch
 			# hand echo error "prop $PROP_ARCH not defined"
 			return 1
 		fi
-		dtsdir=`hand --silence prop get $PROP_DTSDIR`
+		dtsdir=`hand__pure_do hand prop get $PROP_DTSDIR`
 		if [ $? -ne 0 ]; then
 			echo $dtsdir
 			# dtsdir=""
@@ -69,7 +69,7 @@ function hand_android_getpath()
         echo "$OUT"
         ;;
     "uboot")
-		uboot=`hand prop get $PROP_UBOOT`
+		uboot=`hand__pure_do hand prop get $PROP_UBOOT`
 		if [ $? -ne 0 ]; then
 			echo $uboot
 			# hand echo error "prop $PROP_UBOOT not defined"

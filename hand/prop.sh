@@ -7,7 +7,6 @@
 # echo "prop.sh: props_file=$props_file"
 hand_prop()
 {
-
 	# get global props file name
 	local g_props_file="$hand__config_path/_global.props"
 	if [ ! -f "$g_props_file" ]; then
@@ -36,9 +35,9 @@ hand_prop()
 		if [ "$key" = "" ]; then
 			# show all props
 			# hand echo do cat $props_file
-			hand echo green "==== $hand_work__name ===="
+			hand echo green "--- $hand_work__name ---"
 			cat $props_file
-			hand echo green "==== global ===="
+			hand echo green "--- global ---"
 			cat $g_props_file
 		else
 			# cat $props_file | grep $1 | sed 's/.*=//g'
@@ -47,7 +46,8 @@ hand_prop()
 				# hand echo warn "prop $key not defined, hand prop set $key [value]"
 				local value=`grep ${key}= $g_props_file | sed 's/.*=//g'`
 				if [[ $value = "" ]] && [[ $props_file != $g_props_file ]]; then
-					# hand echo warn "prop $key not defined, hand prop set [-g] $key [value]"
+					hand echo warn "prop $key not defined"
+					hand echo warn "use 'hand prop set [-g] $key [value]' to set"
 					return 1
 				fi
 			fi

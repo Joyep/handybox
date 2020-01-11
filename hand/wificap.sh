@@ -60,7 +60,7 @@ function hand_wificap()
 wificap_hashcat()
 {
 	local hashcat_path
-	hashcat_path=`hand prop get wificap.hashcat.path`
+	hashcat_path=`hand__pure_do hand prop get wificap.hashcat.path`
 	if [ $? -ne 0 ]; then
 		echo $hashcat_path
 		return 1
@@ -95,7 +95,7 @@ function wificap_init()
 			BSSID=$1
 			hand prop set wificap.bssid "$BSSID"
 		else
-			BSSID=`hand prop get wificap.bssid`
+			BSSID=`hand__pure_do hand prop get wificap.bssid`
 			if [ $? -ne 0 ]; then
 				echo $BSSID
 				return 1
@@ -108,7 +108,7 @@ function wificap_init()
 			CHANNEL=$2
 			hand prop set wificap.channel $CHANNEL
 		else
-			CHANNEL=`hand prop get wificap.channel`
+			CHANNEL=`hand__pure_do hand prop get wificap.channel`
 			if [ $? -ne 0 ]; then
 				echo $CHANNEL
 				return 1

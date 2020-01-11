@@ -28,17 +28,17 @@ function mydepot_init()
 	fi
 
 	local user
-	user=`hand --silece prop get git.mydepot.user`
+	user=`hand__pure_do hand prop get git.mydepot.user`
 	if [ $? -ne 0 ]; then
 		user=
 	fi
 	local ip
-	ip=`hand --silece prop get git.mydepot.ip`
+	ip=`hand__pure_do hand prop get git.mydepot.ip`
 	if [ $? -ne 0 ]; then
 		ip=
 	fi
 	local path1
-	path1=`hand --silence prop get git.mydepot.path`
+	path1=`hand__pure_do hand prop get git.mydepot.path`
 	if [ $? -ne 0 ]; then
 		echo $path1
 		hand echo error mydepot path not found!
@@ -105,7 +105,7 @@ function mydepot_clone()
 	local user
 	
 	local path1
-	path1=`hand --silence prop get git.mydepot.path`
+	path1=`hand__pure_do hand prop get git.mydepot.path`
     if [ $? -ne 0 ]; then
     	echo $path1
         # hand echo warn "git.mydepot.path not found! please set by:"
@@ -114,14 +114,14 @@ function mydepot_clone()
     fi
 
     local ip
-	ip=`hand --silence prop get git.mydepot.ip`
+	ip=`hand__pure_do hand prop get git.mydepot.ip`
 	if [ $? -ne 0 ]; then
 		ip=""
 	fi
 
 	local gitpath=""
 	local sedstr="s%$path1/%%g"
-	user=`hand --silence prop get git.mydepot.user`
+	user=`hand__pure_do hand prop get git.mydepot.user`
     if [ $? -ne 0 ]; then
 		#clone from local
 		gitpath=$path1/$1

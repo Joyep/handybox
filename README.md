@@ -111,7 +111,7 @@ It will switch to another workspace, if this workspace not exist, it will create
     ```
     function hand_hello()
     {
-        hello_to=`hand --silence prop get hello.to`
+        hello_to=`hand__pure_do hand prop get hello.to`
         if [ $? -ne 0 ]; then
             echo "hello.to not found!"
             return 1

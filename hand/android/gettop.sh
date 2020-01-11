@@ -7,7 +7,7 @@ function hand_android_gettop()
 	if [ ! -z $OUT ]; then
 		echo ${OUT%out*}
 		return
-	fi
+fi
 
 	# get root from gettop
 	hand__check_function_exist gettop
@@ -21,9 +21,9 @@ function hand_android_gettop()
 	fi
 	
 	# get root by repo/git dir 
-	aroot=$(hand --silence repo gettop)
+	aroot=$(hand__pure_do hand repo gettop)
 	if [ $? -ne 0 ]; then
-		aroot=$(hand --silence git gettop)
+		aroot=$(hand__pure_do hand git gettop)
 		if [ $? -ne 0 ]; then
 			# repo/git not found!
 			return 1

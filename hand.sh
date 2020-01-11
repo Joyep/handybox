@@ -15,6 +15,7 @@ function hand()
 
 	#special options
 	local show_func_define=0
+	local saved_debug_state=$hand__debug
 	while [ true ];
 	do
 		if [ "$1" = "--show" ]; then
@@ -23,17 +24,11 @@ function hand()
 			continue;
 		elif [ "$1" = "--silence" ]; then
 			shift
-			if [ "$hand__debug" != "0" ]; then # if debug enabled
-				local save_debug_state=$hand__debug
-				#echo "set hand__debug=0"
-				hand__debug=0
-			fi
+			hand__debug=0
 			continue;
 		fi
 		break;
 	done
-
-
 
 	# find shell dest file
 	local func="hand"
@@ -150,10 +145,7 @@ function hand()
 	ret=$?
 
 	# restore debug state
-	if [ "$save_debug_state" ]; then
-		#echo "set hand__debug=$save_debug_state"
-		hand__debug=$save_debug_state
-	fi
+	hand__debug=$saved_debug_state
 
 	return $ret
 
@@ -179,15 +171,13 @@ hand__help()
 	return 1
 
 }
-
-# get prop
-hand__getprop()
+# do a commond and get lastline, if error return 1
+hand__pure_do()
 {
 	local value=
-	value=`hand prop get $1`
+	value=`$*`
 	if [ $? -ne 0 ]; then
 		echo $value
-		# hand echo error "$1 not found!"
 		return 1
 	fi
 	hand__get_lastline $value
@@ -265,13 +255,25 @@ function hand__echo_debug()
 
 hand__get_lastline()
 {
+
+	# echo ret=$?
+		# echo ret=$pipestatus
+
 	if [[ ! $# -eq 0 ]]; then
 		# echo get last line from params
 		echo $* | awk 'END {print}'
 		return 0
 	fi
 
-	# echo parmas is empty, try read from pipe
+	# echo parmas is empty
+	# echo status=$PIPESTATUS[@]
+
+
+
+	# exit if last cmd error
+	# [[ $ret -ne 0 ]] && return 1
+
+	# try read from pipe
 	local lastline
 	while read line ; do
 		lastline=$line
