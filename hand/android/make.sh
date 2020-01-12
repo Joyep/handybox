@@ -47,7 +47,7 @@ hand_android_make__kernel()
     # cd $cur_path
 }
 
-#make $arch $defconfig [-f]
+#make $archv $defconfig $func [-f]
 hand_android_make__uboot()
 {
 	# local cur_path=`pwd`;
@@ -56,17 +56,23 @@ hand_android_make__uboot()
     	hand echo error "uboot dir not found! exit make"
         return 1
     fi
-    echo 111
+    # echo 111
 
 	local arch=$1;
     local defconfig=$2;
-    local force=$3;
+    local func=$3
+    local force=$4;
    
     if [ "$force" = "-f" ]; then
         hand echo do make mrproper;
     fi;
     hand echo do make $defconfig;
-    hand echo do make ARCHV=$arch;
+    if [[ $arch != "-" ]]; then
+        hand echo do make ARCHV=$arch;
+    else
+        hand echo do $func
+    fi
+    
 
     # cd $cur_path
 }

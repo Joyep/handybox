@@ -7,8 +7,4 @@ hand__debug=0
 #load my alias
 source $hand__config_path/alias.sh
 
-
-#select my workspace
-#hand work default
-
-
+# your custom script

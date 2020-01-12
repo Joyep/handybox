@@ -12,7 +12,6 @@ function hand_cd()
 
 hand_cd__help()
 {
-	echo "== hand cd =="
 	echo "切换到handybox主目录"
 }
 

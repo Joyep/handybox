@@ -1,66 +1,69 @@
-#my alias config
-
+# handdybox custom alias config
 
 
 # alias h='hand__hub'
 alias h='hand'
-alias hs='h --show'
+alias hs='hand --show'
+alias hh="hand --help"
 
-#alias for echo
-alias echor='hand echo red'
-alias echoy='hand echo yellow'
-alias echog='hand echo green'
-alias echoi='hand echo info'
-alias echow='hand echo warn'
-alias echoe='hand echo error'
+## props
+# alias setprop='hand prop set'
+# alias getprop='hand prop get'
 
-#alias for cd
-#alias cdmyconfig="hand cd config"
+## alias for echo
+# alias echor='hand echo red'
+# alias echoy='hand echo yellow'
+# alias echog='hand echo green'
+# alias echoi='hand echo info'
+# alias echow='hand echo warn'
+# alias echoe='hand echo error'
 
-alias cdandroid="hand cd android"
-alias cdevice="hand cd android device"
-alias cout="hand cd android out"
-alias cdkernel="hand cd android kernel"
-alias cduboot="hand cd android uboot"
-alias cddefconfig="hand cd android defconfig"
-alias cddts="hand cd android dts"
-alias cddts64="hand cd android dts64"
-alias cdgit="hand cd git"
-alias cdrepo="hand cd repo"
+## alias for cd
+# alias cdmyconfig="hand cd config"
+# alias cdandroid="hand cd android"
+# alias cdevice="hand cd android device"
+# alias cout="hand cd android out"
+# alias cdkernel="hand cd android kernel"
+# alias cduboot="hand cd android uboot"
+# alias cddefconfig="hand cd android defconfig"
+# alias cddts="hand cd android dts"
+# alias cddts64="hand cd android dts64"
+# alias cdgit="hand cd git"
+# alias cdrepo="hand cd repo"
 
-#alias for lcd
-alias gencmd="hand lcd gencmd"
+## alias for lcd
+# alias gencmd="hand lcd gencmd"
 
-#alias for adb
-alias adbrb='adb reboot'
-alias adbi='adb install -r'
-alias adbrm="adb remount"
-alias adbconnect="hand adb connect"
-alias pushko='hand adb push ko'
-alias pushlib='hand adb push lib'
-alias pushlib64='hand adb push lib64'
-alias pushbin='hand adb push bin'
-alias pushpath='hand adb push path'
-alias pushapp='hand adb push app'
-alias pushprivapp='hand adb push privapp'
+## alias for adb
+# alias adbrb='adb reboot'
+# alias adbi='adb install -r'
+# alias adbrm="adb remount"
+# alias adbconnect="hand adb connect"
+# alias pushko='hand adb push ko'
+# alias pushlib='hand adb push lib'
+# alias pushlib64='hand adb push lib64'
+# alias pushbin='hand adb push bin'
+# alias pushpath='hand adb push path'
+# alias pushapp='hand adb push app'
+# alias pushprivapp='hand adb push privapp'
 
-#alias for dmsg
-alias dmsg="adb shell dmesg"
-alias kmsg="adb shell cat /proc/kmsg"
+## alias for dmsg
+# alias dmsg="adb shell dmesg"
+# alias kmsg="adb shell cat /proc/kmsg"
 
-#alias for remote
-alias rdo="hand remote do"
-alias rdof="hand remote do -f"
-alias rdoh="hand remote do hand"
-alias rdofh="hand remote do -f hand"
-alias rcpfrom="hand remote cpfrom"
-alias rcpto="hand remote cpto"
+## alias for remote
+# alias rdo="hand remote do"
+# alias rdof="hand remote do -f"
+# alias rdoh="hand remote do hand"
+# alias rdofh="hand remote do -f hand"
+# alias rcpfrom="hand remote cpfrom"
+# alias rcpto="hand remote cpto"
 
-#alias for git
-alias gitclone_mydepot="hand git mydepot clone"
-alias gitinit_mydepot="hand git mydepot init"
-alias gerrit_push="hand git pushref"
+## alias for git
+# alias gitclone_mydepot="hand git mydepot clone"
+# alias gitinit_mydepot="hand git mydepot init"
+# alias gerrit_push="hand git pushref"
 
-#android make
-alias sourcelunch="source build/envsetup.sh && lunch"
+## android make
+# alias sourcelunch="source build/envsetup.sh && lunch"
 

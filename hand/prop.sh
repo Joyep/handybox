@@ -47,7 +47,7 @@ hand_prop()
 				local value=`grep ${key}= $g_props_file | sed 's/.*=//g'`
 				if [[ $value = "" ]] && [[ $props_file != $g_props_file ]]; then
 					hand echo warn "prop $key not defined"
-					hand echo warn "use 'hand prop set [-g] $key [value]' to set"
+					# hand echo warn "use 'hand prop set [-g] $key [value]' to set"
 					return 1
 				fi
 			fi
@@ -115,5 +115,3 @@ hand_prop()
 	# some error occurs
 	return 1
 }
-
-# hand_prop "$@"

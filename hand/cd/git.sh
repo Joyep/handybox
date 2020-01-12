@@ -22,6 +22,5 @@ function hand_cd_git()
 
 hand_cd_git__help()
 {
-	echo "== hand cd git =="
 	echo "切换到当前目录所在的git根目录"
 }

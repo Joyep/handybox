@@ -8,7 +8,7 @@ function hand_adb_connect()
 
 	# get ip value
 	local ip=$1
-	if [ "$ip" = "" ]; then
+	if [[ ! $ip ]]; then
 		ip=`hand__pure_do hand prop get adb.connect.ip`
 		if [ $? -ne 0 ]; then
 			echo $ip

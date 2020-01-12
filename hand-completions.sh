@@ -43,7 +43,7 @@ hand__completion_entry() {
 if [[ "$SHELL" = "/bin/zsh" ]]; then
 	fpath=($hand__path/completions $fpath)
 	autoload -U _hand
-	compdef _hand hand h hs hand__hub
+	compdef _hand hand h hs hh hand__hub
 else
 	complete -F hand__completion_entry h
 	# complete -F hand__completion_entry handy

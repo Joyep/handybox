@@ -4,9 +4,9 @@
 #
 function hand_configmirror__help()
 {
-	echo "--- hand configmirror ---"
-	echo "假如config目录的仓库是一个镜像仓库, 每次提交前需要对镜像仓库进行更新, 提交后要对镜像仓库进行推送"
-	echo "这里提供update和push命令达到这个目的"
+	echo "假如handybox/config目录的仓库是一个镜像仓库, 每次提交前需要对镜像仓库进行更新, 提交后要对镜像仓库进行推送."
+	echo "$1 update -- 更新镜像仓库"
+	echo "$1 push -- 推送镜像仓库"
 }
 
 function hand_configmirror()

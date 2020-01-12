@@ -27,6 +27,5 @@ function hand_git_gettop()
 
 hand_git_gettop__help()
 {
-    echo "== hand git gettop =="
     echo "获取当前目录所在的git根目录路径"
 }

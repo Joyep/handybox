@@ -6,7 +6,6 @@ hand_cd_config()
 
 hand_cd_config__help()
 {
-	echo "== hand cd config =="
 	echo "切换到handybox配置目录"
 }
 

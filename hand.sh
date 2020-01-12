@@ -15,6 +15,7 @@ function hand()
 
 	#special options
 	local show_func_define=0
+	local show_help=0
 	local saved_debug_state=$hand__debug
 	while [ true ];
 	do
@@ -25,6 +26,11 @@ function hand()
 		elif [ "$1" = "--silence" ]; then
 			shift
 			hand__debug=0
+			continue;
+		elif [ "$1" = "--help" ]; then
+			shift
+			# echo "should show help!!"
+			show_help=1
 			continue;
 		fi
 		break;
@@ -134,9 +140,16 @@ function hand()
 		return 0
 	fi
 
+	if [[ $show_help -eq 1 ]]; then
+		local cmd="${func//_/ }"
+		echo "---- $cmd 帮助文档 ----"
+		${func}__help "$cmd" "$loast $@"
+		return 0
+	fi
+
 	# provide help function
-	hand__help "${func}__help" "$lost $*" 
-	[[ $? -eq 0 ]] && return 0
+	# hand__help "${func}__help" "$lost $*" 
+	# [[ $? -eq 0 ]] && return 0
 	
 	# excute
 	# echo ">>" $func $lost "$@"
@@ -151,35 +164,42 @@ function hand()
 
 }
 
-# hand__help $help_func $params
-hand__help()
-{
-	# echo "hand__help 1=$1"
-	# echo "hand__help 2=$2"
-	# echo "with help? =${2//[ ]*-h*}="
-	local param=`eval echo $2`
-	# echo "params =$param="
+# # hand__help $help_func $params
+# hand__help()
+# {
+# 	# echo "hand__help 1=$1"
+# 	# echo "hand__help 2=$2"
+# 	# echo "with help? =${2//[ ]*-h*}="
+# 	local param=`eval echo $2`
+# 	# echo "params =$param="
 
-	[[ ! $param ]] && return 1
+# 	[[ ! $param ]] && return 1
 
-	if [[ ! ${param//-h*} ]] || [[ ! ${param//--help*} ]]; then
-		# echo do $1
-		$1
-		return 0
-	fi
-	# echo "go pass"
-	return 1
+# 	if [[ ! ${param//-h*} ]] || [[ ! ${param//--help*} ]]; then
+# 		# echo do $1
+# 		$1
+# 		return 0
+# 	fi
+# 	# echo "go pass"
+# 	return 1
+# }
 
-}
 # do a commond and get lastline, if error return 1
 hand__pure_do()
 {
 	local value=
-	value=`$*`
+	# echo cmd="$*"
+	value=`$@`
+	# echo ret=$value
 	if [ $? -ne 0 ]; then
 		echo $value
 		return 1
 	fi
+
+	if [[ ! $value ]]; then
+		return 0
+	fi
+
 	hand__get_lastline $value
 }
 
@@ -217,7 +237,7 @@ function hand__get_computer_name()
     #echo "example"
 }
 
-function hand__show_help()
+function hand__help()
 {
 	echo "============================"
 	echo "Handybox $hand__version"
