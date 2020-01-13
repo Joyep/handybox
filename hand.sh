@@ -206,7 +206,7 @@ hand__pure_do()
 		return 0
 	fi
 
-	hand__get_lastline $value
+	hand__get_last $value
 }
 
 # load a function from file
