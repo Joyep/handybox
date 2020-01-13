@@ -9,7 +9,7 @@ function hand()
 {
 	#empty cmd
 	if [ $# -eq 0 ]; then
-		hand__show_help
+		hand__help
 		return
 	fi
 
@@ -142,7 +142,13 @@ function hand()
 
 	if [[ $show_help -eq 1 ]]; then
 		local cmd="${func//_/ }"
-		echo "---- $cmd 帮助文档 ----"
+		hand__check_function_exist ${func}__help
+		if [[ $? -ne 0 ]]; then
+			hand echo warn "Helper for \"$cmd\" not found."
+			hand echo warn "Please define in ${func}__help"
+			return 1
+		fi
+		hand echo green "---- $cmd 帮助文档 ----"
 		${func}__help "$cmd" "$loast $@"
 		return 0
 	fi
