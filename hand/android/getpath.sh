@@ -5,7 +5,7 @@ function hand_android_getpath()
 {
 
 	local PROP_KERNEL="android.path.kernel"
-	local PROP_ARCH="android.arch"
+	local PROP_ARCH="android.path.arch"
 	local PROP_UBOOT="android.path.uboot"
 	local PROP_DTSDIR="android.path.dts"
 
