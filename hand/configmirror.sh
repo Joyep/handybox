@@ -28,15 +28,15 @@ function hand_configmirror()
 		return 1
 	fi
 
-	if [[ -d $config_git ]]; then
-		hand echo error "$config_git is not a dir!"
-		return 1
-	fi
-
 	local mydepot_path
 	mydepot_path=`hand__pure_do hand prop get git.mydepot.path`
 	if [ $? -ne 0 ]; then
 		echo $mydepot_path
+		return 1
+	fi
+
+	if [[ ! -d $mydepot_path/$config_git ]]; then
+		hand echo error "$mydepot_path/$config_git is not a dir!"
 		return 1
 	fi
 
