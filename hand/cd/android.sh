@@ -16,10 +16,12 @@ function hand_cd_android()
 	path1=`hand__pure_do hand android getpath $1`
 	if [ $? -ne 0 ]; then
 
-		# echo $path1
+		echo $path1
 
 		# sub path not found
 		# maybe sub_module_name is a path
+
+		hand echo warn "use $1 as related path"
 		path1=$1
 	fi
 

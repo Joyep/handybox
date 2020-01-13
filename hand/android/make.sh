@@ -14,10 +14,10 @@ hand_android_make()
 
 	case $sub in
 	"kernel")
-		hand_android_make__kernel $@
+		hand_android_make__kernel "$@"
 		;;
 	"uboot")
-		hand_android_make__uboot $@
+		hand_android_make__uboot "$@"
 		;;
 	esac
 }
@@ -67,8 +67,8 @@ hand_android_make__uboot()
         hand echo do make mrproper;
     fi;
     hand echo do make $defconfig;
-    if [[ $arch != "-" ]]; then
-        hand echo do make ARCHV=$arch;
+    if [[ $arch != "" ]]; then
+        hand echo do make ARCHV=$arch -j8;
     else
         hand echo do $func
     fi
