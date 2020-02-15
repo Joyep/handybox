@@ -480,6 +480,9 @@ hand_ctags__use()
 	# echo $work > $topdir/.ctags/current
 
 	# generate tags file
+	if [ -f $topdir/tags ]; then
+		hand echo do rm $topdir/tags
+	fi
 	if [ $force -eq 1 ]; then
 	    # tags not exist or by force
 		# create it by ctags
@@ -493,22 +496,14 @@ hand_ctags__use()
 	    [ $? != 0 ] && hand echo error "ctags ERROR!!" && return
 	 	cd $pwd
 	    hand echo info "create tags success"
-		hand echo do "cp $topdir/tags $tags_file"
+		hand echo do "mv $topdir/tags $tags_file"
+		# hand echo do rm $topdir/tags
 	else 
 	    #if tags exist, use it
 	    hand echo info "tags already exist, use it"
-	    hand echo do "cp $tags_file $topdir/tags"
+	    # hand echo do "cp $tags_file $topdir/tags"
 	fi
-}
 
-# get current ctags workspace name
- hand_ctags__get_current()
-{
-	cat $CTAGS_DIR/current
-}
-
-# set current ctags workspace name
- hand_ctags__set_current()
-{
-	echo $1 > $CTAGS_DIR/current
+	# use link
+	hand echo do ln -s $tags_file $topdir/tags
 }
