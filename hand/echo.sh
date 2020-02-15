@@ -45,7 +45,7 @@ function hand_echo__debug()
 function hand_echo__do()
 {
 	echo -e "\033[33m[do] $@\033[0m"
-    "$@"
+    $@
     return $?
 }
 function hand_echo__error()
