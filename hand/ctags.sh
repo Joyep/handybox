@@ -16,7 +16,7 @@
 #   ctags rm --- remove a workspace
 #	ctags addpath --- add a path to current workspace
 #	ctags rmpath --- rm a path from current workspace
-#
+#	ctags rename --- rename workspace name from $1 to $2
 
 
  hand_ctags()
@@ -54,12 +54,46 @@
 		hand_ctags__show
 		;;
 
+	"rename")
+		hand_ctags__rename $*
+		hand_ctags__ls
+		;;
+
 	*)
 		hand_ctags__ls
 		# hand echo error "$sub unsupported"
 		;;
 
 	esac
+}
+
+# rename from $1 to $2
+hand_ctags__rename()
+{
+	# find .ctags dir
+	local topdir
+	topdir=`hand_ctags__gettop`
+	if [ $? -ne 0 ]; then
+		# ctags dir not found, use current path
+		hand echo error "ctags workspace NOT found!"
+		hand_ctags__help
+		return 1
+	fi
+
+	local current
+	current=`cat $topdir/.ctags/current`
+	
+	if [ ! -f $topdir/.ctags/workspace_$1 ]; then
+		hand echo error "workspace \"$1\" not found!"
+		return 1
+	fi
+
+	hand echo do mv $topdir/.ctags/workspace_$1 $topdir/.ctags/workspace_$2
+	hand echo do mv $topdir/.ctags/tags_$1 $topdir/.ctags/tags_$2
+	if [ $1 = $current ]; then
+		echo $2 > $topdir/.ctags/current
+	fi
+
 }
 
 # get top dir which include .ctags
@@ -339,8 +373,6 @@ hand_ctags__use()
 	# fi
 
     # create ctags dir if need
-	#local ctagsgen_path
-    #ctagsgen_path=".ctags"
     if [ ! -d "$topdir/.ctags" ] ; then
         mkdir "$topdir/.ctags"
     fi
