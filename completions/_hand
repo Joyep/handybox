@@ -4,7 +4,7 @@
 local cmd= comp= i=
 
 for (( i=2;i<${#words};i++ )); do
-	if [ "${words[i]:0:2}" = "--" ]; then
+	if [ "${words[i]:0:1}" = "-" ]; then
 		continue
 	fi
 	cmd="${cmd}_${words[i]}"
