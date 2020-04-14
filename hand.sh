@@ -1,11 +1,11 @@
-
 #hand main script
 hand__version="2.1.0"
 hand__timestamp=`date +"%s"`
 hand__debug=0
 
+# hand main entry
 # hand [command] [options...]
-function hand()
+hand()
 {
 	#empty cmd
 	if [ $# -eq 0 ]; then
@@ -170,27 +170,20 @@ function hand()
 
 }
 
-# # hand__help $help_func $params
-# hand__help()
-# {
-# 	# echo "hand__help 1=$1"
-# 	# echo "hand__help 2=$2"
-# 	# echo "with help? =${2//[ ]*-h*}="
-# 	local param=`eval echo $2`
-# 	# echo "params =$param="
+# prefer run hand in standalone process
+hand__hub()
+{
+	case $1 in
+	"cd"|"update"|"work"|"prop"|"--show"|"time")
+	    hand "$@"
+	    ;;
+	*)
+		$HOME/bin/hand "$@"
+		;;
+	esac
+}
 
-# 	[[ ! $param ]] && return 1
-
-# 	if [[ ! ${param//-h*} ]] || [[ ! ${param//--help*} ]]; then
-# 		# echo do $1
-# 		$1
-# 		return 0
-# 	fi
-# 	# echo "go pass"
-# 	return 1
-# }
-
-# do a commond and get lastline, if error return 1
+# do a commond and get last word, if error return 1
 hand__pure_do()
 {
 	local value=
@@ -225,7 +218,7 @@ hand__load_file()
 	eval hand__timestamp_${func}=`date +%s`
 }
 
-function hand__get_file_timestamp()
+hand__get_file_timestamp()
 {
 	if [ "`uname`" = "Darwin" ]; then
 		stat -r $1 | awk '{print $(NF-6)}'
@@ -234,16 +227,15 @@ function hand__get_file_timestamp()
 	fi
 }
 
-
 # use time 280ms
-function hand__get_computer_name()
+hand__get_computer_name()
 {
 	local computer=`whoami`_`hostname`
 	echo ${computer%.*}
     #echo "example"
 }
 
-function hand__help()
+hand__help()
 {
 	echo "============================"
 	echo "Handybox $hand__version"
@@ -253,32 +245,20 @@ function hand__help()
 	echo "============================"
 }
 
-function hand__hub()
-{
-	case $1 in
-	"cd"|"update"|"work"|"prop"|"--show"|"time")
-	    hand "$@"
-	    ;;
-	*)
-		$HOME/bin/hand "$@"
-		;;
-	esac
-}
-
-function hand__check_function_exist()
+hand__check_function_exist()
 {
 	declare -f -F $1 > /dev/null
 	return $?
 }
 
-function hand__echo_debug()
+hand__echo_debug()
 {
 	if [ "$hand__debug" = "1" ]; then
 		echo $*
 	fi
 }
 
-
+# get last line
 hand__get_lastline()
 {
 
@@ -307,6 +287,7 @@ hand__get_lastline()
 	echo $lastline
 }
 
+# get first line
 hand__get_firstline()
 {
 	# echo -E "$@" | awk 'START {print}'
@@ -322,6 +303,7 @@ hand__get_firstline()
 	echo $line
 }
 
+# get last word
 hand__get_last()
 {
 	hand__get_lastline $* | awk -F " " '{print $NF}'
@@ -329,20 +311,19 @@ hand__get_last()
 	# echo -E "$@" | awk 'END {print}' | awk -F " " '{print $NF}'
 }
 
+# get first word
 hand__get_first()
 {
 	hand__get_firstline $* | awk -F " " '{print $NF}'
 	# echo -E "$@" | awk 'START {print}' | awk -F " " '{print $1}'
 }
 
-# hand__dump_params()
-# {
-# 	echo $@
-# }
 
-#
-# Init custom configuration
-#
+
+# -------------------------
+# Init flow
+# -------------------------
+
 
 # get custom config path
 # computer_name=`hand computer hostname`
@@ -358,7 +339,7 @@ fi
 # completions prebuild file
 hand__completion_prebuild=$hand__config_path/.completions.sh
 
-#init workspace
+# init workspace
 if [ -f $hand__config_path/current_work ]; then
 	hand_work__name=`cat $hand__config_path/current_work`
 fi
@@ -366,11 +347,5 @@ if [[ ! $hand_work__name ]]; then
 	hand_work__name='default'
 fi
 
-
-
 # load custom sh
 source $hand__config_path/custom.sh
-
-
-
-

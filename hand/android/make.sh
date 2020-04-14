@@ -47,7 +47,7 @@ hand_android_make__kernel()
     # cd $cur_path
 }
 
-#make $archv $defconfig $func [-f]
+#make $arch $defconfig $func [-f]
 hand_android_make__uboot()
 {
 	# local cur_path=`pwd`;

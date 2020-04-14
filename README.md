@@ -3,8 +3,11 @@
 Handybox is a tool which include many shell scripts integrated for linux/macOS environment.
 
 ## Version
+* next
+    * Support `hand install` command to install extra function. 
 * 2.1.0
     * compatible with zsh
+
 
 ## Features
 1. provide only one main command `hand` for many shell scripts.
@@ -45,7 +48,18 @@ Handybox is a tool which include many shell scripts integrated for linux/macOS e
 * `hand prop get/set` --- get/set properties in you workspace
 * `hand <sub command> [<params...>]`  --- call sub command
 
-> Tips: If you want to run cmd in standalone process, please use `$HOME/bin/hand`. Also, you can use `hand__hub` instead of `hand` to run most of commands in standalone process.
+### command type
+There is 2 types of command, called `EffectFunction` and `PureFunction`. 
+- `EffectFunction` commands does modify current shell environment. list as below:
+  - cd
+  - work
+  - prop
+  - update
+- `PureFunction` commands does not modify current shell environment.
+
+> If you want to run cmd in standalone process, please use `$HOME/bin/hand` executable bin, or use `hand__hub` instead of `hand`, to run `PureFunction` commands in standalone process.
+
+
 
 ## Configuration
 The first time you source handybox, it will automatically generate config directory depending on user name and host name.

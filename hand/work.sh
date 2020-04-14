@@ -5,18 +5,13 @@
 
 ## Used Variables:
 # hand_work__name ---  current workspace name
-# hand_work__current_file --- file stored current workspace name
-# hand__config_path --- hand configuration path
 
 ## Usage
 # hand work --- show workspaces
 # hand work [name]  --- switch to [name] workspace
-# hand work --on [name]   ---lightly switch to [name] workspace
+# hand work --temp [name]   ---lightly switch to [name] workspace
 function hand_work()
 {
-
-	hand_work__current_file="$hand__config_path/current_work"
-
 	#no param
 	if [ $# -eq 0 ]; then
 		# only show current work
@@ -24,31 +19,32 @@ function hand_work()
     	return
 	fi
 
-	# work --on [name], or work [name]
-	if [ "$1" = "--on" ] ; then
+	# work --temp [name], or work [name]
+	if [ "$1" = "--temp" ] ; then
 		shift
-		hand_work__on "$1"
+		hand_work__temp_on "$1"
 	else
-		hand_work__set "$1"
+		hand_work__on "$1"
 	fi
 
 	# show them all
 	hand_work__show
 }
 
-# lightly work on a workspace
-function hand_work__on()
+# lightly work on a workspace(only set a shell variable)
+function hand_work__temp_on()
 {
 	hand_work__name=$1
 }
 
 # work on a workspace and write work to file
-function hand_work__set()
+function hand_work__on()
 {
-	hand_work__on $1
-
+	hand_work__temp_on $1
+	
 	# write current work name to file
-	echo $1 > $hand_work__current_file
+	local current_file="$hand__config_path/current_work"
+	echo $1 > $current_file
 
 	# touch prop file
 	touch $hand__config_path/${1}.props
@@ -59,22 +55,23 @@ function hand_work__set()
 function hand_work__show()
 {
 	local default_name='default'
+	local current_file="$hand__config_path/current_work"
 
 	# get current hand work name
 	local work_name=$hand_work__name
 	if [ ! "$work_name" ]; then
-		echo "\$hand_work__name is empty, read from $hand_work__current_file"
-		work_name=`cat $hand_work__current_file`
+		echo "\$hand_work__name is empty, read from $current_file"
+		work_name=`cat $current_file`
 	fi
 
 	if [ ! "$work_name" ]; then
-		echo "work file $hand_work__current_file is empty! so use $default_name as default"
+		echo "work file $current_file is empty! so use $default_name as default"
 		work_name=$default_name
 	fi
 
 	# udpate it
 	if [ ! "$hand_work__name" ]; then
-		hand_work__on $default_name
+		hand_work__temp_on $default_name
 		if [ ! -f $hand__config_path/${work_name}.props ]; then
 			touch $hand__config_path/${work_name}.props
 		fi

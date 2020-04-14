@@ -1,6 +1,6 @@
-
-
 #hand cd
+
+# EffectFunction
 
 #change directory to handybox path
 function hand_cd()
