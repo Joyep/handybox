@@ -19,6 +19,9 @@ hand_android_make()
 	"uboot")
 		hand_android_make__uboot "$@"
 		;;
+    "recovery")
+		make recoveryimage "$@"
+		;;
 	esac
 }
 

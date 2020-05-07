@@ -1,1 +1,1 @@
-hand__complist_android_make="kernel uboot"
+hand__complist_android_make="kernel uboot recovery"
