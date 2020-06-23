@@ -1,6 +1,7 @@
 
 hand_str_len()
 {
-    echo ${#1}
+    local str="$*"
+    echo ${#str}
 }
 
