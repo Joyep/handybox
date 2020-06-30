@@ -148,14 +148,14 @@ function remote_do()
 			if [ -f $p ] || [ -d $p ]; then
 				#file or dir found
 				hand echo do scp -r $p $remote:$path1
-				p=$path1/${p##*\/}
+				p=${p##*\/}
 			fi
 			params="$params $p"
 		done
-		hand echo do ssh $remote $real_cmd $params
+		hand echo do ssh $remote "cd $remote_path && $real_cmd $params"
 	else
 		#normal remote do
-		hand echo do ssh $remote $real_cmd "$@"
+		hand echo do ssh $remote "cd $remote_path && $real_cmd $@"
 	fi
 }
 
