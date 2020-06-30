@@ -202,6 +202,14 @@ hand__pure_do()
 	hand__get_last $value
 }
 
+
+# get current shell, name as: sh/bash/zsh...
+hand__shell_name()
+{
+	local name=`ps | grep $$  | awk 'NR==1' | awk '{print $4}'`
+	echo ${name#-}
+}
+
 # load a function from file
 # params: $file $func $symbol
 hand__load_file()
@@ -241,7 +249,7 @@ hand__help()
 	echo "Handybox $hand__version"
 	echo "path: $hand__path"
 	echo "config: $hand__config_path"
-	echo "shell: $SHELL"
+	echo "shell:" `hand__shell_name`
 	echo "============================"
 }
 

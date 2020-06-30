@@ -40,7 +40,7 @@ hand__completion_entry() {
 	return
 }
 
-if [[ "$SHELL" = "/bin/zsh" ]]; then
+if [[ `hand__shell_name` = "zsh" ]]; then
 	fpath=($hand__path/completions $fpath)
 	autoload -U _hand
 	compdef _hand hand h hs hh hand__hub
