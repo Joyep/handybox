@@ -44,7 +44,7 @@ Basic command line rules like this:
 - `options...`: options for hand, as below:
    - `--show`: show source code of this command
    - `--help`: show help of this command
-   - `--silence`: not display any log
+   - `--pure`: not display any log
 
 - `sub_command`: any custom sub command
 - `params...`: params for sub command
@@ -91,6 +91,13 @@ Alias hand as h makes you more easy to use handybox, the main command just an `h
 
 > Tips: If you prefer call `hand__hub` instead of `hand`, using `alias h='hand__hub`.
 
+Example alias:
+```sh
+alias h='hand'
+# alias h='hand__hub'
+alias hh='h --help'
+alias hs='h --show'
+```
 
 
 ## Workspace
@@ -175,34 +182,34 @@ Hello, world!
 handybox export some variables and functions in enviroment.
 
 ### Functions
-- hand
-- hand__hub
-- hand__help
-- hand__show_help
-- hand__getprop
-- hand__get_file_timestamp
-- hand__get_computer_name
-- hand__get_file_timestamp
-- hand__get_firstline
-- hand__get_first
-- hand__get_lastline
-- hand__get_last
-- hand__echo_debug
-- hand__check_function_exist
+- hand              --- hand函数, 将子命令懒加载到环境中执行
+- hand__hub         --- hand函数变体, 尽量将子命令放在独立进程执行(不缓存在环境)
+- hand__pure_do     --- 执行命令但是只输出最后一行
+- hand__help        --- hand帮助函数
+- hand__shell_name  --- 获取当前shell名称
+- hand__get_firstline --- 获取首行
+- hand__get_first     --- 获取首个单词
+- hand__get_lastline  --- 获取最后一行
+- hand__get_last      --- 获取最后一个单词
+- hand__check_function_exist --- 检查函数是否存在于环境
+- hand__echo_debug  --- 调试时打印
+- hand__get_config_name --- [内部使用]获取当前用户的配置名
+- hand__get_file_timestamp --- [内部使用]获取sh文件的加载时间戳
+- hand__load_file --- [内部使用]加载sh文件
 
-- hand__load_file
-- hand__pure_do
-- hand__shell_name
 
+> 其他子命令导出的函数, 都以hand_(cmd)__开头
 ### Variables
-- hand__path
-- hand__version
-- hand__timestamp
+- hand__path        --- handybox主目录
+- hand__version     --- 版本
 - hand__timestamp_* --- 自命令的时间戳, 用于懒加载
 - hand__complist_*  --- 自动补全信息
 - hand__debug       --- 是否打印debug信息
 - hand__config_path --- 用户配置目录
-- hand_work__name
+
+
+> 其他子命令导出的变了, 都以hand_(cmd)__开头
+
 
 ## Version
 * next

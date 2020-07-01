@@ -1,19 +1,14 @@
-#hand main script
-hand__version="2.1.0"
-hand__timestamp=`date +"%s"`
-hand__debug=0
-
-# hand main entry
+# hand command entry
 # hand [command] [options...]
 hand()
 {
-	#empty cmd
+	# empty cmd
 	if [ $# -eq 0 ]; then
 		hand__help
 		return
 	fi
 
-	#special options
+	# parse special options
 	local show_func_define=0
 	local show_help=0
 	local saved_debug_state=$hand__debug
@@ -23,20 +18,19 @@ hand()
 			shift
 			 show_func_define=1
 			continue;
-		elif [ "$1" = "--silence" ]; then
+		elif [ "$1" = "--pure" ]; then
 			shift
 			hand__debug=0
 			continue;
 		elif [ "$1" = "--help" ]; then
 			shift
-			# echo "should show help!!"
 			show_help=1
 			continue;
 		fi
 		break;
 	done
 
-	# find shell dest file
+	# find shell file and function name of this sub command
 	local func="hand"
 	local file2="$hand__path/hand"
 	local file="$hand__config_path/hand"
@@ -44,29 +38,21 @@ hand()
 	for p in $*
 	do
 		shift
-		#echo "p=$p"
 		func="${func}_${p}"
 		file="$file/$p"
 		file2="$file2/$p"
-		#echo file=$file
-		#echo file2=$file2
-
 		if [ -e $file ]; then
-			#file2=$file
 			continue
 		fi
 		if [ -e $file2 ]; then
-			#file=$file2
 			continue
 		fi
-
 		break
 	done
 	if [ -e $file2.sh ]; then
 		file=$file2
 	fi
 	file=$file.sh
-	# echo "file="$file
 
 	local lost=
 	if [ ! -e $file ]; then
@@ -86,51 +72,20 @@ hand()
 		fi
 	fi
 
-	# hand__check_function_exist $func
-	# if [ $? -ne 0 ]; then
-	# 	# load
-	# 	echo "[+] $func"
-	# 	source $file
-	# fi
-
-	# record func timestamp
+	# lazy load func by comparing timestamp
 	local func_date=`eval echo '$'hand__timestamp_${func}`
-
 	if [ "$func_date" = "" ]; then
 		# func not exist, first load file
 		hand__load_file $file $func
-		# hand__echo_debug "source $file"
-		# hand__echo_debug "[+] $func"
-		# source $file
-		# eval ${func}__timestamp=`date +%s`
 	else
+		# func exist
 		local file_date
 		file_date=`hand__get_file_timestamp $file`
-
-		# echo $file
-		# echo func_date=$func_date
-		# echo file_date=$file_date
-		# echo hand_time=$hand__timestamp
-
 		if [[ $file_date -gt $func_date ]]; then
 			# func has modified, reload file
-			hand__load_file  $file $func 'u'
-			# hand__echo_debug "source $file"
-			# hand__echo_debug "[u] $func"
-			# source $file
-			# eval ${func}__timestamp=`date +%s`
-
-		# elif [ $hand__timestamp -gt $func_date ] ; then
-		# 	# hand updated, force reload file
-		# 	hand__echo_debug "source $file"
-		# 	hand__echo_debug "[u] $func"
-		# 	source $file
-		# 	eval ${func}__timestamp=`date +%s`
-
+			hand__load_file $file $func 'u'
 		fi
 	fi
-
-	# echo fun=$func	
 
 	# show func define
 	if [ $show_func_define = 1 ]; then
@@ -140,6 +95,7 @@ hand()
 		return 0
 	fi
 
+	# show help
 	if [[ $show_help -eq 1 ]]; then
 		local cmd="${func//_/ }"
 		hand__check_function_exist ${func}__help
@@ -153,13 +109,7 @@ hand()
 		return 0
 	fi
 
-	# provide help function
-	# hand__help "${func}__help" "$lost $*" 
-	# [[ $? -eq 0 ]] && return 0
-	
-	# excute
-	# echo ">>" $func $lost "$@"
-	# echo $lost
+	# call sub command function
 	$func $lost "$@"
 	ret=$?
 
@@ -202,12 +152,13 @@ hand__pure_do()
 	hand__get_last $value
 }
 
-
-# get current shell, name as: sh/bash/zsh...
+# get current shell name, such as: sh, bash, or zsh...
 hand__shell_name()
 {
 	local name=`ps | grep $$  | awk 'NR==1' | awk '{print $4}'`
-	echo ${name#-}
+	# handle case: "-zsh" "/bin/bash"
+	name=${name#-}  		# Delete left -
+	echo ${name##*/} 		# Delete left path
 }
 
 # load a function from file
@@ -235,21 +186,20 @@ hand__get_file_timestamp()
 	fi
 }
 
-# use time 280ms
-hand__get_computer_name()
+# get config name using usename_hostname
+hand__get_config_name()
 {
 	local computer=`whoami`_`hostname`
 	echo ${computer%.*}
-    #echo "example"
 }
 
 hand__help()
 {
 	echo "============================"
 	echo "Handybox $hand__version"
-	echo "path: $hand__path"
+	echo "path:   $hand__path"
 	echo "config: $hand__config_path"
-	echo "shell:" `hand__shell_name`
+	echo "shell:  `hand__shell_name`"
 	echo "============================"
 }
 
@@ -327,23 +277,21 @@ hand__get_first()
 }
 
 
+# ==============
+# script entry
+# ==============
 
-# -------------------------
-# Init flow
-# -------------------------
+hand__version="2.1.0"
+hand__debug=0
 
-
-# get custom config path
-hand__config_path=$hand__path/config/`hand__get_computer_name`
+# init custom config path
+hand__config_path=$hand__path/config/`hand__get_config_name`
 if [ ! -d $hand__path/config  ]; then
     mkdir $hand__path/config
 fi
 if [ ! -d $hand__config_path ]; then
 	cp -r $hand__path/example $hand__config_path
 fi
-
-# completions prebuild file
-# hand__completion_prebuild=$hand__config_path/.completions.sh
 
 # init workspace
 if [ -f $hand__config_path/current_work ]; then
