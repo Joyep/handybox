@@ -155,7 +155,11 @@ function remote_do()
 		hand echo do ssh $remote "cd $remote_path && $real_cmd $params"
 	else
 		#normal remote do
-		hand echo do ssh $remote "cd $remote_path && $real_cmd $@"
+        if [ $# -gt 0 ]; then
+		    hand echo do ssh $remote "cd $remote_path && $real_cmd $@"
+        else
+		    hand echo do ssh $remote
+        fi
 	fi
 }
 
