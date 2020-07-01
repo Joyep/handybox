@@ -12,25 +12,25 @@ Handybox is a tool with many shell scripts integrated for linux/macOS environmen
 
 ## Installation
 1. get handybox
-    ```
+    ```sh
     git clone git@github.com:Joyep/handybox.git
     cd handybox
     git submodule init
     git submodule update
     ```
 2. export `hand__path` in your shell config file (such as ~/.bashrc)
-    ```
+    ```sh
     sh install.sh
     ```
     It will automaticlly install `hand` command line in your home bin path(`$HOME/bin`), and show you lines to add into bash config file. as below:
 
-    ```
+    ```sh
     export hand__path=/path/to/handybox
     source $hand__path/hand.sh
     source $hand__path/hand-completions.sh
     ```
 3. open new terminal and enjoy!
-   ```
+   ```sh
    hand
    ```
 

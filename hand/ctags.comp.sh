@@ -1,1 +1,0 @@
-hand__complist_ctags="gen rm use ls show addpath rmpath rename"

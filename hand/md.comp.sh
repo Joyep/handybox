@@ -1,1 +1,0 @@
-hand__complist_md="fix_images clean_images"

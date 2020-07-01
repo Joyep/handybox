@@ -1,1 +1,0 @@
-hand__complist_cd_android="device defconfig kernel dts uboot"

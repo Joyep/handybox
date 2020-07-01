@@ -1,1 +1,0 @@
-hand__complist_eos="node killnode keosd killkeosd status unlock"

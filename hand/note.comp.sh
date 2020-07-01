@@ -1,1 +1,0 @@
-hand__complist_note="gettop setdir search grep"
