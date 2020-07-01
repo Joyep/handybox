@@ -38,8 +38,8 @@ hand()
 
 	# find shell dest file
 	local func="hand"
-	local file="$hand__path/hand"
-	local file2="$hand__config_path/hand"
+	local file2="$hand__path/hand"
+	local file="$hand__config_path/hand"
     local p=
 	for p in $*
 	do
