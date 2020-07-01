@@ -334,9 +334,7 @@ hand__get_first()
 
 
 # get custom config path
-# computer_name=`hand computer hostname`
-computer_name=`hand__get_computer_name`
-hand__config_path=$hand__path/config/$computer_name
+hand__config_path=$hand__path/config/`hand__get_computer_name`
 if [ ! -d $hand__path/config  ]; then
     mkdir $hand__path/config
 fi
@@ -345,7 +343,7 @@ if [ ! -d $hand__config_path ]; then
 fi
 
 # completions prebuild file
-hand__completion_prebuild=$hand__config_path/.completions.sh
+# hand__completion_prebuild=$hand__config_path/.completions.sh
 
 # init workspace
 if [ -f $hand__config_path/current_work ]; then
