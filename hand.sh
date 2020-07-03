@@ -283,7 +283,7 @@ hand__get_first()
 # script entry
 # ==============
 
-hand__version="2.1.0"
+hand__version="2.2"
 hand__debug=0
 
 # init custom config path
