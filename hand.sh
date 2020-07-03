@@ -72,6 +72,8 @@ hand()
 		fi
 	fi
 
+	hand__subcmd_dir=`dirname $file`
+	
 	# lazy load func by comparing timestamp
 	local func_date=`eval echo '$'hand__timestamp_${func}`
 	if [ "$func_date" = "" ]; then

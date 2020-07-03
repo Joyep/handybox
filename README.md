@@ -206,6 +206,7 @@ handybox export some variables and functions in enviroment.
 - hand__complist_*  --- 自动补全信息
 - hand__debug       --- 是否打印debug信息
 - hand__config_path --- 用户配置目录
+- hand__subcmd_dir     --- 正在运行的子命令所在的目录
 
 
 > 其他子命令导出的变了, 都以hand_(cmd)__开头

@@ -46,9 +46,9 @@ if [[ `hand__shell_name` = "zsh" ]]; then
 	compdef _hand hand h hs hh hand__hub
 else
 	complete -F hand__completion_entry h
-	# complete -F hand__completion_entry handy
 	complete -F hand__completion_entry hand
 	complete -F hand__completion_entry hs
+	complete -F hand__completion_entry hh
 fi
 
 
