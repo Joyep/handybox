@@ -7,7 +7,7 @@ Handybox is a tool with many shell scripts integrated for linux/macOS shell envi
 
 ## Features
 1. provide only one main command `hand` for many shell scripts.
-2. Flexible sub command, lazy load.
+2. Flexible sub command.
 3. Easy to customize your shell environment.
 
 
@@ -28,16 +28,15 @@ Handybox is a tool with many shell scripts integrated for linux/macOS shell envi
     ```sh
     git clone git@github.com:Joyep/handybox.git
     cd handybox
-    git submodule init
-    git submodule update
     ```
-2. export `hand__path` in your shell config file (such as ~/.bashrc)
+2. export `hand__path` in your shell config file (such as ~/.bashrc or ~/.zshrc)
     ```sh
     sh install.sh
     ```
-    It will automaticlly install `hand` command line in your home bin path(`$HOME/bin`), and show you lines to add into bash config file. as below:
+    It will automaticlly install `hand` command line into your home bin path(`$HOME/bin`), and show you lines which you should add into bash config file manually. as below:
 
     ```sh
+    # handybox
     export hand__path=/path/to/handybox
     source $hand__path/hand.sh
     source $hand__path/hand-completions.sh
@@ -67,19 +66,7 @@ Basic command line rules like this:
 * `hand update completions` --- update completions
 * `hand cd` --- cd to handybox root dir
 * `hand cd config`  --- cd to your config dir
-* `hand work` --- switch workspace
-* `hand prop get/set` --- get/set properties in you workspace
-
-### command type
-There is 2 types of command, called `EffectFunction` and `PureFunction`. 
-- `EffectFunction` commands does modify current shell environment. list as below:
-  - cd
-  - work
-  - prop
-  - update
-- `PureFunction` commands does not modify current shell environment.
-
-> If you want to run cmd in standalone process, please use `$HOME/bin/hand` executable bin, or use `hand__hub` instead of `hand`, to run `PureFunction` commands in standalone process.
+* `hand work` --- switch workspace, get/set props in workspace
 
 ## Configuration
 The first time you source handybox, it will automatically generate config directory named depending on current user name and host name, located in `$hand__path/config/<user_name>_<host_name>`.
@@ -91,23 +78,21 @@ example/
 └── hand            --- your custom commands
     └── example.sh
 ```
-> Tips: `$hand__config_path` is your config dir path.
+> Tips: `$hand__config_path` is the path of your config dir.
 
 
 ## Alias hand as h
-Alias hand as h makes you more easy to use handybox, the main command just an `h`.
+Alias hand as h makes you more easier to use handybox, the main command just an `h`.
 
 1. `hand cd config`, jump to your handybox config dir
 2. Edit `alias.sh`, add line `alias h='hand'`
 3. `hand update`
 4. Using `h` instead of `hand`
 
-> Tips: If you prefer call `hand__hub` instead of `hand`, using `alias h='hand__hub`.
 
 Example alias:
 ```sh
 alias h='hand'
-# alias h='hand__hub'
 alias hh='h --help'
 alias hs='h --show'
 ```
@@ -126,13 +111,13 @@ work space:
 ```
 It means that you have one workspace named `default`. Now, you can put some properties into this workspace.
 ```sh
-$ hand prop set hello.to Daniel
-$ hand prop get hello.to
+$ hand work setprop hello.to Daniel
+$ hand work getprop hello.to
 Daniel
 ```
 Then, maybe you want to switch to another workspace, say `develop`:
 ```sh
-$ hand work develop
+$ hand work on develop
 work space:
      default
   *  develop
@@ -163,7 +148,7 @@ It is easy to add a new sub command, for example if you want to add a command `h
     ```
 
     > Notice:
-    > 1. 命令文件后缀名必须是`.cmd.sh`
+    > 1. 子命令文件的后缀名必须是`.cmd.sh`
 
 2. 为`hand say`添加自动补全
 
@@ -174,7 +159,7 @@ It is easy to add a new sub command, for example if you want to add a command `h
     ```sh
     hand
     ├── say.cmd.sh
-    └── say.cmd.sh
+    └── say.comp.sh
     ```
     然后更新自动补全信息
     ```sh
@@ -191,7 +176,7 @@ It is easy to add a new sub command, for example if you want to add a command `h
     ```sh
     hand
     └── say.cmd
-        ├── any_file
+        ├── any_other_file
         ├── say.cmd.sh
         └── say.comp.sh
     ```
@@ -203,7 +188,7 @@ It is easy to add a new sub command, for example if you want to add a command `h
     ```sh
     function hand_hello()
     {
-        hello_to=`hand__pure_do hand prop get hello.to`
+        hello_to=`hand --pure prop get hello.to`
         if [ $? -ne 0 ]; then
             echo "hello.to not found!"
             return 1
@@ -251,12 +236,10 @@ handybox export some variables and functions in enviroment.
 - hand__get_file_timestamp --- [内部使用]获取sh文件的加载时间戳
 - hand__load_file --- [内部使用]加载sh文件
 
-
-> 其他子命令导出的函数, 都以hand_(cmd)__开头
 ### Variables
 - hand__path        --- handybox主目录
+- hand__cmd_dir     --- path that current cmd in
 - hand__version     --- 版本
-- hand__timestamp_* --- 自命令的时间戳, 用于懒加载
 - hand__complist_*  --- 自动补全信息
 - hand__debug       --- 是否打印debug信息
 - hand__config_path --- 用户配置目录

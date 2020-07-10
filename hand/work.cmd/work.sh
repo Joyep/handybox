@@ -160,7 +160,7 @@ hand_work__show()
 hand_work_getprop()
 {
 	local SED="sed"
-	if [ `uname` == "Darwin" ]; then
+	if [ `uname` = "Darwin" ]; then
 		SED="gsed"
 	fi
 
@@ -193,7 +193,7 @@ hand_work_getprop()
 hand_work_setprop()
 {
 	local SED="sed"
-	if [ `uname` == "Darwin" ]; then
+	if [ `uname` = "Darwin" ]; then
 		SED="gsed"
 	fi
 
@@ -224,7 +224,7 @@ hand_work_setprop()
 		# echo key line found
 		if [[ ! $value ]]; then
 			# echo empty value, should remove this prop
-			$SED -i "" "${line}d" $set_file  
+			$SED -i "${line}d" $set_file  
 		else
 			# echo set prop value
 			$SED -i "${line}c ${key}=${value}"  $set_file
