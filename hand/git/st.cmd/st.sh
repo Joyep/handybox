@@ -7,8 +7,10 @@ hand_git_st()
     local i
     for i in $* ; do
         cd $i
-        hand echo green `pwd`
+        hand echo yellow `pwd`
         hand echo do git status
         cd - > /dev/null
     done
 }
+
+hand_git_st $*

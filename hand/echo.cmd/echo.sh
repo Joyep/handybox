@@ -1,5 +1,4 @@
 
-
 function hand_echo()
 {
 	local sub=$1
@@ -26,6 +25,9 @@ function hand_echo()
 	"yellow"):
 		hand_echo__yellow "$@"
 		;;
+	"white"):
+		echo "$@"
+		;;
 	"debug"):
 		hand_echo__debug "$@"
 		;;
@@ -37,6 +39,9 @@ function hand_echo()
 
 function hand_echo__debug()
 {
+	# echo hand echo debug
+	# echo $hand__debug
+	# echo $hand__path
 	if [ "$hand__debug" = "1" ]; then
 		echo $*
 	fi
@@ -77,4 +82,7 @@ function hand_echo__yellow()
 {
     echo -e "\033[33m$*\033[0m"
 }
+
+
+hand_echo $*
 

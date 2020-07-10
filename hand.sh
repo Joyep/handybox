@@ -1,10 +1,26 @@
 # hand command entry
 # hand [command] [options...]
+
+hand__help()
+{
+	echo -e "hand [options...] [<subcmd> [<params...>]]"
+	echo -e "            \t\tRun a subcommand"
+	echo
+	echo -e "hand --help \t\tHelp"
+	echo -e "hand --pure \t\tCall hand but not print debug info"
+	echo -e "hand --show \t\tShow source code"
+	echo -e "hand update \t\tUpdate handybox script"
+	echo -e "hand update completions Update handybox completions"
+	echo -e "hand cd \t\tChange dir to handybox home path"
+	echo -e "hand cd config \t\tChange dir to handybox config path"
+}
+
 hand()
 {
+	local origin_cmd=$*
 	# empty cmd
 	if [ $# -eq 0 ]; then
-		hand__help
+		hand__show_version
 		return
 	fi
 
@@ -30,96 +46,143 @@ hand()
 		break;
 	done
 
+	# only hand cmd ?
+	if [ "$*" = "" ]; then
+		if [ $show_help = 1 ]; then
+			hand__help
+		fi
+		return 0
+	fi
+
 	# find shell file and function name of this sub command
-	local func="hand"
-	local file2="$hand__path/hand"
-	local file="$hand__config_path/hand"
-    local p=
+	local func="hand"  # hand_a_b_c_...
+	local cmdpath="hand" # 相对路径
+	local p=
 	for p in $*
-	do
+	do	
 		shift
 		func="${func}_${p}"
-		file="$file/$p"
-		file2="$file2/$p"
-		if [ -e $file ]; then
-			continue
-		fi
-		if [ -e $file2 ]; then
+		cmdpath="$cmdpath/$p"
+		# echo func=$func
+		if [ -d $hand__config_path/$cmdpath ] || [ -d $hand__path/$cmdpath ]; then
+			# echo "continue"
 			continue
 		fi
 		break
 	done
-	if [ -e $file2.sh ]; then
-		file=$file2
-	fi
-	file=$file.sh
 
-	local lost=
-	if [ ! -e $file ]; then
-		local file2=${file%/*}.sh
-		if [ "${file2##*/}" = "hand.sh" ]; then
-			echo "$file not found!"
-			return 1
+	# find dest cmd.sh file
+	local lost=""   # get lost params
+	local file=""
+	local f
+	while [ true ]; do
+		# echo
+		# echo func=$func
+		# echo cmdpath=$cmdpath
+		# echo params=$lost $*
+		
+		if [ "${cmdpath}" = "hand" ]; then
+			# echo "cmd not found"
+			break
 		fi
-		if [ ! -e $file2 ]; then
-			echo "$file not found!"
-			echo "$file2 not found!"
-			return 1
+		
+		f=$hand__config_path/$cmdpath.cmd.sh
+		if [ -f $f ]; then
+			# xxx.cmd.sh found 1
+			file=$f
+			break
+		fi
+		# echo $f not found
+		
+		f=$hand__path/$cmdpath.cmd.sh
+		if [ -f $f ]; then
+			# xxx.cmd.sh found 2
+			file=$f
+			break
+		fi
+		# echo $f not found
+
+		f=$hand__config_path/$cmdpath.cmd
+		if [ -d $f ] ; then
+			# xxx.cmd found 1
+			file=$f/${cmdpath##*/}.cmd.sh
+			break
+		fi
+		# echo $f not found
+
+		f=$hand__path/$cmdpath.cmd
+		if [ -d $f ] ; then
+			# xxx.cmd found 2
+			file=$f/${cmdpath##*/}.cmd.sh
+			break
+		fi
+		# echo $f not found
+
+		# fallback to upper level
+		
+		cmdpath=${cmdpath%/*}  # up level cmdpath
+		if [ "$lost" = "" ]; then
+			lost="${func##*_}"
 		else
-			lost=${func##*_}
-			func=${func%_*}
-			file=$file2
+			lost="${func##*_} $lost"
 		fi
+		func=${func%_*}
+	done
+
+	# echo
+	# echo func=$func
+	# echo file=$file
+	# echo params=$lost $*
+
+	if [ ! -f "$file" ]; then
+		echo file=$file
+		hand echo error "hand $origin_cmd not found in handybox!"
+		return 1
 	fi
 
-	hand__subcmd_dir=`dirname $file`
-	
-	# lazy load func by comparing timestamp
-	local func_date=`eval echo '$'hand__timestamp_${func}`
-	if [ "$func_date" = "" ]; then
-		# func not exist, first load file
-		hand__load_file $file $func
-	else
-		# func exist
-		local file_date
-		file_date=`hand__get_file_timestamp $file`
-		if [[ $file_date -gt $func_date ]]; then
-			# func has modified, reload file
-			hand__load_file $file $func 'u'
-		fi
-	fi
+	# ok, xxx.cmd.sh file found!
+	# echo file=$file
+	hand__cmd_dir=`dirname $file`
+	# file=$file/${file##*/}.sh
 
 	# show func define
 	if [ $show_func_define = 1 ]; then
-		echo "file: $file"
-		type $func
-		which $func
+		echo ">> $file"
+		cat $file
+		# type $func
+		# which $func
 		return 0
 	fi
 
-	# show help
+	# go on execute cmd file
 	if [[ $show_help -eq 1 ]]; then
+		# show help
 		local cmd="${func//_/ }"
-		hand__check_function_exist ${func}__help
-		if [[ $? -ne 0 ]]; then
-			hand echo warn "Helper for \"$cmd\" not found."
-			hand echo warn "Please define in ${func}__help"
-			return 1
-		fi
+		# hand__check_function_exist ${func}__help
+		# if [[ $? -ne 0 ]]; then
+		# 	hand echo warn "Helper for \"$cmd\" not found."
+		# 	hand echo warn "Please define in ${func}__help"
+		# 	return 1
+		# fi
 		hand echo green "---- $cmd 帮助文档 ----"
-		${func}__help "$cmd" "$loast $@"
-		return 0
+		# ${func}__help "$cmd" "$loast $@"
+		# return 0
+		# if [ "$hand__path/hand" = "$hand__cmd_dir" ]; then
+		# 	hand__help "$cmd" "$lost $@"
+		# 	return 0
+		# fi
+		source $file --help "$cmd" "$lost $@"
+	else
+		# call sub command function
+		# echo file2=$file
+		source $file $lost $*
 	fi
-
-	# call sub command function
-	$func $lost "$@"
 	ret=$?
 
 	# restore debug state
 	hand__debug=$saved_debug_state
 
 	return $ret
-
 }
 
 # prefer run hand in standalone process
@@ -127,8 +190,8 @@ hand__hub()
 {
 	case $1 in
 	"cd"|"update"|"work"|"prop"|"--show"|"time")
-	    hand "$@"
-	    ;;
+		hand "$@"
+		;;
 	*)
 		$HOME/bin/hand "$@"
 		;;
@@ -195,7 +258,7 @@ hand__get_config_name()
 	echo ${computer%.*}
 }
 
-hand__help()
+hand__show_version()
 {
 	echo "============================"
 	echo "Handybox $hand__version"
@@ -283,13 +346,13 @@ hand__get_first()
 # script entry
 # ==============
 
-hand__version="2.2"
+hand__version="3.0"
 hand__debug=0
 
 # init custom config path
 hand__config_path=$hand__path/config/`hand__get_config_name`
 if [ ! -d $hand__path/config  ]; then
-    mkdir $hand__path/config
+	mkdir $hand__path/config
 fi
 if [ ! -d $hand__config_path ]; then
 	cp -r $hand__path/example $hand__config_path

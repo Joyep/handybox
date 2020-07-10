@@ -1,7 +1,7 @@
 
-# Handy Box Tool Scripts
+# HandyBox, A Tool Scripts for Shell
 
-Handybox is a tool with many shell scripts integrated for linux/macOS environment.
+Handybox is a tool with many shell scripts integrated for linux/macOS shell environment.
 
 [TOC]
 
@@ -9,6 +9,19 @@ Handybox is a tool with many shell scripts integrated for linux/macOS environmen
 1. provide only one main command `hand` for many shell scripts.
 2. Flexible sub command, lazy load.
 3. Easy to customize your shell environment.
+
+
+## Version
+* 3.0
+  * 全新目录结构, 允许复杂命令将依赖库放在一起.
+  * 取消懒加载功能, 子命令独立加载运行, 减少对当前shell环境的影响
+  * Move `hand prop get/set` to `hand work getprop/setprop`
+  * Add core sub command `hand git st`, which go into a dir and call `git status`
+* 2.2
+  * Only keep core sub commands, delete other personal commands.
+* 2.1.0
+  * compatible with zsh
+
 
 ## Installation
 1. get handybox
@@ -127,22 +140,63 @@ work space:
 It will switch to another workspace, if this workspace not exist, it will create one automatically.
 
 
-## Custom sub command
+## Create a sub command
 
-It is easy to add a new sub command, for example if you want to add a command `hand hello`.
-1. create file `$hand__path/hand/hello.sh`or`$hand__config_path/hand/hello.sh`, and write shell script as below:
-```
-function hand_hello()
-{
-    echo "Hello, world!"
-}
-```
-> Notice: function name must be `hand_hello` if your command is `hand hello`.
-2. enjoy!
-```
-$ hand hello
-Hello, world!
-```
+It is easy to add a new sub command, for example if you want to add a command `hand say`.
+1. 在`hand`目录创建`say.cmd.sh`文件.
+    目录结构如下:
+    ```
+    hand
+    └── say.cmd.sh
+    ```
+    `say.cmd.sh`文件内容:
+    ```sh
+    # say.cmd.sh
+    echo "Say $1!"
+    ```
+   
+
+    这样就可以直接在hand中使用这个命令了
+    ```
+    $ hand say hello
+    Say hello!
+    ```
+
+    > Notice:
+    > 1. 命令文件后缀名必须是`.cmd.sh`
+
+2. 为`hand say`添加自动补全
+
+    在`say.cmd.sh`同目录创建文件`say.comp.sh`, 内容如下
+    ```sh
+    hand__comp_say="hello hi"
+    ```
+    ```sh
+    hand
+    ├── say.cmd.sh
+    └── say.cmd.sh
+    ```
+    然后更新自动补全信息
+    ```sh
+    hand update completions
+    ```
+    此时就有了自动补全提示
+    ```sh
+    $ hand say 
+    hello hi
+    ```
+
+3. 如果命令很复杂, 需要多个文件, 可以使用文件夹存放命令.
+   创建say.cmd目录, 把刚刚两个文件放进去, 如下:
+    ```sh
+    hand
+    └── say.cmd
+        ├── any_file
+        ├── say.cmd.sh
+        └── say.comp.sh
+    ```
+
+
 
 ### Use workspace in sub command
 1. Edit `$hand__path/hand/hello.sh`
@@ -182,7 +236,7 @@ Hello, world!
 handybox export some variables and functions in enviroment.
 
 ### Functions
-- hand              --- hand函数, 将子命令懒加载到环境中执行
+- hand              --- hand主函数, 将子命令懒加载到环境中执行
 - hand__hub         --- hand函数变体, 尽量将子命令放在独立进程执行(不缓存在环境)
 - hand__pure_do     --- 执行命令但是只输出最后一行
 - hand__help        --- hand帮助函数
@@ -206,15 +260,8 @@ handybox export some variables and functions in enviroment.
 - hand__complist_*  --- 自动补全信息
 - hand__debug       --- 是否打印debug信息
 - hand__config_path --- 用户配置目录
-- hand__subcmd_dir     --- 正在运行的子命令所在的目录
+<!-- - hand__cmd_dir     --- 正在运行的子命令所在的目录 -->
 
 
 > 其他子命令导出的变了, 都以hand_(cmd)__开头
-
-
-## Version
-* next
-    * Support `hand install` command to install extra function. 
-* 2.1.0
-    * compatible with zsh
 

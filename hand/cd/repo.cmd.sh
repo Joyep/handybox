@@ -1,6 +1,10 @@
 
+help()
+{
+	echo "切换到当前目录所在的repo根目录"
+}
 
-function hand_cd_repo()
+hand_cd_repo()
 {
 	local path1
 	path1=`hand --pure repo gettop`
@@ -10,8 +14,6 @@ function hand_cd_repo()
 		return 1
 	fi
 
-	# path1=`echo $path1 | awk -F " " '{print $NF}'`
-	# path1=`hand__get_lastline $path1`
 	if [[ ! -d "$path1" ]]; then
 		hand echo red "repo dir not found!"
 		return 1
@@ -20,7 +22,11 @@ function hand_cd_repo()
 	cd $path1
 }
 
-hand_cd_repo__help()
-{
-	echo "切换到当前目录所在的repo根目录"
-}
+# entry
+if [ "$1" = "--help" ]; then
+	shift
+	help $*
+else
+	hand_cd_repo
+fi
+

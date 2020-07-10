@@ -1,0 +1,1 @@
+hand__complist_echo="red green yellow error info warn debug do"
