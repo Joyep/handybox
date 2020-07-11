@@ -1,5 +1,4 @@
-
-function hand_time()
+hand_time()
 {
 	local sub=$1
 	shift
@@ -46,6 +45,3 @@ hand_time__end()
 	hand echo red "${delta:0:-9}.${delta:index} seconds"
 	echo "================"
 }
-
-
-# hand_time "$@"

@@ -61,5 +61,3 @@ hand_thread_init()
 
 	hand echo green "multi thread with fifo INIT! fd=6 max_thread=$max"
 }
-
-# hand_thread "$@"

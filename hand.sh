@@ -144,45 +144,54 @@ hand()
 	# echo file=$file
 	hand__cmd_dir=`dirname $file`
 	# file=$file/${file##*/}.sh
-
+ 
+	# lazy load func by comparing timestamp
+	local func_date=`eval echo '$'hand__timestamp_${func}`
+	if [ "$func_date" = "" ]; then
+		# func not exist, first load file
+		hand__load_file $file $func
+	else
+		# func exist
+		local file_date
+		file_date=`hand__get_file_timestamp $file`
+		if [[ $file_date -gt $func_date ]]; then
+			# func has modified, reload file
+			hand__load_file $file $func 'u'
+		fi
+	fi
+	
 	# show func define
 	if [ $show_func_define = 1 ]; then
-		echo ">> $file"
-		cat $file
-		# type $func
-		# which $func
+		echo "file: $file"
+		# cat $file
+		type $func
+		which $func
 		return 0
 	fi
 
-	# go on execute cmd file
+	# show help
 	if [[ $show_help -eq 1 ]]; then
-		# show help
 		local cmd="${func//_/ }"
-		# hand__check_function_exist ${func}__help
-		# if [[ $? -ne 0 ]]; then
-		# 	hand echo warn "Helper for \"$cmd\" not found."
-		# 	hand echo warn "Please define in ${func}__help"
-		# 	return 1
-		# fi
+		hand__check_function_exist ${func}__help
+		if [[ $? -ne 0 ]]; then
+			hand echo warn "Helper for \"$cmd\" not found."
+			hand echo warn "Please define in ${func}__help"
+			return 1
+		fi
 		hand echo green "---- $cmd 帮助文档 ----"
-		# ${func}__help "$cmd" "$loast $@"
-		# return 0
-		# if [ "$hand__path/hand" = "$hand__cmd_dir" ]; then
-		# 	hand__help "$cmd" "$lost $@"
-		# 	return 0
-		# fi
-		source $file --help "$cmd" "$lost $@"
-	else
-		# call sub command function
-		# echo file2=$file
-		source $file $lost $*
+		${func}__help "$cmd" "$loast $@"
+		return 0
 	fi
+
+	# call sub command function
+	$func $lost "$@"
 	ret=$?
 
 	# restore debug state
 	hand__debug=$saved_debug_state
 
 	return $ret
+
 }
 
 # prefer run hand in standalone process

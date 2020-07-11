@@ -1,11 +1,17 @@
-# echo "cd handybox home"
-# echo $$
-# cd $hand__path
-# echo $#
-if [ $# -eq 0 ]; then
+#hand cd
+
+# EffectFunction
+
+#change directory to handybox path
+function hand_cd()
+{
+	#hand echo error "Hello"
+	#hand echo do "cd $hand__path"
 	cd $hand__path
-elif [ "$1" = "--help" ]; then
+}
+
+hand_cd__help()
+{
 	echo "切换到handybox主目录"
-else
-	echo "Unknown path $*"
-fi
+}
+
