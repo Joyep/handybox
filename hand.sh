@@ -54,7 +54,7 @@ hand()
 		return 0
 	fi
 
-	# find shell file and function name of this sub command
+	# 1. find shell file and function name of this sub command
 	local func="hand"  # hand_a_b_c_...
 	local cmdpath="hand" # 相对路径
 	local p=
@@ -71,7 +71,10 @@ hand()
 		break
 	done
 
-	# find dest cmd.sh file
+	# echo func=$func
+	# echo cmdpath=$cmdpath
+
+	# 2. find dest cmd.sh file
 	local lost=""   # get lost params
 	local file=""
 	local f
@@ -86,40 +89,23 @@ hand()
 			break
 		fi
 		
-		f=$hand__config_path/$cmdpath.cmd.sh
+		f=$hand__config_path/$cmdpath/cmd.sh
 		if [ -f $f ]; then
-			# xxx.cmd.sh found 1
+			# cmd.sh found 1
 			file=$f
 			break
 		fi
 		# echo $f not found
 		
-		f=$hand__path/$cmdpath.cmd.sh
+		f=$hand__path/$cmdpath/cmd.sh
 		if [ -f $f ]; then
-			# xxx.cmd.sh found 2
+			# cmd.sh found 2
 			file=$f
-			break
-		fi
-		# echo $f not found
-
-		f=$hand__config_path/$cmdpath.cmd
-		if [ -d $f ] ; then
-			# xxx.cmd found 1
-			file=$f/${cmdpath##*/}.cmd.sh
-			break
-		fi
-		# echo $f not found
-
-		f=$hand__path/$cmdpath.cmd
-		if [ -d $f ] ; then
-			# xxx.cmd found 2
-			file=$f/${cmdpath##*/}.cmd.sh
 			break
 		fi
 		# echo $f not found
 
 		# fallback to upper level
-		
 		cmdpath=${cmdpath%/*}  # up level cmdpath
 		if [ "$lost" = "" ]; then
 			lost="${func##*_}"
@@ -135,12 +121,12 @@ hand()
 	# echo params=$lost $*
 
 	if [ ! -f "$file" ]; then
-		echo file=$file
-		hand echo error "hand $origin_cmd not found in handybox!"
+		# echo file=$file
+		echo "cmd not found in handybox!"
 		return 1
 	fi
 
-	# ok, xxx.cmd.sh file found!
+	# 3. ok, xxx.cmd.sh file found! load it
 	# echo file=$file
 	hand__cmd_dir=`dirname $file`
 	# file=$file/${file##*/}.sh
@@ -160,7 +146,7 @@ hand()
 		fi
 	fi
 	
-	# show func define
+	# 4. show func define
 	if [ $show_func_define = 1 ]; then
 		echo "file: $file"
 		# cat $file
@@ -169,21 +155,21 @@ hand()
 		return 0
 	fi
 
-	# show help
+	# 5. show help
 	if [[ $show_help -eq 1 ]]; then
 		local cmd="${func//_/ }"
 		hand__check_function_exist ${func}__help
 		if [[ $? -ne 0 ]]; then
-			hand echo warn "Helper for \"$cmd\" not found."
-			hand echo warn "Please define in ${func}__help"
+			echo "Helper for \"$cmd\" not found."
+			echo "Please define in ${func}__help"
 			return 1
 		fi
-		hand echo green "---- $cmd 帮助文档 ----"
+		echo "---- $cmd 帮助文档 ----"
 		${func}__help "$cmd" "$loast $@"
 		return 0
 	fi
 
-	# call sub command function
+	# 6. call sub command function
 	$func $lost "$@"
 	ret=$?
 
@@ -355,7 +341,7 @@ hand__get_first()
 # script entry
 # ==============
 
-hand__version="3.0"
+hand__version="3.1"
 hand__debug=0
 
 # init custom config path

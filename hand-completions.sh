@@ -51,43 +51,58 @@ else
 	complete -F hand__completion_entry hh
 fi
 
+hand__completion_scan()
+{
+	local list1=`find -L $hand__config_path/hand -type f -name cmd.sh | sed 's%'$hand__config_path/hand/'%%g' | sed 's/\/cmd.sh$//g'`
+	local list2=`find -L $hand__path/hand -type f -name cmd.sh | sed 's%'$hand__path/hand/'%%g' | sed 's/\/cmd.sh$//g'`
+
+	local cmd=""
+	local p=
+	local name=
+	for p in $list1 $list2
+	do
+		array=(${p//\// })
+		for name in ${array[@]}
+		do
+			cmd="_${name}"
+			echo hand__complist${cmd}=\$hand__complist${cmd}"'${words}'" >> $hand__config_path/.completions.sh
+
+		done 
+	done
+
+}
 
 #gen $path $cmd
 hand__completions_generate()
 {
-	# echo pathx=$pathx
 	# echo ">>" Generate "$@ ============="
 	local pathx=$1
-	# local path1
-	# local path2
 	local cmd=$2
-	# local item
-	local list=
-	local list2=
-	local list3=
-	local list4=
 
-	if [ -d $hand__path/hand/$pathx ]; then
-		list=`ls $hand__path/hand/$pathx | grep ".cmd"`
-		list2=`ls -F $hand__path/hand/$pathx | grep "/$" | sed '/^_/d' | sed 's/\/$//g' `
-	fi
+	local dirs=
+	local cmdshfiles=
+	local search_path=
+	for search_path in $hand__path/hand/$pathx $hand__config_path/hand/$pathx
+	do
+		if [ -d $search_path ]; then
+			cmdshfiles=`find -L $search_path -type f -name cmd.sh -d 2 | head -n 1`
+			if [ "$cmdshfiles" != "" ]; then
+				# echo ">>>cmdshfile=$cmdshfiles, not empty!<<<"
+				dirs="${dirs} "`ls -F $hand__path/hand/$pathx | grep "/$" | sed 's/\/$//g' `
+			fi
+		fi
+	done
 
-	if [ -d $hand__config_path/hand/$pathx ]; then
-		list3=`ls $hand__config_path/hand/$pathx | grep ".cmd"`
-		list4=`ls -F $hand__config_path/hand/$pathx | grep "/$" | sed '/^_/d' | sed 's/\/$//g'  `
-	fi
-
-	if [ -z "$list" ] && [ -z "$list2" ] && [ -z "$list3" ] && [ -z "$list4" ]; then
-		# echo "$pathx is not a path!!!"
-		return 1
+	# echo dirs=$dirs
+	if [ "$dirs" = " " ] || [ "$dirs" = "" ]; then
+		return
 	fi
 
 	hand echo white "completion: hand$cmd"
-	
-	list=(`echo $list $list2 $list3 $list4`)
+	local list=(`echo $dirs`)
 	# echo list=${list[@]}
 
-	local words=`echo ${list[@]} | sed 's/\.cmd//g' | sed 's/\.sh//g'   `
+	local words=`echo ${list[@]} `
 	# echo words=$words
 
 	echo hand__complist${cmd}="'${words}'" >> $hand__config_path/.completions.sh
@@ -96,13 +111,7 @@ hand__completions_generate()
 	local item=
 	for item in ${list[@]}
 	do
-		# echo "for item=$item:"
-		if [ "${item#*.cmd*}" ]; then
-			# echo item=$item
-			# echo cmd=$cmd
-			hand__completions_generate $pathx/$item "${cmd}_${item}"
-		fi
-		# echo "***2"
+		hand__completions_generate $pathx/$item "${cmd}_${item}"
 	done
 }
 
@@ -110,7 +119,7 @@ hand__completions_load_sub()
 {
 	local f
 	#echo "load sub..."
-	for f in $(find -L $hand__path/hand $hand__config_path/hand -name "*.comp.sh")
+	for f in $(find -L $hand__path/hand $hand__config_path/hand -name "comp.sh")
 	do
 		hand echo white "load $f"
 		#echo "" >> $hand__config_path/.completions.sh
@@ -129,7 +138,7 @@ if [ ! -f $hand__config_path/.completions.sh ]; then
 	hand echo yellow "generating completions..."
 	hand__completions_generate
 
-	echo -e "\n\n#\n# Generate by .comp.sh file\n#" >> $hand__config_path/.completions.sh
+	echo -e "\n\n#\n# Generate by comp.sh file\n#" >> $hand__config_path/.completions.sh
 	hand echo yellow "load sub completions..."
 	hand__completions_load_sub
 fi
