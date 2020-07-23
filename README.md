@@ -8,13 +8,15 @@ Handybox is a tool with many shell scripts integrated for linux/macOS shell envi
 ## Features
 1. provide only one main command `hand` for many shell scripts.
 2. Flexible sub command.
-3. Easy to customize your shell environment.
+3. Easy to customize your own shell environment and commands.
+4. Automaticly generate command completions
 
 
 ## Version
+* 3.1
+  * 更新目录结构, 命令全部使用目录, 目标命令文件统一命名为`cmd.sh`
 * 3.0
   * 全新目录结构, 允许复杂命令将依赖库放在一起.
-  * 取消懒加载功能, 子命令独立加载运行, 减少对当前shell环境的影响
   * Move `hand prop get/set` to `hand work getprop/setprop`
   * Add core sub command `hand git st`, which go into a dir and call `git status`
 * 2.2
@@ -33,7 +35,7 @@ Handybox is a tool with many shell scripts integrated for linux/macOS shell envi
     ```sh
     sh install.sh
     ```
-    It will automaticlly install `hand` command line into your home bin path(`$HOME/bin`), and show you lines which you should add into bash config file manually. as below:
+    It will automaticlly install `hand` command line into your home bin path(`$HOME/bin`), and show you lines which you should COPY into bash config file manually. example as below:
 
     ```sh
     # handybox
@@ -62,11 +64,13 @@ Basic command line rules like this:
 - `params...`: params for sub command
 
 ### Intergrated sub commands
-* `hand update` --- update hand and sub command scripts
+* `hand update` --- reload hand script
 * `hand update completions` --- update completions
 * `hand cd` --- cd to handybox root dir
 * `hand cd config`  --- cd to your config dir
 * `hand work` --- switch workspace, get/set props in workspace
+* `hand work getprop` --- get props from workspace
+* `hand work setprop` --- set props to workspace
 
 ## Configuration
 The first time you source handybox, it will automatically generate config directory named depending on current user name and host name, located in `$hand__path/config/<user_name>_<host_name>`.
@@ -127,67 +131,78 @@ It will switch to another workspace, if this workspace not exist, it will create
 
 ## Create a sub command
 
-It is easy to add a new sub command, for example if you want to add a command `hand say`.
-1. 在`hand`目录创建`say.cmd.sh`文件.
+It is easy to add a new sub command, for example if you want to add a command `hand hello`.
+1. 在`hand`目录创建`hello/cmd.sh`文件.
     目录结构如下:
     ```
     hand
-    └── say.cmd.sh
+    └── hello
+        └── cmd.sh
     ```
-    `say.cmd.sh`文件内容:
+    `cmd.sh`是命令的入口, 文件内容:
     ```sh
-    # say.cmd.sh
-    echo "Say $1!"
+    # cmd.sh
+    hand_hello()
+    {
+        echo "Hello ${1}!"
+    }
     ```
    
-
     这样就可以直接在hand中使用这个命令了
     ```
-    $ hand say hello
-    Say hello!
+    $ hand hello Daniel
+    Hello Daniel!
+    ```
+    ```
+    $ hand hello world
+    Hello world!
     ```
 
     > Notice:
-    > 1. 子命令文件的后缀名必须是`.cmd.sh`
+    > 1. 命令文件名必须是`cmd.sh`
 
-2. 为`hand say`添加自动补全
+2. 为`hand hello`添加自动补全
 
-    在`say.cmd.sh`同目录创建文件`say.comp.sh`, 内容如下
+    在`cmd.sh`同目录创建文件`comp.sh`, 内容如下
     ```sh
-    hand__comp_say="hello hi"
+    # comp.sh
+    hand__comp_hello="world earth"
     ```
+    目录结构
     ```sh
     hand
-    ├── say.cmd.sh
-    └── say.comp.sh
+    └── hello
+        ├── cmd.sh
+        └── comp.sh
     ```
     然后更新自动补全信息
     ```sh
-    hand update completions
+    $ hand update completions
+    update Handy Box Completions success!
     ```
     此时就有了自动补全提示
     ```sh
-    $ hand say 
-    hello hi
+    $ hand hello [TAB]
+    world earth
     ```
 
-3. 如果命令很复杂, 需要多个文件, 可以使用文件夹存放命令.
-   创建say.cmd目录, 把刚刚两个文件放进去, 如下:
+3. 如果命令很复杂, 需要多个文件, 可以放在`cmd.sh`同目录, 如下:
     ```sh
     hand
-    └── say.cmd
-        ├── any_other_file
-        ├── say.cmd.sh
-        └── say.comp.sh
+    └── say
+        ├── any_other_dirs_or_files
+        ├── cmd.sh
+        └── comp.sh
     ```
-
+> `cmd.sh`所在目录可以使用`$hand__cmd_dir`变量访问.
 
 
 ### Use workspace in sub command
-1. Edit `$hand__path/hand/hello.sh`
+1. Edit `hand/hello/cmd.sh`
     ```sh
     function hand_hello()
     {
+        local hello_to
         hello_to=`hand --pure work getprop hello.to`
         if [ $? -ne 0 ]; then
             echo "hello.to not found!"
@@ -218,7 +233,7 @@ It is easy to add a new sub command, for example if you want to add a command `h
 
 ## Global variables and functions
 
-handybox export some variables and functions in enviroment.
+handybox export some variables and functions in shell enviroment.
 
 ### Functions
 - hand              --- hand主函数, 将子命令懒加载到环境中执行
@@ -246,5 +261,5 @@ handybox export some variables and functions in enviroment.
 <!-- - hand__cmd_dir     --- 正在运行的子命令所在的目录 -->
 
 
-> 其他子命令导出的变了, 都以hand_(cmd)__开头
+> 其他子命令导出的变量, 都以hand_(cmd)__开头
 
