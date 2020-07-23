@@ -85,7 +85,7 @@ hand__completions_generate()
 	for search_path in $hand__path/hand/$pathx $hand__config_path/hand/$pathx
 	do
 		if [ -d $search_path ]; then
-			cmdshfiles=`find -L $search_path -type f -name cmd.sh -d 2 | head -n 1`
+			cmdshfiles=`find -L $search_path -maxdepth 2  -type f -name cmd.sh | head -n 1`
 			if [ "$cmdshfiles" != "" ]; then
 				# echo ">>>cmdshfile=$cmdshfiles, not empty!<<<"
 				dirs="${dirs} "`ls -F $hand__path/hand/$pathx | grep "/$" | sed 's/\/$//g' `
