@@ -188,7 +188,7 @@ It is easy to add a new sub command, for example if you want to add a command `h
     ```sh
     function hand_hello()
     {
-        hello_to=`hand --pure prop get hello.to`
+        hello_to=`hand --pure work getprop hello.to`
         if [ $? -ne 0 ]; then
             echo "hello.to not found!"
             return 1
@@ -202,12 +202,12 @@ It is easy to add a new sub command, for example if you want to add a command `h
     $ hand hello
     hello.to not found!
 
-    $ hand prop set hello.to Alice
+    $ hand work setprop hello.to Alice
     $ hand hello
     Hello, Alice
 
     $ hand work bob
-    $ hand prop set hello.to Bob
+    $ hand work setprop hello.to Bob
     $ hand hello
     Hello, Bob
 

@@ -122,7 +122,7 @@ hand()
 
 	if [ ! -f "$file" ]; then
 		# echo file=$file
-		echo "cmd not found in handybox!"
+		echo "\"hand $origin_cmd\" not found in handybox!"
 		return 1
 	fi
 

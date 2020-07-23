@@ -7,14 +7,14 @@ hand_git_pushref()
 	local remote
 	local branch
 	if [ $# -eq 0 ]; then
-		remote=`hand --pure prop get git.pushref.remote`
+		remote=`hand --pure work getprop git.pushref.remote`
 		if [ $? -ne 0 ]; then
 			echo $remote
 			return 1
 		fi
 		# remote=`hand__get_lastline $remote`
 
-		branch=`hand --pure prop get git.pushref.branch`
+		branch=`hand --pure work getprop git.pushref.branch`
 		if [ $? -ne 0 ]; then
 			echo $branch
 			return 1

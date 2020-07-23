@@ -7,8 +7,8 @@ alias hs='h --show'
 alias hh="h --help"
 
 # props
-alias setprop='hand prop set'
-alias getprop='hand prop get'
+alias setprop='hand work setprop'
+alias getprop='hand work getprop'
 
 #alias for str
 alias strlen="hand str len"
