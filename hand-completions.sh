@@ -1,18 +1,4 @@
 
-
-# function _foo()
-#  {
-#      echo -e "\n"
- 
-#      declare -p COMP_WORDS
-#      declare -p COMP_CWORD
-#      declare -p COMP_LINE
-#      declare -p COMP_WORDBREAKS
-#  }
-# complete -F _foo foo
-
-
-
 #input COMP_WORDS array
 #output COMPREPLY
 hand__completion_entry() {
@@ -51,27 +37,6 @@ else
 	complete -F hand__completion_entry hh
 fi
 
-hand__completion_scan()
-{
-	local list1=`find -L $hand__config_path/hand -type f -name cmd.sh | sed 's%'$hand__config_path/hand/'%%g' | sed 's/\/cmd.sh$//g'`
-	local list2=`find -L $hand__path/hand -type f -name cmd.sh | sed 's%'$hand__path/hand/'%%g' | sed 's/\/cmd.sh$//g'`
-
-	local cmd=""
-	local p=
-	local name=
-	for p in $list1 $list2
-	do
-		array=(${p//\// })
-		for name in ${array[@]}
-		do
-			cmd="_${name}"
-			echo hand__complist${cmd}=\$hand__complist${cmd}"'${words}'" >> $hand__config_path/.completions.sh
-
-		done 
-	done
-
-}
-
 #gen $path $cmd
 hand__completions_generate()
 {
@@ -88,7 +53,7 @@ hand__completions_generate()
 			cmdshfiles=`find -L $search_path -maxdepth 2  -type f -name cmd.sh | head -n 1`
 			if [ "$cmdshfiles" != "" ]; then
 				# echo ">>>cmdshfile=$cmdshfiles, not empty!<<<"
-				dirs="${dirs} "`ls -F $hand__path/hand/$pathx | grep "/$" | sed 's/\/$//g' `
+				dirs="${dirs} "`ls -F $search_path | grep "/$" | sed 's/\/$//g' `
 			fi
 		fi
 	done
@@ -143,4 +108,5 @@ if [ ! -f $hand__config_path/.completions.sh ]; then
 	hand__completions_load_sub
 fi
 
+# load
 source $hand__config_path/.completions.sh
