@@ -60,12 +60,12 @@ hand()
 	local p=
 	for p in $*
 	do	
-		shift
-		func="${func}_${p}"
-		cmdpath="$cmdpath/$p"
 		# echo func=$func
-		if [ -d $hand__config_path/$cmdpath ] || [ -d $hand__path/$cmdpath ]; then
+		if [ -d $hand__config_path/$cmdpath/$p ] || [ -d $hand__path/$cmdpath/$p ]; then
 			# echo "continue"
+			func="${func}_${p}"
+			cmdpath="$cmdpath/$p"
+			shift
 			continue
 		fi
 		break
@@ -115,7 +115,8 @@ hand()
 		func=${func%_*}
 	done
 
-	# echo
+	# echo 
+	# echo "--end--"
 	# echo func=$func
 	# echo file=$file
 	# echo params=$lost $*
