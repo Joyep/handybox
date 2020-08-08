@@ -58,15 +58,19 @@ function hand_echo__debug()
 
 function hand_echo__do()
 {
-	echo -e "\033[33m[do] $@\033[0m"
+	# echo $#
+	# echo -e "\033[33m[do] $@\033[0m"
 	#eval "$@"
 	#$@
 	local cmd="$1"
 	shift
 	local p
-	for p in $@ ; do
+	for p in "$@" ; do
 		cmd="$cmd \"$p\""
 	done
+
+	echo -e "\033[33m[do] $cmd\033[0m"
+
 	eval $cmd
 }
 function hand_echo__error()
