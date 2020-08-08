@@ -1,3 +1,16 @@
+hand_echo__help()
+{
+	echo "增加echo功能, 能显示颜色和tag"
+	echo -e "$1 do    \t--- 显示并执行某个命令"
+	echo -e "$1 info  \t--- 信息"
+	echo -e "$1 error \t--- 错误"
+	echo -e "$1 green \t--- 绿色"
+	echo -e "$1 yellow\t--- 黄色"
+	echo -e "$1 red   \t--- 红色"
+
+
+}
+
 hand_echo()
 {
 	local sub=$1
@@ -33,7 +46,7 @@ hand_echo()
 	*)
 		hand_echo__error "$sub not support"
 	esac
-	return $?
+	# return $?
 }
 
 function hand_echo__debug()
@@ -46,8 +59,15 @@ function hand_echo__debug()
 function hand_echo__do()
 {
 	echo -e "\033[33m[do] $@\033[0m"
-    $@
-    return $?
+	#eval "$@"
+	#$@
+	local cmd="$1"
+	shift
+	local p
+	for p in $@ ; do
+		cmd="$cmd \"$p\""
+	done
+	eval $cmd
 }
 function hand_echo__error()
 {

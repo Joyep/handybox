@@ -12,3 +12,8 @@ hand_git_st()
         cd - > /dev/null
     done
 }
+
+hand_git_st__help()
+{
+    echo "$1 <path> --- 相当于跳转到<path>, 执行git status, 然后跳回来."
+}

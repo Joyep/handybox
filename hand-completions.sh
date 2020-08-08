@@ -26,7 +26,7 @@ hand__completion_entry() {
 	return
 }
 
-if [[ `hand__shell_name` = "zsh" ]]; then
+if [[ "`hand__shell_name`" = "zsh" ]]; then
 	fpath=($hand__path/completions $fpath)
 	autoload -U _hand
 	compdef _hand hand h hs hh hand__hub
@@ -44,27 +44,30 @@ hand__completions_generate()
 	local pathx=$1
 	local cmd=$2
 
-	local dirs=
-	local cmdshfiles=
-	local search_path=
+        local cmddir
+	local list="" # valid cmddir list
+	local search_path
 	for search_path in $hand__path/hand/$pathx $hand__config_path/hand/$pathx
 	do
 		if [ -d $search_path ]; then
-			cmdshfiles=`find -L $search_path -maxdepth 2  -type f -name cmd.sh | head -n 1`
-			if [ "$cmdshfiles" != "" ]; then
-				# echo ">>>cmdshfile=$cmdshfiles, not empty!<<<"
-				dirs="${dirs} "`ls -F $search_path | grep "/$" | sed 's/\/$//g' `
-			fi
+			local dirs=`ls -F $search_path | grep "/$" | sed 's/\/$//g' `
+			# echo dirs=$dirs
+			for cmddir in `echo $dirs` ; do
+				local cmdshfiles=`find -L $search_path/$cmddir -maxdepth 2  -type f -name cmd.sh | head -n 1`
+				if [ "$cmdshfiles" != "" ]; then
+					# this dir is a valid cmd dir
+					list="$list $cmddir"
+				fi
+			done
 		fi
 	done
 
-	# echo dirs=$dirs
-	if [ "$dirs" = " " ] || [ "$dirs" = "" ]; then
+	if [ "$list" = " " ] || [ "$list" = "" ]; then
 		return
 	fi
 
 	hand echo white "completion: hand$cmd"
-	local list=(`echo $dirs`)
+	local list=(`echo $list`)
 	# echo list=${list[@]}
 
 	local words=`echo ${list[@]} `
@@ -72,7 +75,6 @@ hand__completions_generate()
 
 	echo hand__complist${cmd}="'${words}'" >> $hand__config_path/.completions.sh
 
-	# echo "-------------1"
 	local item=
 	for item in ${list[@]}
 	do

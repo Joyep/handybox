@@ -161,11 +161,11 @@ hand()
 		local cmd="${func//_/ }"
 		hand__check_function_exist ${func}__help
 		if [[ $? -ne 0 ]]; then
-			echo "Helper for \"$cmd\" not found."
-			echo "Please define in ${func}__help"
+			echo -e "\033[31m[ERROR] Helper for \"$cmd\" not found.\033[0m"
+			echo "Please define function ${func}__help"
 			return 1
 		fi
-		echo "---- $cmd 帮助文档 ----"
+		echo -e "\033[32m---- $cmd 帮助文档 ----\033[0m"
 		${func}__help "$cmd" "$loast $@"
 		return 0
 	fi
@@ -216,10 +216,11 @@ hand__pure_do()
 # get current shell name, such as: sh, bash, or zsh...
 hand__shell_name()
 {
-	local name=`ps | grep $$  | awk 'NR==1' | awk '{print $4}'`
-	# handle case: "-zsh" "/bin/bash"
-	name=${name#-}  		# Delete left -
-	echo ${name##*/} 		# Delete left path
+	if [ "$ZSH_NAME" != "" ]; then
+		echo "zsh"
+	else
+		echo "bash"
+	fi
 }
 
 # load a function from file

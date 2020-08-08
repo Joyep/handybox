@@ -14,7 +14,16 @@
 # fi
 # bash $hand__cmd_dir/work.sh --work=$hand_work__name --hand__config_path=$hand__config_path $*
 
-
+hand_work__help()
+{
+	echo "handybox工作区"
+	echo -e "$1                \t--- 展示所有工作区"
+	echo -e "$1 on <name>      \t--- 切换工作区"
+	echo -e "$1 temp <name>    \t--- 临时切换工作区"
+	echo -e "$1 remove <name>  \t--- 删除工作区"
+	echo -e "$1 getprop <name> \t--- 获取属性"
+	echo -e "$1 setprop <name> \t--- 设置属性"
+}
 
 
 # 'hand work'
@@ -232,12 +241,12 @@ hand_work_setprop()
     fi
 
 	local set_file
-	if [[ $1 = '-g' ]]; then
+	if [ "$1" = "-g" ]; then
 		# set global prop
-	    set_file="$hand__config_path/${hand_work__name}.props"
+	    set_file="$hand__config_path/_global.props"
 		shift
 	else
-	    set_file="$hand__config_path/_global.props"
+	    set_file="$hand__config_path/${hand_work__name}.props"
     fi
 
     if [ $# -eq 0 ]; then

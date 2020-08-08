@@ -1,3 +1,10 @@
+hand_git_pushref__help()
+{
+	echo "简化gerrit推送"
+	echo -e "$1 <remote> <branch>"
+	echo -e "$1 <remote>/<branch>"
+	echo -e "\t--- 相当于 git push <remote> HEAD:refs/for/<branch>"
+}
 
 #pushref
 #pushref $remote/$branch

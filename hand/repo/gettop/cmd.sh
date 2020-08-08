@@ -19,3 +19,8 @@ hand_repo_gettop()
         fi
     done
 }
+
+hand_repo_gettop__help()
+{
+    echo "获取repo根目录"
+}

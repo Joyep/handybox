@@ -5,3 +5,5 @@
 tags
 .DS_Store
 .vscode
+!/example/*
+.DS_Store
