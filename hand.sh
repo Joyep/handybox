@@ -139,9 +139,9 @@ hand()
 		hand__load_file $file $func
 	else
 		# func exist
-		local file_date
-		file_date=`hand__get_file_timestamp $file`
-		if [[ $file_date -gt $func_date ]]; then
+		# local file_date
+		# file_date=`hand__get_file_timestamp $file`
+		if [ $hand__timestamp -gt $func_date ] || [ `hand__get_file_timestamp $file` -gt $func_date ] ; then
 			# func has modified, reload file
 			hand__load_file $file $func 'u'
 		fi
@@ -345,6 +345,7 @@ hand__get_first()
 
 hand__version="3.1"
 hand__debug=0
+hand__timestamp=`date +%s`
 
 # init custom config path
 hand__config_path=$hand__path/config/`hand__get_config_name`
