@@ -42,9 +42,9 @@ hand_time__end()
 	# echo "delta=$delta"
 	echo "================"
 	if [ $hand_time__thing ]; then
-		hand echo red "TIME USED for $hand_time__thing:"
+		hand echo green "TIME USED for $hand_time__thing:"
 	else
-		hand echo red "TIME USED:"
+		hand echo green "TIME USED:"
 	fi
 	local length=${#delta}
 	while [ $length -lt 10 ]; do
@@ -52,6 +52,6 @@ hand_time__end()
 		length=${#delta}
 	done
 	((index=length-9))
-	hand echo red "${delta:0:$index}.${delta:$index} seconds"
+	hand echo green "${delta:0:$index}.${delta:$index} seconds"
 	echo "================"
 }

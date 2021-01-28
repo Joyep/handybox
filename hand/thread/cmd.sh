@@ -4,16 +4,16 @@ function hand_thread()
 	local sub=$1
 	shift
 	case $sub in
-	"up")
-		hand_thread_up $*
-		;;
-	"down")
-		hand_thread_down $*
-		;;
-	"init")
+	"start")
 		hand_thread_init $*
 		;;
-	"clean")
+	"lock")
+		hand_thread_down $*
+		;;
+	"unlock")
+		hand_thread_up $*
+		;;
+	"stop")
 		hand_thread_clean $*
 		;;
 	*)
@@ -22,11 +22,13 @@ function hand_thread()
 	esac
 }
 
+# 释放
 hand_thread_up()
 {
 	echo >&6
 }
 
+# 获取
 hand_thread_down()
 {
 	read -u6
@@ -36,7 +38,7 @@ hand_thread_clean()
 {
 	wait
 	exec 6>&-
-	hand echo green "multi thread with fifo COMPLETED!"
+	hand echo green "multi thread COMPLETED!"
 }
 
 
@@ -59,5 +61,5 @@ hand_thread_init()
 	     echo
 	done >&6
 
-	hand echo green "multi thread with fifo INIT! fd=6 max_thread=$max"
+	hand echo green "multi thread INIT with fd=6, max_thread=$max"
 }

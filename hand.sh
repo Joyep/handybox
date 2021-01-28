@@ -199,11 +199,13 @@ hand__pure_do()
 {
 	local value=
 	# echo cmd="$*"
+	local ret
 	value=`$@`
+	ret=$?
 	# echo ret=$value
-	if [ $? -ne 0 ]; then
+	if [ $ret -ne 0 ]; then
 		echo $value
-		return 1
+		return $ret
 	fi
 
 	if [[ ! $value ]]; then
