@@ -1,4 +1,4 @@
-# handdybox custom alias config
+# handybox custom alias config
 
 
 # alias h='hand__hub'
