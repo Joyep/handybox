@@ -1,7 +1,7 @@
 # load hand.sh
 hand__path="example_path"
 source $hand__path/hand.sh
-# hand__debug=1
+# hand__debug_disabled=1
 
 hand echo debug "[bin] hand $@"
 

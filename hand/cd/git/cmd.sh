@@ -1,7 +1,7 @@
 hand_cd_git()
 {
 	local path1
-	path1=`hand --pure git gettop`
+	path1=`hand -p git gettop`
 	if [ $? -ne 0 ]; then
 		# echo $path1
 		hand echo error "get git top failed!"

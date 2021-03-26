@@ -3,8 +3,8 @@
 
 # alias h='hand__hub'
 alias h='hand'
-alias hs='h --show'
-alias hh="h --help"
+alias hs='h -s'
+alias hh="h -h"
 
 # props
 alias setprop='hand work setprop'

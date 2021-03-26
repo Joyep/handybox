@@ -51,7 +51,7 @@ hand_echo()
 
 function hand_echo__debug()
 {
-	if [ "$hand__debug" = "1" ]; then
+	if [ "$hand__debug_disabled" = "1" ]; then
 		echo $*
 	fi
 }

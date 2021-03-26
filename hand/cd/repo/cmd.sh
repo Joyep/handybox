@@ -1,7 +1,7 @@
 hand_cd_repo()
 {
 	local path1
-	path1=`hand --pure repo gettop`
+	path1=`hand -p repo gettop`
 	if [ $? -ne 0 ]; then
 		# echo $path1
 		hand echo error "get repo top failed!!"

@@ -32,25 +32,25 @@ fi
 if [ -z "$comp" ]; then
 	_arguments \
 		'*:files:_files' \
-		# {-h,--help}'[Help of this command]' \
+		# {-h,-h}'[Help of this command]' \
 		
 	return 0
 # else
 # 	if [[ ! $cmd ]]; then
 # 		echo "with show"
 # 		_arguments \
-# 			--show'[Show script definition]'
+# 			-s'[Show script definition]'
 # 	else
 # 		echo "with help"
 # 		_arguments \
 # 			{-s,--shelp}'[Help of this command 1]' \
-# 			--show'[Show script definition]'
+# 			-s'[Show script definition]'
 # 	fi
 fi
 
 # local options=
 # if [[ ! $cmd ]]; then
-# 	options=('--show[Show script definition]')
+# 	options=('-s[Show script definition]')
 # else
 # 	options=('-h[Help of this command]')
 # fi

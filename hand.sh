@@ -6,9 +6,9 @@ hand__help()
 	echo -e "hand [options...] [<subcmd> [<params...>]]"
 	echo -e "            \t\tRun a subcommand"
 	echo
-	echo -e "hand --help \t\tHelp"
-	echo -e "hand --pure \t\tCall hand but not print debug info"
-	echo -e "hand --show \t\tShow source code"
+	echo -e "hand -h \t\tHelp"
+	echo -e "hand -p \t\tCall hand but not print debug info"
+	echo -e "hand -s \t\tShow source code"
 	echo -e "hand update \t\tUpdate handybox script"
 	echo -e "hand update completions Update handybox completions"
 	echo -e "hand cd \t\tChange dir to handybox home path"
@@ -27,18 +27,19 @@ hand()
 	# parse special options
 	local show_func_define=0
 	local show_help=0
-	local saved_debug_state=$hand__debug
+	local ignore_debug=0
 	while [ true ];
 	do
-		if [ "$1" = "--show" ]; then
+		if [ "$1" = "-s" ]; then
 			shift
-			 show_func_define=1
+			show_func_define=1
 			continue;
-		elif [ "$1" = "--pure" ]; then
+		elif [ "$1" = "-p" ]; then
 			shift
-			hand__debug=0
+			ignore_debug=1
+			((hand__debug_disabled-=1))
 			continue;
-		elif [ "$1" = "--help" ]; then
+		elif [ "$1" = "-h" ]; then
 			shift
 			show_help=1
 			continue;
@@ -175,7 +176,9 @@ hand()
 	ret=$?
 
 	# restore debug state
-	hand__debug=$saved_debug_state
+	if [ "${ignore_debug}" = '1' ]; then
+		((hand__debug_disabled+=1))
+	fi
 
 	return $ret
 
@@ -185,7 +188,7 @@ hand()
 hand__hub()
 {
 	case $1 in
-	"cd"|"update"|"work"|"prop"|"--show"|"time")
+	"cd"|"update"|"work"|"prop"|"-s"|"time")
 		hand "$@"
 		;;
 	*)
@@ -275,7 +278,7 @@ hand__check_function_exist()
 
 hand__echo_debug()
 {
-	if [ "$hand__debug" = "1" ]; then
+	if [ $hand__debug_disabled -eq 0 ]; then
 		echo $*
 	fi
 }
@@ -346,7 +349,7 @@ hand__get_first()
 # ==============
 
 hand__version="3.1"
-hand__debug=0
+hand__debug_disabled=0
 hand__timestamp=`date +%s`
 
 # init custom config path
