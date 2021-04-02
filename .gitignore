@@ -4,6 +4,6 @@
 /config
 tags
 .DS_Store
-!/example/*
-.DS_Store
+*.pyc
+__pycache__
 node_modules

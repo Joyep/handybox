@@ -37,7 +37,7 @@ hand()
 		elif [ "$1" = "-p" ]; then
 			shift
 			ignore_debug=1
-			((hand__debug_disabled-=1))
+			((hand__debug_disabled+=1))
 			continue;
 		elif [ "$1" = "-h" ]; then
 			shift
@@ -177,7 +177,7 @@ hand()
 
 	# restore debug state
 	if [ "${ignore_debug}" = '1' ]; then
-		((hand__debug_disabled+=1))
+		((hand__debug_disabled-=1))
 	fi
 
 	return $ret

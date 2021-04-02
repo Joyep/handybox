@@ -3,13 +3,13 @@
 
 Handybox is a tool with many shell scripts integrated for linux/macOS shell environment.
 
-[TOC]
 
 ## Features
 1. provide only one main command `hand` for all shell scripts.
 2. Flexible sub command.
 3. Easy to customize your own shell function, variables and commands.
-4. Automaticly generate command completions
+4. Automaticly generate command completions.
+5. Multi user configurations.
 
 
 ## Version
@@ -80,7 +80,8 @@ example/
 ├── alias.sh        --- your alias
 ├── custom.sh       --- your custom scripts
 └── hand            --- your custom commands
-    └── example.sh
+    └── example
+      └── cmd.sh
 ```
 > Tips: `$hand__config_path` is the path of your config dir.
 
@@ -96,6 +97,7 @@ Alias hand as h makes you more easier to use handybox, the main command just an 
 
 Example alias:
 ```sh
+# alias.sh
 alias h='hand'
 alias hh='h -h'
 alias hs='h -s'
@@ -160,6 +162,7 @@ It is easy to add a new sub command, for example if you want to add a command `h
 
     > Notice:
     > 1. 命令文件名必须是`cmd.sh`
+    > 2. 命令的函数必须按照子命令路径规则命名.
 
 2. 为`hand hello`添加自动补全
 
@@ -186,7 +189,7 @@ It is easy to add a new sub command, for example if you want to add a command `h
     world earth
     ```
 
-3. 如果命令很复杂, 需要多个文件, 可以放在`cmd.sh`同目录, 如下:
+3. 如果命令很复杂, 需要多个文件, 可以将其他依赖文件放在`cmd.sh`同目录, 如下:
     ```sh
     hand
     └── say
