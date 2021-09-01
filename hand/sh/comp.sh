@@ -14,6 +14,16 @@
 #            comp_params
 ##
 
-if [ $# -eq 0 ]; then
-    comp_provide_values "red green yellow error info warn debug do"
+##
+# hand sh [params...]
+##
+
+
+if [ ${#} -eq 0 ]; then
+    if [ "${comp_editing: 0: 1}" = "-" ]; then
+        comp_provide_values "--zsh --bash --env"
+        return
+    fi
 fi
+
+comp_provide_files

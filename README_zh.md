@@ -1,27 +1,25 @@
 
-# HandyBox, A set of handy scripts for Shell
+# HandyBox, 一套Shell工具集
 
-Handybox is a flexible script collection framework intergrated with any custom scripts for linux/macOS shell environment.
+Handybox集成了很多实用小工具, 具有很强的扩展性, 适用于linux/macOS shell环境.
 
+## 功能
+1. 提供唯一的主命令 `hand`.
+2. 容易定制自己的子命令.
+3. 自动生成补全脚本
+4. 多工作区
+5. 多用户配置
 
-## Features
-1. Provide only one main command `hand` for all integrated scripts.
-2. Flexible sub commands.
-3. Easy to customize your own shell function, variables and commands.
-4. Automaticly generate command completions.
-5. Multi user configurations.
-
-
-## Version
+## 版本
 * 3.3
-  * Optimize hand options, isolate command with `--`, append with option (help/pure/...).
-  - Sub command completion script spec: `comp.sh` V2.3
-  - Sub command properties completion script spec: `comp_props.sh` V1.0
-  - Sub command spec: `cmd.sh` V2.0
+  * 优化hand选项, 在命令的最后用 `--` 隔开, 后接选项(help/pure/...).
+  - 命令补全脚本规范: `comp.sh` V2.3
+  - 属性补全脚本规范: `comp_props.sh` V1.0
+  - 子命令书写规范: `cmd.sh` V2.0
 * 3.1
-  * Update dir structure, All sub commands located in dir with a name of `cmd.sh`
+  * 更新目录结构, 命令全部使用目录, 目标命令文件统一命名为`cmd.sh`
 * 3.0
-  * Update dir structure. Support place depended libs in the same dir of sub command.
+  * 全新目录结构, 允许复杂命令将依赖库放在一起.
   * Move `hand prop get/set` to `hand work getprop/setprop`
   * Add core sub command `hand git st`, which go into a dir and call `git status`
 * 2.2
@@ -29,66 +27,65 @@ Handybox is a flexible script collection framework intergrated with any custom s
 * 2.1.0
   * compatible with zsh
 
-
-## Installation
-1. get handybox
+## 安装
+1. 获取`handybox`
     ```sh
     git clone git@github.com:Joyep/handybox.git
     cd handybox
     ```
-2. export `hand__path` in your shell config file (such as ~/.bashrc or ~/.zshrc)
+2. 安装
     ```sh
     sh install.sh
     ```
-    It will automaticlly install `hand` command line into your home bin path(`$HOME/bin`), and show you lines which you should COPY into bash config file manually. example as below:
+    脚本将会自动安装 `hand` 命令到你的`$HOME/bin`目录, 然后显示如下几行字, 你需要手动拷贝到shell配置文件中(例如 `~/.bashrc` 或 `~/.zshrc`):
 
     ```sh
     # handybox
     export hand__path=/path/to/handybox
     source $hand__path/hand.sh
     ```
-3. open new terminal and enjoy!
+3. 打开新终端, 可以了!
    ```sh
    hand
    ```
 
-## Usage
+## 使用方法
 
-Basic command line rules like this:
+基本的命令行规则如下:
 
 `hand [sub_command [<params...>]] [-- <option>]`
 
-- `hand`: The main command
-- `option`: options for hand, as below:
-   - `-- source`: show source code of this command
-   - `-- help`: show help of this command
-   - `-- pure`: not display any log
+- `hand`: 主命令
+- `option`: hand的选项, 如下:
+   - `-- source`: 显示子命令源码
+   - `-- help`: 显示子命令帮助
+   - `-- pure`: 执行时不打印多余的信息
    - `-- cd`: cd to sub command dir
    - `-- test`: test run the sub command
-- `sub_command`: any custom sub command
-- `params...`: params for sub command
+- `sub_command`: 子命令
+- `params...`: 子命令的参数
 
-### Core sub commands
-* `hand update` --- reload hand main script
-* `hand cd` --- cd to handybox root dir
-* `hand cd config`  --- cd to your config dir
-* `hand work` --- switch workspace, get/set props in workspace
-* `hand work getprop` --- get prop from workspace
-* `hand work setprop` --- set prop to workspace
-* `hand sh` --- execute shell script with handybox env in process
+### 核心子命令
+* `hand update` --- 重新加载handybox
+* `hand cd` --- 跳转到handybox主目录
+* `hand cd config`  --- 跳转到你的配置目录
+* `hand work` --- 工作区
+* `hand work getprop` --- 获取属性, 优先从当前工作区获取
+* `hand work setprop [-g]` --- 设置属性. `-g`表示设置到全局工作区
+* `hand sh` --- 在导入handybox的进程中执行shell脚本
 
-## Configuration
-The first time you source handybox, it will automatically generate config directory named depending on current user name and host name, located in `$hand__path/config/<user_name>_<host_name>`.
-It is a copy of `$hand__path/example`, file tree shows as below:
+## 配置
+首次加载handybox时, 会自动以用户名和电脑名创建配置目录, 位于`$hand__path/config/<user_name>_<host_name>`.
+它是`$hand__path/example`的一个拷贝, 目录结构如下:
 ```sh
 $hand__config_path/
-├── alias.sh        # your alias
-├── custom.sh       # your custom scripts
-└── hand            # your custom sub commands
+├── alias.sh        --- 别名
+├── custom.sh       --- 客制化脚本
+└── hand            --- 客制化hand子命令
     └── example
       └── cmd.sh
 ```
-> Tips: `$hand__config_path` is the path of your config dir.
+> 提示: `$hand__config_path` 是配置目录.
 
 ### custom.sh
 config handybox in custom.sh
@@ -104,54 +101,63 @@ hand__debug_disabled=1
 hand__lazy_load=1
 ```
 
-## Alias hand as h
-Alias hand as h makes you more easier to use handybox, the main command just an `h`.
+## 设置快捷的别名
+为`hand`设置别名`h`, 使你更容易使用`hand`, 主命令仅仅是一个`h`. 步骤如下:
 
-1. `hand cd config`, jump to your handybox config dir
-2. Edit `alias.sh`, add line `alias h='hand'`
-3. `hand update`
-4. Using `h` instead of `hand`
+1. `hand cd config`, 跳转到你的配置目录
+2. 编辑 `alias.sh`, 增加行 `alias h='hand'`
+3. `hand update` 重新加载handybox
+4. 现在可以用 `h` 代替 `hand` 了.
 
 
-Example alias:
+你可以按照自己的需要设置更多的别名, 例如:
 ```sh
 # alias.sh
 alias h='hand'
 ```
 
 
-## Workspace
-Sometimes, you need some environment, but in other times, you need others. For this reason, we need workspace.
+## 工作区
+有时候你需要一些环境变量, 有时候你又需要另一些. 基于此, 我们需要工作区.
 
-In handybox, workspace is a file include a set of properties, named `<workspace_name>.props`, placed in config path.
+在handybox里, 工作区是包含一组属性的文件, 位于配置目录, 命名为 `<workspace_name>.props`.
 
-Using `hand work` to show all workspace. first time, it shows like this:
+使用 `hand work` 命令可以展示所有的工作区. 默认工作区叫做`default`.
 ```sh
 $ hand work
 work space:
   *  default
 ```
-It means that you have one workspace named `default`. Now, you can put some properties into this workspace.
+现在, 你可以在当前工作区设置属性.
 ```sh
 $ hand work setprop hello.to Daniel
 $ hand work getprop hello.to
 Daniel
 ```
-Then, maybe you want to switch to another workspace, say `develop`:
+这时, 你可能需要切换到其他工作区, 比如 `develop`:
 ```sh
 $ hand work on develop
 work space:
      default
   *  develop
 ```
-It will switch to another workspace, if this workspace not exist, it will create one automatically.
+这样会切换到另一个工作区, 如果这个工作区不存在则会自动创建一个.
+以下是接下来的演示, 你会发现, 属性的值会根据工作区而变化.
+```sh
+$ hand work setprop hello.to China
+$ hand work getprop hello.to
+China
+hand work on default
+$ hand work getprop hello.to
+Daniel
+```
 
+## 创建子命令教程
 
-## Sub Command Tutorial
+> 此教程源码位于 `example/hand/hello`
 
-> The source code the turorial located in `$hand__config_path/hand/hello`
+在handybox里, 你可以很容易的创建子命令, 比如你想要一个这样的子命令 `hand hello <person>`.
 
-It is easy to add a new sub command into handybox. for example, you want to add a command `hand hello <person>`.
 ### Create sub command
 在`$hand__path/hand`或`$hand__config_path/hand`目录创建`hello/cmd.sh`文件. 目录结构如下:
 ```
@@ -249,8 +255,8 @@ hand
 ```
 
 
-### Use workspace
-1. Edit `hand/hello/cmd.sh`
+### 在子命令中使用工作区
+1. 编辑 `hand/hello/cmd.sh`
     ```sh
     function hand_hello()
     {
@@ -263,7 +269,7 @@ hand
         echo "Hello, $hello_to"
     }
     ```
-2. Test `hand hello` in different workspace
+2. 在不同的工作区测试 `hand hello`
     ```
     $ hand work alice
     $ hand hello
@@ -283,11 +289,11 @@ hand
     Hello, Alice
     ```
 
-## Global variables and functions
+## 参考: 导出的环境变量
 
-handybox export some variables and functions in shell enviroment.
+handybox在当前shell环境中导出了一些变量和函数.
 
-### Functions
+### 全局函数
 |Function|Description|
 |-|-|
 |hand              | hand主函数, 将子命令懒加载到环境中执行
@@ -307,7 +313,7 @@ handybox export some variables and functions in shell enviroment.
 | comp_provide_files | 命令补全帮助函数: 用文件补全 |
 | comp_provide_values | 命令补全帮助函数: 用字符串值补全 |
 
-### Variables
+### 全局变量
 |Variable|Description|
 |-|-|
 | hand__version     | 版本

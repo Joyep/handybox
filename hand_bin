@@ -1,9 +1,11 @@
 # load hand.sh
 hand__path="example_path"
+hand__load_completion=0
 source $hand__path/hand.sh
-# hand__debug_disabled=1
+hand__debug_disabled=1
+hand__lazy_load=0
 
-hand echo debug "[bin] hand $@"
+#hand echo debug "[bin] hand $@"
 
 # call hand
 hand "$@"

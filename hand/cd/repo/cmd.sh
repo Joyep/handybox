@@ -1,22 +1,38 @@
-hand_cd_repo()
-{
-	local path1
-	path1=`hand -p repo gettop`
-	if [ $? -ne 0 ]; then
-		# echo $path1
-		hand echo error "get repo top failed!!"
-		return 1
-	fi
+##
+# handybox sub command file
+# V2.0
+#
+# ENV:
+#      hand__cmd_dir  # dir of this cmd.sh
+#      hand__cmd      # input cmd
+##
 
-	if [[ ! -d "$path1" ]]; then
-		hand echo red "repo dir ($path1) is invalid!"
-		return 1
-	fi
+##
+# hand cd repo
+##
 
-	cd $path1
-}
 
-hand_cd_repo__help()
-{
-	echo "切换到当前目录所在的repo根目录"
-}
+case $1 in
+	"-h"|"--help")
+		shift
+		echo -e "$hand__cmd            \t# 切换到当前目录所在的repo根目录"
+		echo -e "$hand__cmd -h/--help  \t# Help"
+		;;
+	*)
+		local path1
+		path1=`hand repo gettop -- pure`
+		if [ $? -ne 0 ]; then
+			# echo $path1
+			hand echo error "get repo top failed!!"
+			return 1
+		fi
+
+		if [[ ! -d "$path1" ]]; then
+			hand echo red "repo dir ($path1) is invalid!"
+			return 1
+		fi
+
+		cd $path1
+		;;
+esac
+

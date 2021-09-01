@@ -14,6 +14,10 @@
 #            comp_params
 ##
 
+##
+# hand hello
+##
+
 if [ $# -eq 0 ]; then
-    comp_provide_values "red green yellow error info warn debug do"
+    comp_provide_values "world earth"
 fi
