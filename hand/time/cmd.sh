@@ -14,10 +14,10 @@ local sub=$1
 shift
 case $sub in
 "-h"|"--help")
-	echo "多进程执行, 并控制进程数量"
-	echo -e "$hand__cmd start [<task_name>] \t# Mark start time, can append with a name"
-	echo -e "$hand__cmd end            \t# Mark end time and show duration"
-	echo -e "$hand__cmd -h/--help      \t# Show help"
+	echo "Meassure time usage"
+	echo -e "`hand__color cyan $hand__cmd` start [<task_name>] \t# Mark start time, can append with a name"
+	echo -e "`hand__color cyan $hand__cmd` end            \t# Mark end time and show duration"
+	echo -e "`hand__color cyan $hand__cmd` `hand__color yellow -h\|--help`      \t# Show help"
 	;;
 "start")
 	if [ "`uname`" = "Darwin" ]; then

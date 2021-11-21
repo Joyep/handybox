@@ -2,14 +2,14 @@
 
 #
 # Depend on files:
-#       $hand__config_path/_global.props
-#       $hand__config_path/<work_name>.props
+#       $hand__path/config/$hand__configs[*]/_global.props
+#       $hand__path/config/$hand__configs[*]/<work_name>.props
 #
-#
+# Depend on global variable:
+#       $hand_work__name
 
-
 #
-# params: get/set [-g] <key> [<value>]
+# params: getprop|setprop|modprop [-g|-b] <key> [<value>]
 #
 main() {
     if [ $# -lt 1 ]; then
@@ -21,12 +21,7 @@ main() {
 		SED="gsed"
 	fi
 
-    # prepare all props files
-	local g_props_file="$hand__config_path/_global.props"
-	local g_props_file_base="$hand__config_path/../$hand__base_config/_global.props"
-	local props_file="$hand__config_path/${hand_work__name}.props"
-	local props_file_base="$hand__config_path/../$hand__base_config/${hand_work__name}.props"
-
+	hand__configs=($hand__configs)
     local sub=$1
     shift
 
@@ -34,10 +29,8 @@ main() {
 	local modify=0
 	local base=0
 	local global=0
-	local options=
 	while true; do
 		if [ "$1" = "-g" ]; then
-			options="-g"
 			global=1
 			shift
 			continue
@@ -48,22 +41,6 @@ main() {
 		fi
 		break
 	done
-
-	# determin dest props file
-	local dest_file=
-	if [ $base -eq 1 ]; then
-		if [ $global -eq 1 ]; then
-			dest_file=$g_props_file_base
-		else
-			dest_file=$props_file_base
-		fi
-	else
-		if [ $global -eq 1 ]; then
-			dest_file=$g_props_file
-		else
-			dest_file=$props_file
-		fi
-	fi
 
     case $sub in
         "getprop")
@@ -84,34 +61,75 @@ main() {
 hand_work_getprop()
 {
 	local filelist=
-	if [ "$dest_file" = "$props_file" ]; then
-		if [ "$1" = "-g" ]; then
-			filelist="$g_props_file $g_props_file_base"
-			shift
+	local file=
+	local config=
+
+	if [ $base -eq 1 ]; then
+		if [ $global -eq 1 ]; then
+			# get from base global
+			# search: all base global props
+			for config in ${hand__configs[@]:1}; do
+				file=$hand__path/config/$config/_global.props
+				if [ -f $file ]; then
+					filelist="$filelist $file"
+				fi
+			done
 		else
-			filelist="$props_file $props_file_base $g_props_file $g_props_file_base"
+			# get from base work
+			# search: all base current work props
+			for config in ${hand__configs[@]:1}; do
+				file=$hand__path/config/$config/$hand_work__name.props
+				if [ -f $file ]; then
+					filelist="$filelist $file"
+				fi
+			done
 		fi
 	else
-		# determined a dest file
-		filelist=$dest_file
+		if [ $global -eq 1 ]; then
+			# get from user global
+			# search: all global props
+			for config in ${hand__configs[@]}; do
+				file=$hand__path/config/$config/_global.props
+				if [ -f $file ]; then
+					filelist="$filelist $file"
+				fi
+			done
+		else
+			# get from user work
+			# search: all current work and global props
+			for config in ${hand__configs[@]}; do
+				file=$hand__path/config/$config/$hand_work__name.props
+				if [ -f $file ]; then
+					filelist="$filelist $file"
+				fi
+			done
+			for config in ${hand__configs[@]}; do
+				file=$hand__path/config/$config/_global.props
+				if [ -f $file ]; then
+					filelist="$filelist $file"
+				fi
+			done
+		fi
 	fi
+	
+	# echo search ${filelist}
 	local key=$1
-	local file=
 	if [ "$key" = "" ]; then
+		echo key is empty!
 		for file in $filelist ; do
-			if [ ! -f $file ]; then
-				continue
-			fi
-			hand echo green "--- ${file//*\/} ---"
+			# if [ ! -f $file ]; then
+			# 	continue
+			# fi
+			echo "--- ${file//*\/} ---"
 			cat $file
 		done
 	else
 		local value=
 		for file in $filelist ; do
-			if [ ! -f $file ]; then
-				file=
-				continue
-			fi
+			# if [ ! -f $file ]; then
+			# 	file=
+			# 	continue
+			# fi
 			value=`grep -e "^${key}=" $file | $SED 's/.*=//g'`
 			if [[ "$value" != "" ]]; then
 				break
@@ -121,11 +139,11 @@ hand_work_getprop()
 
 		if [ "$file" != "" ]; then
 			if [ $hand__debug_disabled -eq 0 ]; then
-				echo "[ < ]" $file
+				echo "[ * ]" $file
 			fi
 			echo $value
 		else
-			hand echo warn "prop \"$key\" not defined"
+			echo "WARN: prop \"$key\" not defined"
 			return 1
 		fi
 	fi
@@ -136,11 +154,50 @@ hand_work_getprop()
 hand_work_setprop()
 {
 	if [ $# -eq 0 ]; then
-        hand echo error "no key"
+        echo "ERROR: no key"
         return 1
     fi
 	local key=$1
 	local value=$2
+
+	local file=
+	local config=
+	local dest_file=
+	if [ $base -eq 1 ]; then
+		if [ $global -eq 1 ]; then
+			# set base global
+			# search: all base global props
+			dest_file=$hand__path/config/${hand__configs[1]}/_global.props
+			for config in ${hand__configs[@]:1}; do
+				file=$hand__path/config/$config/_global.props
+				if [ -f $file ]; then
+					dest_file=$file
+					break
+				fi
+			done
+		else
+			# set base work
+			# search: all base current work props
+			dest_file=$hand__path/config/${hand__configs[1]}/$hand_work__name.props
+			for config in ${hand__configs[@]:1}; do
+				file=$hand__path/config/$config/$hand_work__name.props
+				if [ -f $file ]; then
+					dest_file=$file
+					break
+				fi
+			done
+		fi
+	else
+		if [ $global -eq 1 ]; then
+			# set user global
+			# search: user global props
+			dest_file=$hand__config_path/_global.props
+		else
+			# set user work
+			# search: user work props
+			dest_file=$hand__config_path/$hand_work__name.props
+		fi
+	fi
 
 	if [ ! -f "$dest_file" ]; then
 		touch $dest_file
@@ -154,7 +211,7 @@ hand_work_setprop()
 			local old_value=
 			old_value=`grep ${key}= $dest_file | $SED 's/.*=//g'`
 			if [ "$old_value" = "" ]; then
-				hand echo error "modprop: key \"$key\" not found"
+				echo "ERROR: modprop: key \"$key\" not found"
 				return 1
 			fi
 			# echo old_value: $old_value
@@ -185,12 +242,12 @@ hand_work_setprop()
 			fi
 		fi
 		if [ $hand__debug_disabled -eq 0 ]; then
-			echo "[ > ]" $dest_file
+			echo "[ * ]" $dest_file
 			echo "set $key = $value"
 		fi
 		# sleep 5
 	# } 200<>$dest_file
-	} 200<>$hand__config_path/current_work
+	} 200<>$hand__config_path/.current_work
 
 	return 0
 

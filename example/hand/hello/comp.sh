@@ -14,10 +14,6 @@
 #            comp_params
 ##
 
-##
-# hand hello
-##
-
 if [ $# -eq 0 ]; then
     comp_provide_values "world earth"
 fi

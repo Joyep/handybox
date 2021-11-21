@@ -8,6 +8,7 @@ echo "Installing Handybox shell environment..."
 
 echo "Please copy environment to your shell rc file as below:"
 echo
+echo "# in ~/.profile, ~/.bashrc, ~/.zshrc or other shell rc file"
 echo "export hand__path=`pwd`"
 echo "source \$hand__path/hand.sh"
 echo

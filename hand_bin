@@ -1,11 +1,13 @@
-# load hand.sh
+#/bin/bash
+
+# load handybox script
 hand__path="example_path"
 hand__load_completion=0
 source $hand__path/hand.sh
 hand__debug_disabled=1
-hand__lazy_load=0
+hand__cache_load=0
 
-#hand echo debug "[bin] hand $@"
+# echo "[bin] hand $@"
 
 # call hand
 hand "$@"

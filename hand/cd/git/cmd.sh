@@ -14,8 +14,8 @@
 case $1 in
 	"-h"|"--help")
 		shift
-		echo -e "$hand__cmd            \t# 切换到当前目录所在的git根目录"
-		echo -e "$hand__cmd -h/--help  \t# Help"
+		echo -e "`hand__color cyan $hand__cmd`            \t# Go to the nearest git root path"
+		echo -e "`hand__color cyan $hand__cmd` `hand__color yellow -h/--help`  \t# Help"
 		;;
 	*)
 		local path1

@@ -15,11 +15,11 @@ if [ $# -eq 1 ]; then
 	case $1 in
 	"-h"|"--help")
 		echo "Execute shell script file or command in a stand-alone process"
-		echo -e "$hand__cmd [--zsh/--bash] [--hand] [--env <script>] <file/cmd> [params...]"
+		echo -e "`hand__color cyan $hand__cmd` [--zsh/--bash] [--hand] [--env <script>] <file/cmd> [params...]"
 		echo -e "                       \t# execute <file/cmd> in zsh/bash process with some env"
 		echo -e "                       \t#   --hand: load handybox in execution env"
 		echo -e "                       \t#   --env <script>: load <script> in execution env"
-		echo -e "$hand__cmd -h/--help   \t# Show help"
+		echo -e "`hand__color cyan $hand__cmd` -h/--help   \t# Show help"
 		return
 		;;
 	esac

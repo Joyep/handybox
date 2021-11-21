@@ -17,25 +17,45 @@
 if [ $# -eq 1 ]; then
 	case $1 in
 	"-h"|"--help")
-		echo "管理handybox工作区"
-		echo -e "$hand__cmd                \t# 展示所有工作区"
-		echo -e "$hand__cmd on <name>      \t# 切换工作区"
-		echo -e "$hand__cmd temp <name>    \t# 临时切换工作区(仅作用于当前shell环境)"
-		echo -e "$hand__cmd remove <name>  \t# 删除工作区"
-		echo -e "$hand__cmd getprop|setprop|modprop [-g] [-b] <key> [<value>|<operation>]"
-		echo -e "                          \t# getprop: 获取属性<key>的值"
-		echo -e "                          \t# setprop: 设置属性<key>的值为<value>"
-		echo -e "                          \t# modprop: 对属性<key>的值执行<operation>以修改"
-		echo -e "                          \t#      -g: 表示读写全局工作区的属性"
-		echo -e "                          \t#      -b: 表示读写base工作区的属性"
-		echo -e "$hand__cmd -h|--help      \t# Show help"
+		# local SKY='\033[96m'
+		# local ITALIC='\033[3m'
+		# local YELLOW='\033[33m'
+		# local RES='\033[0m'        # 清除颜色
+		echo "Manage handybox workspace"
+		
+		echo -e "`hand__color cyan $hand__cmd`               \t# Show all workspaces"
+		echo -e "`hand__color cyan $hand__cmd` `hand__color yellow on \<name\>`      \t# Switch workspace(create one if necessary)"
+		echo -e "`hand__color cyan $hand__cmd` `hand__color yellow temp \<name\>`    \t# Switch workspace Temporarily(only effect in current shell environment)"
+		echo -e "`hand__color cyan $hand__cmd` `hand__color yellow remove \<name\>`  \t# Remove a workspace"
+		echo -e "`hand__color cyan $hand__cmd` `hand__color yellow getprop\|setprop\|modprop \[-g\] \[\-b\] \<key\> \[\<value\>\|\<operation\>\]`"
+		echo -e "                          \t# getprop: Get value of property <key>"
+		echo -e "                          \t# setprop: Set property <key> with <value>"
+		echo -e "                          \t# modprop: Modify property <key> by operating <operation>"
+		echo -e "                          \t#      -g: Get/Set property of global workspace"
+		echo -e "                          \t#      -b: Get/Set property of workspaces in base configuration"
+		echo -e "`hand__color cyan $hand__cmd` `hand__color yellow -h\|--help`      \t# Show help"
+
 		return
 		;;
 	esac
 fi
 
-# determin work name
-local work_file=$hand__config_path/current_work
+
+case $1 in
+"on"|"temp"|"remove")
+	if [ "$2" = "" ]; then
+		hand echo error "no workspace name!"
+		return
+	fi
+	if [ "$1" != "remove" ]; then
+		hand_work__name=$2
+	fi
+	;;
+esac
+
+
+# get current work name
+local work_file=$hand__config_path/.current_work
 if [ "$hand_work__name" = "" ]; then
 	if [ -f $work_file ]; then
 		hand_work__name=`cat $work_file`
@@ -47,31 +67,24 @@ if [ "$hand_work__name" = "" ]; then
 fi
 
 local env_script="\
-hand_work__name=$hand_work__name
-hand__base_config=$hand__base_config
+hand__path=$hand__path
 hand__debug_disabled=$hand__debug_disabled
-hand__config_path=${hand__config_path}"
-# echo hand__debug_disabled: $hand__debug_disabled
+hand__configs=\"${hand__configs[@]}\"
+hand__config_path=${hand__config_path}
+hand_work__name=$hand_work__name"
+# echo env=$env_script
+
 case $1 in
 "getprop"|"setprop"|"modprop")
 	hand sh --env "$env_script" ${hand__cmd_dir}/prop.sh "$@"
 	;;
-"on")
-	shift
-	hand sh --env "$env_script" $hand__cmd_dir/work.sh on $1
-	hand work temp $1
-	;;
-"temp")
-	shift
-	hand_work__name=$1
-	hand work
-	;;
 *)
-	if [ $# -eq 0 ]; then
-		# no param, show current work
-		hand sh --env "$env_script" $hand__cmd_dir/work.sh show
-		return
-	fi
 	hand sh --env "$env_script" $hand__cmd_dir/work.sh $@
+	if [ "$1" = "remove" ] && [ "$hand_work__name" = "$2" ]; then
+		hand_work__name="default"
+	fi
 	;;
 esac
+
+# hand sh --env "$env_script" $hand__cmd_dir/work.sh $@
+

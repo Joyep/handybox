@@ -14,9 +14,8 @@
 
 case $1 in
 	"-h"|"--help")
-        echo "获取repo根目录"
-		echo -e "$hand__cmd           \t--- print repo top dir"
-		echo -e "$hand__cmd -h/--help \t--- show help"
+		echo -e "`hand__color cyan $hand__cmd`           \t--- Get nearest repo root path"
+		echo -e "`hand__color cyan $hand__cmd` `hand__color yellow -h\|--help` \t--- show help"
 		;;
 	*)
         local path1=`pwd`

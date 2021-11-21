@@ -13,8 +13,8 @@
 
 case $1 in
 	"-h"|"--help")
-		echo -e "$hand__cmd            \t# 切换到handybox配置目录"
-		echo -e "$hand__cmd -h/--help  \t# Help"
+		echo -e "`hand__color cyan $hand__cmd`            \t# Go go handybox config path"
+		echo -e "`hand__color cyan $hand__cmd` `hand__color yellow -h/--help`  \t# Help"
 		;;
 	*)
 		cd $hand__config_path

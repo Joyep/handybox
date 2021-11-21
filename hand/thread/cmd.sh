@@ -12,15 +12,15 @@
 ##
 case $1 in
 "-h"|"--help")
-	echo "多进程执行, 并控制进程数量"
-	echo -e "$hand__cmd start [<max_thread> [<fd_value>]]"
+	echo "Managing multi-thread process"
+	echo -e "`hand__color cyan $hand__cmd` `hand__color yellow start \[\<max_thread\> \[\<fd_value\>\]\]`"
 	echo -e "                          \t# start multi thread session"
-	echo -e "$hand__cmd stop           \t# stop multi thread session"
-	echo -e "$hand__cmd lock           \t# consume a thread"
-	echo -e "$hand__cmd unlock         \t# release a thread"
-	echo -e "$hand__cmd test [<max_thread=5> [<task_count=10>]]"
+	echo -e "`hand__color cyan $hand__cmd` `hand__color yellow stop`           \t# stop multi thread session"
+	echo -e "`hand__color cyan $hand__cmd` `hand__color yellow lock`           \t# consume a thread"
+	echo -e "`hand__color cyan $hand__cmd` `hand__color yellow unlock`         \t# release a thread"
+	echo -e "`hand__color cyan $hand__cmd` `hand__color yellow test \[\<max_thread=5\> \[\<task_count=10\>\]\]`"
 	echo -e "                          \t# test"
-	echo -e "$hand__cmd -h/--help      \t# show help"
+	echo -e "`hand__color cyan $hand__cmd` `hand__color yellow -h\|--help`      \t# show help"
 	;;
 "start")
 	shift
@@ -45,13 +45,13 @@ case $1 in
 	read -u6
 	hand work modprop thread.count.$$ +1 -- pure
 	local count=`hand work getprop thread.count.$$ -- pure`
-	hand echo green "[+] Runing: $count"
+	hand echo green "[+] Running: $count"
 	;;
 "unlock")
 	echo >&6
 	hand work modprop thread.count.$$ -1 -- pure
 	local count=`hand work getprop thread.count.$$ -- pure`
-	hand echo green "[-] Runing: $count"
+	hand echo green "[-] Running: $count"
 	;;
 "stop")
 	wait

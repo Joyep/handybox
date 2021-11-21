@@ -1,5 +1,6 @@
 
-if [[ "`hand__shell_name`" = "zsh" ]]; then
+
+if [ "$ZSH_NAME" != "" ]; then
 	fpath=($hand__path/completions $fpath)
 	autoload -U hand_zsh_comp.sh
 	compdef hand_zsh_comp.sh hand

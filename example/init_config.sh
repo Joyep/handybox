@@ -1,0 +1,1 @@
+rm -rf $hand__config_path/hand

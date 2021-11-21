@@ -12,9 +12,8 @@
 ##
 case $1 in
 	"-h"|"--help")
-        echo "执行repo sync, 失败后重试"
-		echo -e "$hand__cmd           \t--- call repo sync, retry if failed"
-		echo -e "$hand__cmd -h/--help \t--- show help"
+		echo -e "`hand__color cyan $hand__cmd`           \t# Call repo sync, retry if failed"
+		echo -e "`hand__color cyan $hand__cmd` `hand__color yellow -h\|--help` \t# show help"
 		;;
 	*)
 		hand echo do repo sync

@@ -1,17 +1,16 @@
 ##
 # Handybox subcommand completion script
-# V2.3
+# V2.4
 #
 # Environment Functions:
 #           comp_provide_values [$complist...]
 #           comp_provide_files
+#           comp_provide_cmddirs
 #
 # Environment Varivables
 #            comp_editing  # Editing word
 #            comp_params   # command params
 #            comp_dir      # command dir
-# Params:    
-#            comp_params
 ##
 
 ##
@@ -22,9 +21,37 @@
 
 # hand -- options
 if [ ${#} -ge 1 ] && [ ${@: -1} = "--" ]; then
-	comp_provide_values "test pure source help cd where edit"
+	comp_provide_values "test pure source help cd where edit editcomp new remove"
 	return 0
 fi
+
+comp_provide_cmddirs()
+{
+
+	# provide dir list as completion values
+	local dir
+	local has_value=0
+
+	# echo subcmd_path: $subcmd_path
+	local cfg=""
+	for cfg in ${hand__configs[@]} .. ; do
+		dir=$hand__path/config/$cfg/$subcmd_path
+		# echo dir=$dir
+		if [ -d $dir ]; then
+			# echo "oh, $cfg $dir is a dir"
+			local values=`ls -F $dir/ | grep "/$" | sed 's/\/$//g'`
+			if [ ! "$values" = "" ]; then
+				comp_provide_values $values
+				has_value=1
+			fi
+		fi
+	done
+	# echo "has_value: $has_value"
+	if [ $has_value -eq 0 ]; then
+		comp_provide_files
+	fi
+
+}
 
 # handle completion for subcmd
 
@@ -55,31 +82,7 @@ if [ $ret -ne 0 ] || [ ! -f "$comp_dir/comp.sh" ] ; then
 			;;
 		esac
 	fi
-	# provide dir list as completion values
-	local dir
-	local has_value=0
-	local config_path=
-	if [ -d $hand__config_path/../$hand__base_config/hand ]; then
-		config_path=$hand__config_path/../$hand__base_config
-	else
-		config_path=$hand__config_path
-	fi
-	# echo config_path: $config_path
-	# echo subcmd_path: $subcmd_path
-	for dir in "${config_path}/${subcmd_path}" "${hand__path}/$subcmd_path"; do
-		if [ -d $dir ]; then
-			# echo "oh, $dir is a dir"
-			local values=`ls -F $dir/ | grep "/$" | sed 's/\/$//g'`
-			if [ ! "$values" = "" ]; then
-				comp_provide_values $values
-				has_value=1
-			fi
-		fi
-	done
-	# echo "has_value: $has_value"
-	if [ $has_value -eq 0 ]; then
-		comp_provide_files
-	fi 
+	comp_provide_cmddirs
 	return 0
 fi
 

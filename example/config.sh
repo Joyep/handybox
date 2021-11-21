@@ -10,15 +10,10 @@
 #    >0: debug disabled
 # hand__debug_disabled=1
 
-# Lazy load sub command (default: 1)
-#    1: will lazy load sub command as a function
-#    0: will direactly source load sub command
-# hand__lazy_load=1
-
-#
-# alias
-#
-source $hand__config_path/alias.sh
+# Cached load sub command (default: 1)
+#    1: will cached load sub command as a function
+#    0: will direactly load and excute sub command
+# hand__cache_load=1
 
 #
 # your custom script

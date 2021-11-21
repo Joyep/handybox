@@ -6,31 +6,64 @@ hand()
 
 	# show version info
 	if [ $# -eq 0 ]; then
-		set -- -h
+		# set -- -h
+
+		echo "======================================"
+		echo -e "           `hand__color -b cyan Handybox` `hand__color -i white v$hand__version`"
+		echo
+		echo -e "    `hand__color cyan Script:` $hand__path"
+		echo -e "    `hand__color cyan Binary:` `whereis hand | awk '{print $2}'`"
+		echo -e "   `hand__color cyan Configs:` ${hand__configs[@]}"
+		echo -e "     `hand__color cyan Shell:` `hand__shell_name`"
+		echo -e "  `hand__color cyan Get help:` hand -h"
+		echo "======================================"
+		return
 	fi
 
 	# show help
 	if [ $# -eq 1 ]; then
 		case $1 in
 			"-h"|"--help")
-				echo "============================"
-				echo "Handybox V$hand__version"
-				echo "path:   $hand__path"
-				echo "config: $hand__config_path"
-				echo "shell:  `hand__shell_name`"
-				echo "============================"
-				echo -e "hand [<subcmd> [<params...>]] [-- options...]"
-				echo -e "                     \t\t# Run a subcmd with params"
-				echo -e "hand [subcmd] -- help   \t# Show Help of subcmd"
-				echo -e "hand [subcmd] -- pure   \t# Call subcmd but not print debug info"
-				echo -e "hand [subcmd] -- source \t# Show source code of subcmd"
-				echo -e "hand [subcmd] -- test   \t# Test Runing the subcmd"
-				echo -e "hand [subcmd] -- where  \t# Show path of subcmd"
-				echo -e "hand [subcmd] -- edit   \t# Edit subcmd cmd.sh"
-				echo -e "hand [subcmd] -- cd     \t# Go to path of subcmd"
-				echo -e "hand update      \t\t# Update handybox main script"
-				echo -e "hand cd          \t\t# Change dir to handybox home dir"
-				echo -e "hand cd config   \t\t# Change dir to handybox config dir"
+				local colored_hand=`hand__color cyan hand`
+				echo -e "$colored_hand `hand__color yellow \<subcmd\> \[\<params...\>\]` `hand__color magenta \[\-\- \<option\>]`"
+
+				echo -e "                     \t# Run a subcmd with params"
+				echo -e "option:"
+				echo -e "\t`hand__color magenta -- help`     \t# Show Help of subcmd"
+				echo -e "\t`hand__color magenta -- pure`     \t# Call subcmd but not print debug info"
+				echo -e "\t`hand__color magenta -- source`   \t# Show source code of subcmd"
+				echo -e "\t`hand__color magenta -- test`    \t# Test Runing the subcmd"
+				echo -e "\t`hand__color magenta -- where`    \t# Show path of subcmd"
+				echo -e "\t`hand__color magenta -- edit`     \t# Edit subcmd cmd.sh"
+				echo -e "\t`hand__color magenta -- editcomp` \t# Edit subcmd comp.sh"
+				echo -e "\t`hand__color magenta -- cd`       \t# Go to path of subcmd"
+				echo -e "\t`hand__color magenta -- new`      \t# Create a new subcmd"
+				echo -e "\t`hand__color magenta -- remove`   \t# Remove an exist subcmd"
+				echo -e "\nExample:"
+				echo -e "$colored_hand `hand__color yellow update`      \t# Update handybox main script"
+				echo -e "$colored_hand `hand__color yellow cd`          \t# Go to path of handybox home dir"
+				echo -e "$colored_hand `hand__color yellow cd config`   \t# Go to path of handybox config dir"
+				# echo -e "\nAll subcommands:"
+				# local config=
+				# local dirs=
+				# local cmds=`ls $hand__path/hand`
+				# for config in ${hand__configs[@]}; do
+				# 	if [ -d $hand__path/config/$config/hand ]; then
+				# 		cmds="$cmds `ls $hand__path/config/$config/hand`"
+				# 	fi
+				# done
+				# local cmd=
+				# local array=(${(u)=cmds})
+				# # array=${(u)array}
+				# local index=1
+				# for cmd in $array; do
+				# 	echo -e -n "`hand__color yellow $cmd`\t"
+				# 	if [ $((index%8)) -eq 0 ]; then
+				# 		echo
+				# 	fi
+				# 	((index+=1))
+				# done
+				# echo
 				return
 			;;
 		esac
@@ -43,6 +76,9 @@ hand()
 	local cd_to_cmddir=0
 	local show_cmd_location=0
 	local edit_cmd=0
+	local edit_comp=0
+	local new_subcmd=0
+	local remove_subcmd=0
 	if [ $# -ge 2 ]; then
 		local option_sign=""
 		if [ "$ZSH_NAME" != "" ]; then
@@ -52,11 +88,20 @@ hand()
 		fi
 		if [ "$option_sign" = "--" ]; then
 			case "${@: -1}" in
+			"new")
+				new_subcmd=1
+				;;
+			"remove")
+				remove_subcmd=1
+				;;
 			"where")
 				show_cmd_location=1
 				;;
 			"edit")
 				edit_cmd=1
+				;;
+			"editcomp")
+				edit_comp=1
 				;;
 			"source")
 				show_func_define=1
@@ -107,9 +152,37 @@ hand()
 		fi
 	fi
 
-	# show help by -- help option
+	# handle special options for hand
 	if [ $# -eq 0 ]; then
-		echo -e "\033[32m---- hand ----\033[0m"
+
+		local file=$hand__path/hand.sh
+		if [ $show_cmd_location -eq 1 ]; then
+			echo $file
+			return 0
+		fi
+		if [ $edit_cmd -eq 1 ]; then
+			vim $file
+			echo $file
+			return 0
+		fi
+		if [ $edit_comp -eq 1 ]; then
+			vim $hand__path/completions/comp.sh
+			echo $hand__path/completions/comp.sh
+			return 0
+		fi
+		if [ $cd_to_cmddir -eq 1 ]; then
+			cd `dirname $file`
+			return 0
+		fi
+		if [ $new_subcmd -eq 1 ]; then
+			echo -e "Command \"hand\" already exist!"
+			return 0
+		fi
+		if [ $remove_subcmd -eq 1 ]; then
+			echo -e "Can't remove command \"hand\"!"
+			return 0
+		fi
+		echo -e `hand__color green "Helper for \"hand\""`
 		hand -h
 		return 0
 	fi
@@ -122,9 +195,49 @@ hand()
 	local subcmd_param_shift_times=0
 	hand__find_subcmd $@
 	if [ $? -ne 0 ]; then
-		echo "\"hand $origin_cmd\" not found in handybox!"
+		if [ $new_subcmd -eq 1 ]; then
+			# create a new subcmd using tamplete
+			local subcmd_path="hand $@"
+			local index=0
+			if [ "$ZSH_NAME" != "" ]; then
+				index=1
+			fi
+			subcmd_handdir=$hand__path/config/${hand__configs[index]}
+			local subcmd_path="$subcmd_handdir/${subcmd_path// //}"
+			mkdir -p $subcmd_path
+			cp $hand__path/example/hand/hello/cmd.sh $subcmd_path/cmd.sh
+			cp $hand__path/example/hand/hello/comp.sh $subcmd_path/comp.sh
+			echo "Command \"hand $@\" created in $subcmd_path"
+			return 0
+		fi
+		echo "\"hand $@\" is not a subcommand!"
 		return 1
 	fi
+
+	# subcommand found
+
+	local cmdpath=$subcmd_path
+	local hand__cmd="${cmdpath//\// }"
+	if [ $new_subcmd -eq 1 ]; then
+		echo "Command \"hand $hand__cmd\" already exist!"
+		return 1
+	fi
+
+	if [ $remove_subcmd -eq 1 ]; then
+		echo "Remove command \"$hand__cmd\" from $subcmd_handdir/$subcmd_path (Yes/no)?"
+		local confirm_remove
+		read confirm_remove
+		if [ "$confirm_remove" = "Yes" ]; then
+			rm -r $subcmd_handdir/$subcmd_path
+			echo "Removed"
+		else
+			echo "Cancelled"
+		fi
+		return 0
+	fi
+
+	local file=$subcmd_handdir/$subcmd_path/cmd.sh
+	local func=${subcmd_path//\//_}
 	# echo subcmd_param_shift_times=$subcmd_param_shift_times
 	while [ $subcmd_param_shift_times -gt 0 ]; do
 		shift
@@ -135,10 +248,6 @@ hand()
 	# echo subcmd_params=$@
 	# return 0
 
-	file=$subcmd_handdir/$subcmd_path/cmd.sh
-	cmdpath=$subcmd_path
-	func=${subcmd_path//\//_}
-
 	# show where is the sub cmd
 	if [ $show_cmd_location -eq 1 ]; then
 		echo $file
@@ -147,6 +256,12 @@ hand()
 
 	if [ $edit_cmd -eq 1 ]; then
 		vim $file
+		echo $file
+		return 0
+	fi
+	if [ $edit_comp -eq 1 ]; then
+		vim $subcmd_handdir/$subcmd_path/comp.sh
+		echo $subcmd_handdir/$subcmd_path/comp.sh
 		return 0
 	fi
 
@@ -156,11 +271,11 @@ hand()
 		return 0
 	fi
 
-	local hand__cmd="${cmdpath//\// }"
+
 	local hand__cmd_dir=`dirname $file`
 
 	# 3. load sub command file (cmd.sh)
-	if [ "$hand__lazy_load" = "1" ]; then
+	if [ "$hand__cache_load" = "1" ]; then
 		# lazy load func by comparing timestamp
 		local func_date=`eval echo '$'hand__timestamp_${func}`
 		if [ "$func_date" = "" ]; then
@@ -187,7 +302,7 @@ hand()
 	if [ $show_func_define = 1 ]; then
 		echo "file: $file"
 		# cat $file
-		if [ "$hand__lazy_load" = "1" ]; then
+		if [ "$hand__cache_load" = "1" ]; then
 			type $func
 			which $func
 		else
@@ -198,7 +313,7 @@ hand()
 
 	# 5. show help
 	if [[ $show_help -eq 1 ]]; then
-		echo -e "\033[32m---- $hand__cmd ----\033[0m"
+		echo -e `hand__color green "Helper for \"$hand__cmd\""`
 		$func --help
 		return 0
 	fi
@@ -218,26 +333,179 @@ hand()
 
 }
 
+# hand__color [-b|-i|-bg|-li] <color> [<bgcolor>] <content>
+# -b: bold
+# -i: italic
+# -bg: with background color
+# -li: low Intensity color
+hand__color()
+{
+	# local COLOR_BLACK=0
+	# local COLOR_RED=1
+	# local COLOR_GREEN=2
+	# local COLOR_YELLOW=3
+	# local COLOR_BLUE=4
+	# local COLOR_MAGENTA=5
+	# local COLOR_CYAN=6
+	# local COLOR_WHITE=7
+
+	# local FOREGROUND=3
+	# local BACKGROUND=4
+	# local FOREGROUND_HIGH_INTENSITY=9
+	# local BACKGROUND_HIGH_INTENSITY=10
+
+	# local OPTION_NONE=0
+	# local OPTION_BOLD=1
+	# local OPTION_TINT=2
+	# local OPTION_ITALIC=3
+
+	local option=0
+	local color=0
+	local bgcolor=-1
+	local with_bg=0
+	local foreground=9
+	local background=10
+	while true; do
+		if [ "-b" = "$1" ]; then
+			option=1
+			shift
+			continue
+		fi
+		if [ "-i" = "$1" ]; then
+			option=3
+			shift
+			continue
+		fi
+		if [ "-bg" = "$1" ]; then
+			with_bg=1
+			shift
+			continue
+		fi
+		if [ "-li" = "$1" ]; then
+			foreground=3
+			background=4
+			shift
+			continue
+		fi
+		if [ "-" = "${1:0:1}" ]; then
+			shift
+			continue
+		fi
+		break
+	done
+
+	# format text with color
+	local i=
+	for i in  1 2 ; do
+		case $1 in
+		"black")
+			shift
+			if [ $i -eq 1 ]; then
+				color=0
+			else
+				bgcolor=0
+			fi
+			;;
+		"red")
+			shift
+			if [ $i -eq 1 ]; then
+				color=1
+			else
+				bgcolor=1
+			fi
+			;;
+		"green")
+			shift
+			if [ $i -eq 1 ]; then
+				color=2
+			else
+				bgcolor=2
+			fi
+			;;
+		"yellow")
+			shift
+			if [ $i -eq 1 ]; then
+				color=3
+			else
+				bgcolor=3
+			fi
+			;;
+		"blue")
+			shift
+			if [ $i -eq 1 ]; then
+				color=4
+			else
+				bgcolor=4
+			fi
+			;;
+		"magenta")
+			shift
+			if [ $i -eq 1 ]; then
+				color=5
+			else
+				bgcolor=5
+			fi
+			;;
+		"cyan")
+			shift
+			if [ $i -eq 1 ]; then
+				color=6
+			else
+				bgcolor=6
+			fi
+			;;
+		"white")
+			shift
+			if [ $i -eq 1 ]; then
+				color=7
+			else
+				bgcolor=7
+			fi
+			;;
+		*)
+			shift
+			echo $*
+			return
+			;;
+		esac
+		if [ $with_bg -eq 1 ]; then
+			continue
+		fi
+		break
+	done
+	
+	if [ $bgcolor -ne -1 ]; then
+		bgcolor="${background}$bgcolor;"
+	else
+		bgcolor=""
+	fi
+	echo -e "\033[${option};${bgcolor}${foreground}${color}m$*\033[0m"
+}
+
 # 
 # hand subcmd... params... ---> $subcmd_handdir/$subcmd_path/cmd.sh $subcmd_params...
 # output: subcmd_handdir, subcmd_path, subcmd_param_shift_times
 #
 hand__find_subcmd() {
 	local off=0
-	local config_path=
-	if [ -d $hand__config_path/../$hand__base_config/hand ]; then
-		config_path=$hand__config_path/../$hand__base_config
-	else
-		config_path=$hand__config_path
-	fi
-
 
 	# 1. get func and cmdpath of sub command 
-	local cmdpath="hand" # sub cmd related path. eg: hand/a/b/c
+	local cmdpath="hand" # subcmd related path. eg: hand/a/b/c
 	local par=
-	for par in $*
-	do	
-		if [ -d $config_path/$cmdpath/$par ] || [ -d $hand__path/$cmdpath/$par ]; then
+	for par in $* ; do	
+		local matched=0
+		local cfg=""
+		for cfg in ${hand__configs[@]} $hand__path/$cmdpath/$par; do
+			if [ -d $hand__path/config/$cfg/$cmdpath/$par ]; then
+				matched=1
+			fi
+		done
+		if [ $matched -ne 1 ]; then
+			if [ -d $hand__path/$cmdpath/$par ]; then
+				matched=1
+			fi
+		fi
+		if [ $matched -eq 1 ]; then
 			((off=off+1))
 			cmdpath="$cmdpath/$par"
 			continue
@@ -265,13 +533,16 @@ hand__find_subcmd() {
 			return 1
 		fi
 		
-		file=$config_path/$cmdpath/cmd.sh
-		if [ -f $file ]; then
-			# cmd.sh found in config path
-			subcmd_handdir=$config_path
-			break
-		fi
-		file=
+		local cfg=""
+		for cfg in ${hand__configs[@]}; do
+			file=$hand__path/config/$cfg/$cmdpath/cmd.sh
+			if [ -f $file ]; then
+				# cmd.sh found in config path
+				subcmd_handdir=$hand__path/config/$cfg
+				break 2
+			fi
+			file=
+		done
 		
 		file=$hand__path/$cmdpath/cmd.sh
 		if [ -f $file ]; then
@@ -346,13 +617,15 @@ hand__load_file()
 	fi
 	# hand__echo_debug "source $file -- from "
 	hand__echo_debug "[$symbol] $func  <-- $file"
-	# echo define $func
+	
+	# define $func
 	local temp=$( mktemp )
 	echo "$func() {" > $temp
 	cat $file >> $temp
 	echo -e "\n}" >> $temp
-	. $temp
+	source $temp
 	rm ${temp}
+
 	eval hand__timestamp_${func}=`date +%s`
 }
 
@@ -445,36 +718,86 @@ hand__get_first()
 	# echo -E "$@" | awk 'START {print}' | awk -F " " '{print $1}'
 }
 
+hand__init() {
+	# echo Loading handybox...
+	hand__version="3.4"
+	hand__timestamp=`date +%s`
 
-# ==============
-# script loading entry
-# ==============
-
-hand__version="3.3.2"
-hand__timestamp=`date +%s`
-
-# init custom config path
-hand__config_path=$hand__path/config/`hand__get_config_name`
-if [ ! -d $hand__path/config  ]; then
-	mkdir $hand__path/config
-fi
-if [ ! -d $hand__config_path ]; then
-	cp -r $hand__path/example $hand__config_path
-	if [ -f $hand__config_path/init_config.sh ]; then
-		source $hand__config_path/init_config.sh
+	# get user config name
+	local cfg=""
+	if [ "$hand__custom_config" != "" ]; then
+		cfg=$hand__custom_config
+	else
+		cfg=`hand__get_config_name`
 	fi
-fi
+	hand__config_path=$hand__path/config/$cfg
+	# echo hand__config_path=$hand__config_path
+	# init config path
+	local file=$hand__path/config
+	if [ ! -d $file  ]; then
+		mkdir $file
+	fi
+	local config_path=$hand__config_path
+	if [ ! -d $config_path ]; then
+		cp -r $hand__path/example $config_path
+		file=$config_path/init_config.sh
+		if [ -f $file ]; then
+			source $file
+			rm $file
+		fi
+	fi
 
-# load user's custom script
-source $hand__config_path/custom.sh
-if [ -z $hand__debug_disabled ]; then
+	# default configuration
 	hand__debug_disabled=1
-fi
-if [ -z $hand__lazy_load ]; then
-	hand__lazy_load=1
-fi
+	hand__cache_load=1
 
-# load cmd completion script
-if [ ! "$hand__load_completion" = "0" ]; then
-	source $hand__path/completions/complete.sh
-fi
+	# load user's configuration
+	hand__configs=( $cfg )
+	local index=1
+	if [ "$ZSH_NAME" != "" ]; then
+		index=2
+	fi
+	local _base_name=
+	while true; do
+		# echo parse config: cfg
+		file=$hand__path/config/$cfg/base.config.txt
+		if [ -f $file ]; then
+			_base_name=`cat $file`
+			# echo in cfg, _base_name is $_base_name
+			if [ "$_base_name" != "" ] && [ -d $hand__path/config/$_base_name ]; then
+				cfg=$_base_name
+				hand__configs[index]=$_base_name
+				((index+=1))
+				continue
+			fi
+		fi
+		break
+	done
+	# echo all configs: $hand__configs[@]
+	# echo index=$index
+	local from=$((index-1))
+	local to=0
+	if [ "$ZSH_NAME" != "" ]; then
+		to=1
+	fi
+	local i
+	for ((i=from; i>=to; i--)) do
+		# echo load config: ${hand__configs[i]}
+		file=$hand__path/config/${hand__configs[i]}/config.sh
+		if [ -f $file ]; then
+			source $file
+		fi
+		file=$hand__path/config/${hand__configs[i]}/alias.sh
+		if [ -f $file ]; then
+			source $file
+		fi
+	done
+
+	# load cmd completion script
+	if [ ! "$hand__load_completion" = "0" ]; then
+		source $hand__path/completions/complete.sh
+	fi
+}
+
+hand__init
+

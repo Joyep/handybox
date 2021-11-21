@@ -11,6 +11,7 @@ hand_path=`pwd`
 
 echo "Installing Handybox command 'hand' to $dest ..."
 
+mkdir -p $HOME/bin
 cp $src $dest
 if [ $(uname) = "Darwin" ]; then
 	SED_CMD="gsed"

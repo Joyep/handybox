@@ -83,25 +83,25 @@ It is a copy of `$hand__path/example`, file tree shows as below:
 ```sh
 $hand__config_path/
 ├── alias.sh        # your alias
-├── custom.sh       # your custom scripts
-└── hand            # your custom sub commands
+├── config.sh       # your configuration scripts
+└── hand            # your user scope sub commands
     └── example
       └── cmd.sh
 ```
 > Tips: `$hand__config_path` is the path of your config dir.
 
-### custom.sh
-config handybox in custom.sh
+### config.sh
+config handybox in config.sh
 ```sh
 # Disable debug info (default: 1)
 #     0: debug enabled
 #    >0: debug disabled
 hand__debug_disabled=1
 
-# Lazy load sub command (default: 1)
-#    1: will lazy load sub command as a function
-#    0: will direactly source load sub command
-hand__lazy_load=1
+# Cached load sub command (default: 1)
+#    1: will cached load sub command as a function
+#    0: will direactly load and excute sub command
+hand__cache_load=1
 ```
 
 ## Alias hand as h
@@ -316,7 +316,7 @@ handybox export some variables and functions in shell enviroment.
 | hand__cmd         | 正在运行的子命令(不含参数)
 | hand__cmd_dir     | 正在运行的子命令所在的文件夹
 | hand__debug_disabled       | 是否打印debug信息
-| hand__lazy_load      | 懒加载子命令cmd.sh文件
+| hand__cache_load      | 懒加载子命令cmd.sh文件
 
-> 当启用懒加载(`hand__lazy_load`)时, 系统会为每个子命令创建一个函数, 函数名为`hand_<subcmd...>`
+> 当启用懒加载(`hand__cache_load`)时, 系统会为每个子命令创建一个函数, 函数名为`hand_<subcmd...>`
 

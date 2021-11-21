@@ -26,17 +26,20 @@ fi
 
 local will_provide_proplist=0
 case ${1} in
-"on"|"temp")
+"on"|"temp"|"remove")
     shift
     local i= name=
-    for i in `ls $hand__config_path/*.props; ls $hand__config_path/../$hand__base_config/*.props`
-	do
-		name=${i##*\/}
-		name=${name%.*}
-		if [[ ! ${name//_*} ]]; then
-			continue
-		fi
-        comp_provide_values "$name"
+    local config=
+    for config in ${hand__configs[@]} ; do
+        for i in `ls $hand__path/config/$config/*.props` ; do
+            # echo i=$i
+            name=${i##*\/}
+            name=${name%.*}
+            if [[ ! ${name//_*} ]]; then
+                continue
+            fi
+            comp_provide_values "$name"
+        done
     done
     ;;
 # "modprop")
@@ -45,52 +48,91 @@ case ${1} in
 #         will_provide_proplist=1
 #     fi
 #     ;;
-"getprop"|"setprop"|"modprop")
+"setprop"|"modprop"|"getprop")
+    local need_param_count=2
+    if [ "$1" = "getprop" ]; then
+        need_param_count=1
+    fi
     shift
-    if [ ${#} -gt 2 ]; then
+    local option_g=0
+    local option_b=0
+    while true; do
+        if [ "$1" = "-g" ]; then
+            shift
+            option_g=1
+            continue
+        elif [ "$1" = "-b" ]; then
+            shift
+            option_b=1
+            continue
+        fi
+        break
+    done
+    if [ $# -ge $need_param_count ]; then
         return
+    fi
+    if [ "${comp_editing: 0: 1}" = "-" ]; then
+        if [ $option_g -eq 0 ]; then
+            comp_provide_values "-g"
+        fi
+        if [ $option_b -eq 0 ]; then
+            comp_provide_values "-b"
+        fi
     else
-        if [ ${#} -eq 0 ] ; then
-            if [ "${comp_editing: 0: 1}" = "-" ]; then
-                comp_provide_values "-g -b"
-            else
-                will_provide_proplist=1
-            fi
-        elif [ ${#} -eq 1 ]; then
-            if [ "${1: 0: 1}" = "-" ] ; then
-                will_provide_proplist=1
-            else
-                comp_provide_files
-            fi
-        elif [ ${#} -eq 2 ]; then
-            if [ "${1: 0: 1}" = "-" ] ; then
-                comp_provide_files
-            else
-                return
-            fi
+        if [ $# -eq 0 ]; then
+            will_provide_proplist=1
         else
-            return
+            comp_provide_files
         fi
     fi
     ;;
+# "xsetprop"|"xmodprop")
+#     shift
+#     if [ ${#} -gt 2 ]; then
+#         return
+#     else
+#         if [ ${#} -eq 0 ] ; then
+#             if [ "${comp_editing: 0: 1}" = "-" ]; then
+#                 comp_provide_values "-g -b"
+#             else
+#                 will_provide_proplist=1
+#             fi
+#         elif [ ${#} -eq 1 ]; then
+#             if [ "${1: 0: 1}" = "-" ] ; then
+#                 will_provide_proplist=1
+#             else
+#                 comp_provide_files
+#             fi
+#         elif [ ${#} -eq 2 ]; then
+#             if [ "${1: 0: 1}" = "-" ] ; then
+#                 comp_provide_files
+#             else
+#                 return
+#             fi
+#         else
+#             return
+#         fi
+#     fi
+#     ;;
 esac
 
 if [ $will_provide_proplist -eq 1 ]; then
-   # echo hand_path=$hand__path
+    if [ ! -z "$comp_work_proplist" ]; then
+        comp_provide_values $comp_work_proplist
+        return
+    fi
+
     local files=(`find $hand__path -name comp_props.sh`)
     local file=
     local dir=
     for file in ${files[@]}
     do
-        # echo file: $file
         dir=${file%\/*}
-        # echo dir: $dir
         if [ -f "$dir/cmd.sh" ]; then
-            # echo source $file
-            # inn $dir ...
             source $file $dir
         fi
     done
     comp_provide_values $proplist
+    comp_work_proplist=$proplist
 fi
 

@@ -15,7 +15,7 @@
 case $1 in
 	"-h"|"--help")
 		shift
-        echo $hand__cmd "获取当前目录所在的git根目录路径"
+        echo `hand__color cyan $hand__cmd` "\t# Get nearest git root path"
 		;;
 	*)
         local path1=`pwd`

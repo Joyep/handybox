@@ -15,14 +15,13 @@
 case $1 in
 	"-h"|"--help")
 		shift
-		echo "重新载入handybox脚本"
-		echo -e "$hand__cmd           \t# update handybox main script"
-		echo -e "$hand__cmd -h/--help \t# Show help"
+		echo -e "`hand__color cyan $hand__cmd`           \t# Reload handybox main script"
+		echo -e "`hand__color cyan $hand__cmd` -h/--help \t# Show help"
 		;;
 	*)
 		source $hand__path/hand.sh
 		hand
-		echo "update Handy Box success!"
+		hand echo green "handybox main script updated!"
 		;;
 esac
 

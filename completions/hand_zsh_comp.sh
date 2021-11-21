@@ -21,10 +21,10 @@ comp_dump() {
 	echo editing: $comp_editing
 }
 
-local size=${#words}
-local comp_editing=${words[size]}
+# local size=${#words}
+local comp_editing=${words[CURRENT]}
 local comp_dir=${hand__path}/completions
-local comp_params=(${words[2, size-1]})
+local comp_params=(${words[2, CURRENT-1]})
 
 set -- $comp_params
 source $comp_dir/comp.sh
