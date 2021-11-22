@@ -47,6 +47,10 @@ case $1 in
 		hand echo error "no workspace name!"
 		return
 	fi
+	if [ "${2:0:1}" = "_" ]; then
+		hand echo error "\"$2\" is NOT a valid workspace name"
+		return
+	fi
 	if [ "$1" != "remove" ]; then
 		hand_work__name=$2
 	fi
