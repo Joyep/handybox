@@ -26,7 +26,7 @@
 
     ```sh
     # handybox
-    export hand__path=/path/to/handybox
+    hand__path=/path/to/handybox
     source $hand__path/hand.sh
     ```
 3. 打开新终端, 可以了!
