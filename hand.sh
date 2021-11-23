@@ -32,11 +32,11 @@ hand()
 				echo -e "\t`hand__color magenta -- help`     \t# Show Help of subcmd"
 				echo -e "\t`hand__color magenta -- pure`     \t# Call subcmd but not print debug info"
 				echo -e "\t`hand__color magenta -- source`   \t# Show source code of subcmd"
-				echo -e "\t`hand__color magenta -- test`    \t# Test Runing the subcmd"
+				# echo -e "\t`hand__color magenta -- test`    \t# Test Runing the subcmd"
 				echo -e "\t`hand__color magenta -- where`    \t# Show path of subcmd"
+				echo -e "\t`hand__color magenta -- cd`       \t# Go to path of subcmd"
 				echo -e "\t`hand__color magenta -- edit`     \t# Edit subcmd cmd.sh"
 				echo -e "\t`hand__color magenta -- editcomp` \t# Edit subcmd comp.sh"
-				echo -e "\t`hand__color magenta -- cd`       \t# Go to path of subcmd"
 				echo -e "\t`hand__color magenta -- new`      \t# Create a new subcmd"
 				echo -e "\t`hand__color magenta -- remove`   \t# Remove an exist subcmd"
 				echo -e "\nExample:"
@@ -333,11 +333,11 @@ hand()
 
 }
 
-# hand__color [-b|-i|-bg|-li] <color> [<bgcolor>] <content>
+# hand__color [-b|-i|-bg|-hi] <color> [<bgcolor>] <content>
 # -b: bold
 # -i: italic
 # -bg: with background color
-# -li: low Intensity color
+# -hi: high Intensity color
 hand__color()
 {
 	# local COLOR_BLACK=0
@@ -363,8 +363,8 @@ hand__color()
 	local color=0
 	local bgcolor=-1
 	local with_bg=0
-	local foreground=9
-	local background=10
+	local foreground=3
+	local background=4
 	while true; do
 		if [ "-b" = "$1" ]; then
 			option=1
@@ -381,9 +381,9 @@ hand__color()
 			shift
 			continue
 		fi
-		if [ "-li" = "$1" ]; then
-			foreground=3
-			background=4
+		if [ "-hi" = "$1" ]; then
+			foreground=9
+			background=10
 			shift
 			continue
 		fi

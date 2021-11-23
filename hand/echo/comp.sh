@@ -18,7 +18,7 @@
 # echo params="$*"
 # echo paramsnum="$#"
 local with_bg=0
-local options="-b -i -bg -li"
+local options="-b -i -bg -hi"
 local with_option=0
 while true; do
     if [ "${1:0:1}" = "-" ]; then
