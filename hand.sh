@@ -260,8 +260,12 @@ hand()
 		return 0
 	fi
 	if [ $edit_comp -eq 1 ]; then
-		vim $subcmd_handdir/$subcmd_path/comp.sh
-		echo $subcmd_handdir/$subcmd_path/comp.sh
+		file=$subcmd_handdir/$subcmd_path/comp.sh
+		if [ ! -f $file ]; then
+			cp $hand__path/example/hand/hello/comp.sh $file
+		fi
+		vim $file
+		echo $file
 		return 0
 	fi
 
@@ -561,18 +565,6 @@ hand__find_subcmd() {
 	subcmd_param_shift_times=$off
 }
 
-# prefer run hand in standalone process
-hand__hub()
-{
-	case $1 in
-	"cd"|"update"|"work"|"prop"|"-s"|"time")
-		hand "$@"
-		;;
-	*)
-		$HOME/bin/hand "$@"
-		;;
-	esac
-}
 
 # do a commond and get last word, if error return
 hand__pure_do()
@@ -720,7 +712,7 @@ hand__get_first()
 
 hand__init() {
 	# echo Loading handybox...
-	hand__version="3.4"
+	hand__version="3.4.1"
 	hand__timestamp=`date +%s`
 
 	# get user config name

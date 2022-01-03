@@ -18,28 +18,12 @@ case $1 in
         echo `hand__color cyan $hand__cmd` "\t# Get nearest git root path"
 		;;
 	*)
-        local path1=`pwd`
-        while true;
-        do
-            if [ -d $path1/.git ]; then
-                echo "$path1"
-                return 0
-            fi
-
-            if [ -d $path1/.repo ]; then
-                echo "$path1"
-                return 0
-            fi
-
-            if [ "$path1" = "/" ] ; then
-                # echo ""
-                return 1
-            fi
-
-            path1=`dirname $path1`
-            if [ $? -ne 0 ]; then
-                return 1
-            fi
-        done
+		local gitdir=
+		gitdir=`git rev-parse --git-dir`
+		if [ $? -eq 0 ]; then
+			dirname $gitdir
+		else
+			return 1
+		fi
         ;;
 esac

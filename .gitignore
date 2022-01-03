@@ -7,7 +7,6 @@ tags
 *.pyc
 __pycache__
 node_modules
-.current_work
 *.class
-.swiftpm
-.build
+.*
+!.gitignore

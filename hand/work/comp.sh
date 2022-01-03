@@ -54,16 +54,11 @@ case ${1} in
         need_param_count=1
     fi
     shift
-    local option_g=0
-    local option_b=0
+    local options="-b -g"
     while true; do
-        if [ "$1" = "-g" ]; then
+        if [ "${1:0:1}" = "-" ]; then
+            options=${options/$1/}
             shift
-            option_g=1
-            continue
-        elif [ "$1" = "-b" ]; then
-            shift
-            option_b=1
             continue
         fi
         break
@@ -72,12 +67,7 @@ case ${1} in
         return
     fi
     if [ "${comp_editing: 0: 1}" = "-" ]; then
-        if [ $option_g -eq 0 ]; then
-            comp_provide_values "-g"
-        fi
-        if [ $option_b -eq 0 ]; then
-            comp_provide_values "-b"
-        fi
+        comp_provide_values $options
     else
         if [ $# -eq 0 ]; then
             will_provide_proplist=1

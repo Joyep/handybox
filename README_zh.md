@@ -1,6 +1,6 @@
 
-# handybox
-**Shell环境自定义分层子命令框架**
+# Handybox
+**Shell环境目录层次子命令框架**
 
 `handybox`可以将你常用的命令(或脚本)以子命令的方式分层次放置在一个主命令`hand`之下. 适用于bash/zsh等shell环境.
 > 此项目在bash和zsh下测试通过, 其他shell环境请自行验证.

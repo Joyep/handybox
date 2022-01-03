@@ -15,7 +15,7 @@ if [ $# -eq 1 ]; then
 	case $1 in
 	"-h"|"--help")
 		echo "Execute shell script file or command in a stand-alone process"
-		echo -e "`hand__color cyan $hand__cmd` [--zsh/--bash] [--hand] [--env <script>] <file/cmd> [params...]"
+		echo -e "`hand__color cyan $hand__cmd` [--zsh/--bash] [--hand] [--env <script>] <file|cmd> [params...]"
 		echo -e "                       \t# execute <file/cmd> in zsh/bash process with some env"
 		echo -e "                       \t#   --hand: load handybox in execution env"
 		echo -e "                       \t#   --env <script>: load <script> in execution env"
@@ -50,7 +50,7 @@ $script"
 	"--env")
 		shift
 		script="\
-$1 
+$1
 $script"
 		shift
 		;;
@@ -80,9 +80,21 @@ if [ "$shell_env" = "" ]; then
 	fi
 fi
 
+# get cmd to run
+local cmd=""
+if [ -f "$1" ]; then
+	cmd="source $@"
+else
+	cmd="$@"
+fi
+
+# prepare a temp file ready to run
 local temp=$( mktemp )
 cat > $temp <<EOF
 $script
+$cmd
+EOF
+# debug
 # echo "==========="
 # echo "params: $@"
 # echo "process: $shell_env"
@@ -90,13 +102,8 @@ $script
 # echo "zsh name: \$ZSH_NAME"
 # echo "process: \$\$"
 # echo "==========="
-if [ -f "$1" ]; then
-	source $@
-else
-	$@
-fi
-EOF
 
+# run the temp file
 $shell_env $temp $@
 local ret=$?
 # echo temp file: $temp
