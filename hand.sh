@@ -37,7 +37,7 @@ hand()
 				echo -e "\t`hand__color magenta -- cd`       \t# Go to path of subcmd"
 				echo -e "\t`hand__color magenta -- edit`     \t# Edit subcmd cmd.sh"
 				echo -e "\t`hand__color magenta -- editcomp` \t# Edit subcmd comp.sh"
-				echo -e "\t`hand__color magenta -- new`      \t# Create a new subcmd"
+				echo -e "\t`hand__color magenta -- new\|new-python\|new-swift`      \t# Create a new shell|python|swift subcmd project"
 				echo -e "\t`hand__color magenta -- remove`   \t# Remove an exist subcmd"
 				echo -e "\nExample:"
 				echo -e "$colored_hand `hand__color yellow update`      \t# Update handybox main script"
@@ -76,8 +76,10 @@ hand()
 	local cd_to_cmddir=0
 	local show_cmd_location=0
 	local edit_cmd=0
+	local edit_dir=0
 	local edit_comp=0
 	local new_subcmd=0
+	local new_py_subcmd=0
 	local remove_subcmd=0
 	if [ $# -ge 2 ]; then
 		local option_sign=""
@@ -91,6 +93,10 @@ hand()
 			"new")
 				new_subcmd=1
 				;;
+			"new-python")
+				new_subcmd=1
+				new_py_subcmd=1
+				;;
 			"remove")
 				remove_subcmd=1
 				;;
@@ -99,6 +105,9 @@ hand()
 				;;
 			"edit")
 				edit_cmd=1
+				;;
+			"editdir")
+				edit_dir=1
 				;;
 			"editcomp")
 				edit_comp=1
@@ -205,8 +214,11 @@ hand()
 			subcmd_handdir=$hand__path/config/${hand__configs[index]}
 			local subcmd_path="$subcmd_handdir/${subcmd_path// //}"
 			mkdir -p $subcmd_path
-			cp $hand__path/example/hand/hello/cmd.sh $subcmd_path/cmd.sh
-			cp $hand__path/example/hand/hello/comp.sh $subcmd_path/comp.sh
+			if [ $new_py_subcmd -eq 1 ]; then
+				cp $hand__path/templete/python-project/* $subcmd_path/
+			else
+				cp $hand__path/templete/shell-project/* $subcmd_path/
+			fi
 			echo "Command \"hand $@\" created in $subcmd_path"
 			return 0
 		fi
@@ -259,10 +271,14 @@ hand()
 		echo $file
 		return 0
 	fi
+	if [ $edit_dir -eq 1 ]; then
+		vim $subcmd_handdir/$subcmd_path
+		return 0
+	fi
 	if [ $edit_comp -eq 1 ]; then
 		file=$subcmd_handdir/$subcmd_path/comp.sh
 		if [ ! -f $file ]; then
-			cp $hand__path/example/hand/hello/comp.sh $file
+			cp $hand__path/templete/shell-project/comp.sh $file
 		fi
 		vim $file
 		echo $file
@@ -731,7 +747,7 @@ hand__init() {
 	fi
 	local config_path=$hand__config_path
 	if [ ! -d $config_path ]; then
-		cp -r $hand__path/example $config_path
+		cp -r $hand__path/templete/default-config $config_path
 		file=$config_path/init_config.sh
 		if [ -f $file ]; then
 			source $file

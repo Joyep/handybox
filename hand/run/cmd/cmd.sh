@@ -7,26 +7,41 @@
 #      hand__cmd      # input cmd
 ##
 
-if [ $# -eq 0 ]; then
-	hand run cmd -h
-	return
-elif [ $# -eq 1 ]; then
+#if [ $# -eq 0 ]; then
+#	hand run cmd -h
+#	return
+#el
+if [ $# -eq 1 ]; then
 	case $1 in
 	  "-h"|"--help")
-		echo -e "`hand__color cyan $hand__cmd` <cmd.sh_file> [params...] \t# Run a handybox cmd.sh file directly"
-		echo -e "`hand__color cyan $hand__cmd` `hand__color yellow -h\|--help`  \t\t# Help"
-		return
+		echo -e "`hand__color cyan $hand__cmd` [-f <cmd.sh_file>] [params...] \t# Run a handybox cmd.sh file directly"
+		echo
+		#return
 		;;
 	esac
 fi
 
-local file=$1
-shift
+local file=
+local default_file=
+if [ "$1" = "-f" ]; then
+	file=$2
+	default_file=0
+	shift
+	shift
+else
+	file="cmd.sh"
+	default_file=1
+fi
 if [ ! -f $file ] ; then
 	hand echo error $file is not a file !
 	return
 fi
+
 local dir=`dirname $file`
 hand__cmd_dir=`pwd`/$dir
-hand__cmd="hand run cmd $file"
+if [ $default_file -eq 1 ]; then
+	hand__cmd="hand run cmd"
+else
+	hand__cmd="hand run cmd -f $file"
+fi
 source $file $*

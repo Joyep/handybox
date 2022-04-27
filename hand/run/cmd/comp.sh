@@ -14,12 +14,34 @@
 #            comp_params
 ##
 
-if [ $# -eq 0 ]; then
+# [-f <cmd_file>] [cmd_params...]
+
+#comp_dump
+
+local should_provide_subcmd_comp=0
+local file="cmd.sh"
+
+if [ $# -eq 0 ] ; then
+	comp_provide_values "-f"
+	if [ -f $file ];  then
+		# provide subcmd complitions
+		should_provide_subcmd_comp=1
+	fi
+elif [ $# -eq 1 ] && [ "$1" = "-f" ]; then
 	comp_provide_files
 else
-	local comp_dir=`dirname $1`
+	if [ "$1" = "-f" ]; then
+		file=$2
+		shift
+		shift
+	fi
+	# provide subcmd complitions
+	should_provide_subcmd_comp=1
+fi
+
+if [ $should_provide_subcmd_comp -eq 1 ]; then
+	local comp_dir=`dirname $file`
 	local compfile=$comp_dir/comp.sh
-	shift
 	if [ -f $compfile ]; then
 		source $compfile
 	fi

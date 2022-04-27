@@ -21,7 +21,7 @@
 
 # hand -- options
 if [ ${#} -ge 1 ] && [ ${@: -1} = "--" ]; then
-	comp_provide_values "test pure source help cd where edit editcomp new remove"
+	comp_provide_values "test pure source help cd where edit editdir editcomp new new-python new-swift remove"
 	return 0
 fi
 
