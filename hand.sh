@@ -728,7 +728,7 @@ hand__get_first()
 
 hand__init() {
 	# echo Loading handybox...
-	hand__version="3.4.1"
+	hand__version="3.4.2"
 	hand__timestamp=`date +%s`
 
 	# get user config name
