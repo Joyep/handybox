@@ -574,7 +574,7 @@ hand__find_subcmd() {
 
 		# fallback to upper level
 		cmdpath=${cmdpath%/*}  # up level cmdpath
-		((off=off+1))
+		((off=off-1))
 	done
 
 	subcmd_path=$cmdpath
