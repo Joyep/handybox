@@ -38,7 +38,11 @@ if [ ! -f $file ] ; then
 fi
 
 local dir=`dirname $file`
-hand__cmd_dir=`pwd`/$dir
+if [ "${dir##/*}" = "" ]; then
+    hand__cmd_dir=$dir
+else
+    hand__cmd_dir=`pwd`/$dir
+fi
 if [ $default_file -eq 1 ]; then
 	hand__cmd="hand run cmd"
 else
