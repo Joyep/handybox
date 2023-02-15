@@ -51,4 +51,16 @@ local file=$2
 shift
 shift
 hand echo yellow "Run peotry project: $dir/$file"
-hand sh "cd $dir; if [ ! -d dist ]; then poetry install; mkdir dist; fi; source \$(poetry env info --path)/bin/activate && cd - && python $dir/$file $* && deactivate"
+
+# hand sh "cd $dir; if [ ! -d dist ]; then poetry install; mkdir dist; fi; source \$(poetry env info --path)/bin/activate && cd - && python $dir/$file $* && deactivate"
+
+cd $dir
+if [ ! -d dist ]; then 
+	poetry install
+	mkdir dist
+fi
+source $(poetry env info --path)/bin/activate
+trap 'trap -- SIGINT' INT
+cd - > /dev/null
+python $dir/$file $*
+deactivate
