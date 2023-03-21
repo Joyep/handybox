@@ -7,7 +7,6 @@
 #      hand__cmd      # input cmd
 ##
 
-echo params=$*
 case $1 in
   "-h"|"--help")
     echo -e "`hand__color cyan $hand__cmd`            \t# " Say hello

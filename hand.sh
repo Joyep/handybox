@@ -297,7 +297,7 @@ hand()
 	# 3. load sub command file (cmd.sh)
 	if [ "$hand__cache_load" = "1" ]; then
 		# lazy load func by comparing timestamp
-		local func_date=`eval echo '$'hand__timestamp_${func}`
+		local func_date=`eval echo '$'hand__timestamp_${func//-/_}`
 		if [ "$func_date" = "" ]; then
 			# func not exist, first load file
 			hand__load_file $file $func
@@ -634,7 +634,7 @@ hand__load_file()
 	source $temp
 	rm ${temp}
 
-	eval hand__timestamp_${func}=`date +%s`
+	eval hand__timestamp_${func//-/_}=`date +%s`
 }
 
 hand__get_file_timestamp()

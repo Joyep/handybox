@@ -162,7 +162,18 @@ hand
 ```
 `cmd.sh`是子命令的入口, 编辑文件:
 ```sh
-# hello/cmd.sh
+##
+# handybox sub command file
+# V2.0
+#
+# ENV:
+#      hand__cmd_dir  # dir of this cmd.sh
+#      hand__cmd      # input cmd
+##
+
+##
+# hand hello [$params...]
+##
 
 
 case $1 in
@@ -190,7 +201,25 @@ Hello world!
 ### Add completion script
 为`hand hello`添加自动补全. 在`cmd.sh`同目录创建文件`comp.sh`, 内容如下:
   ```sh
-  # hello/comp.sh
+  ##
+  # Handybox subcommand completion script
+  # V2.3
+  #
+  # Environment Functions:
+  #           comp_provide_values [$complist...]
+  #           comp_provide_files
+  #
+  # Environment Varivables
+  #            comp_editing  # Editing word
+  #            comp_params   # command params
+  #            comp_dir      # command dir
+  # Params:    
+  #            comp_params
+  ##
+
+  ##
+  # hand hello
+  ##
 
   if [ $# -eq 0 ]; then
       comp_provide_values "world earth"
@@ -261,8 +290,10 @@ handybox export some variables and functions in shell enviroment.
 ### Functions
 |Function|Description|
 |-|-|
-| hand              | hand主函数, 将子命令懒加载到环境中执行
+|hand              | hand主函数, 将子命令懒加载到环境中执行
+|hand__hub         | hand函数变体, 尽量将子命令放在独立进程执行(不缓存在环境)
 | hand__pure_do     | 执行命令但是只输出最后一行
+| hand__help        | hand帮助函数
 | hand__shell_name  | 获取当前shell名称
 | hand__get_firstline | 获取首行
 | hand__get_first     | 获取首个单词
